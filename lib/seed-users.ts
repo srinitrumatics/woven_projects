@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { db } from '../db';
-import { users, organizations, userOrganizations, userRoles, roles, userSalesforceProfiles } from '../db/schema';
+import { users, organizations, userOrganizations, userRoles, roles } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
 import { hash } from 'bcryptjs';
 
@@ -102,24 +102,6 @@ async function seedUsers() {
       console.log(`ℹ️ Role ${u.role.name} already assigned to user`);
     }
 
-    // D. Create/Update Salesforce profile mapping
-    const existingProfile = await db.select()
-      .from(userSalesforceProfiles)
-      .where(eq(userSalesforceProfiles.userId, userId))
-      .limit(1);
-
-    if (existingProfile.length === 0) {
-      await db.insert(userSalesforceProfiles).values({
-        userId,
-        contactId: u.contactId,
-      });
-      console.log(`✅ Created Salesforce Profile with contactId: ${u.contactId}`);
-    } else {
-      await db.update(userSalesforceProfiles)
-        .set({ contactId: u.contactId })
-        .where(eq(userSalesforceProfiles.userId, userId));
-      console.log(`✅ Updated Salesforce Profile contactId to: ${u.contactId}`);
-    }
 
     console.log('🎉 Seeding successfully completed!');
     process.exit(0);

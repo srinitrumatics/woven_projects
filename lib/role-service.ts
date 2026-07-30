@@ -1,8 +1,7 @@
 import { db } from '../db';
-import { roles, roleOrganizations, permissions, rolePermissions, permissionGroups } from '../db/schema';
+import { roles, permissions, rolePermissions, permissionGroups } from '../db/schema';
 import { eq, and, or, inArray } from 'drizzle-orm';
 import { NewRole, NewPermissionGroup } from '../db/schema';
-import { NewRoleOrganization } from '../db/schema';
 
 /**
  * Creates a new role
@@ -46,9 +45,6 @@ export async function updateRole(id: string, roleData: Partial<NewRole>) {
  */
 export async function deleteRole(id: string) {
   try {
-    // Delete associated role-organization relationships
-    await db.delete(roleOrganizations).where(eq(roleOrganizations.roleId, id));
-    
     // Delete associated role-permission relationships
     await db.delete(rolePermissions).where(eq(rolePermissions.roleId, id));
 
@@ -104,79 +100,7 @@ export async function getRoleByName(name: string) {
   }
 }
 
-/**
- * Assigns organizations to a role
- * @param roleId - The ID of the role
- * @param organizationIds - Array of organization IDs to assign to the role
- * @returns Promise indicating success or failure
- */
-export async function assignOrganizationsToRole(roleId: string, organizationIds: string[]) {
-  try {
-    await db.transaction(async (tx) => {
-      // First delete existing role-organization associations for this role
-      await tx.delete(roleOrganizations).where(eq(roleOrganizations.roleId, roleId));
 
-      // Insert new role-organization associations
-      if (organizationIds.length > 0) {
-        const roleOrgValues = organizationIds.map((orgId) => ({
-          roleId,
-          organizationId: orgId,
-        }));
-        await tx.insert(roleOrganizations).values(roleOrgValues);
-      }
-    });
-
-    return true;
-  } catch (error) {
-    console.error("Error assigning organizations to role:", error);
-    throw new Error("Failed to assign organizations to role");
-  }
-}
-
-/**
- * Gets organizations assigned to a role
- * @param roleId - The ID of the role
- * @returns Promise with array of organizations for the role
- */
-export async function getOrganizationsForRole(roleId: string) {
-  try {
-    const roleOrgData = await db
-      .select({
-        organizationId: roleOrganizations.organizationId,
-      })
-      .from(roleOrganizations)
-      .where(eq(roleOrganizations.roleId, roleId));
-
-    return roleOrgData;
-  } catch (error) {
-    console.error('Error fetching organizations for role:', error);
-    throw new Error('Failed to fetch organizations for role');
-  }
-}
-
-/**
- * Removes organizations from a role
- * @param roleId - The ID of the role
- * @param organizationIds - Array of organization IDs to remove from the role
- * @returns Promise indicating success or failure
- */
-export async function removeOrganizationsFromRole(roleId: string, organizationIds: string[]) {
-  try {
-    const result = await db
-      .delete(roleOrganizations)
-      .where(
-        and(
-          eq(roleOrganizations.roleId, roleId),
-          inArray(roleOrganizations.organizationId, organizationIds)
-        )
-      );
-
-    return result.changes > 0;
-  } catch (error) {
-    console.error('Error removing organizations from role:', error);
-    throw new Error('Failed to remove organizations from role');
-  }
-}
 
 /**
  * Gets all permission groups

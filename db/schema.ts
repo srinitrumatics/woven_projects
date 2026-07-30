@@ -100,21 +100,7 @@ export const rolePermissions = pgTable(
   })
 );
 
-// Role-Organization relationship (many-to-many) - determines which organizations a role is available in
-export const roleOrganizations = pgTable(
-  'role_organizations',
-  {
-    roleId: uuid('role_id')
-      .notNull()
-      .references(() => roles.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-    organizationId: uuid('organization_id')
-      .notNull()
-      .references(() => organizations.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-  },
-  (t) => ({
-    pk: primaryKey({ columns: [t.roleId, t.organizationId] }),
-  })
-);
+
 
 // User-Organization relationship (many-to-many)
 export const userOrganizations = pgTable(
@@ -205,16 +191,7 @@ export const userRoleRelations = relations(userRoles, ({ one }) => ({
   }),
 }));
 
-export const roleOrganizationRelations = relations(roleOrganizations, ({ one }) => ({
-  role: one(roles, {
-    fields: [roleOrganizations.roleId],
-    references: [roles.id],
-  }),
-  organization: one(organizations, {
-    fields: [roleOrganizations.organizationId],
-    references: [organizations.id],
-  }),
-}));
+
 
 // Types for better TypeScript support
 export type Organization = typeof organizations.$inferSelect;
@@ -226,8 +203,7 @@ export type NewUser = typeof users.$inferInsert;
 export type UserOrganization = typeof userOrganizations.$inferSelect;
 export type NewUserOrganization = typeof userOrganizations.$inferInsert;
 
-export type RoleOrganization = typeof roleOrganizations.$inferSelect;
-export type NewRoleOrganization = typeof roleOrganizations.$inferInsert;
+
 
 export type Role = typeof roles.$inferSelect;
 export type NewRole = typeof roles.$inferInsert;
@@ -244,48 +220,6 @@ export type NewUserRole = typeof userRoles.$inferInsert;
 export type RolePermission = typeof rolePermissions.$inferSelect;
 export type NewRolePermission = typeof rolePermissions.$inferInsert;
 
-// API Keys table
-export const apiKeys = pgTable('api_keys', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  userId: uuid('user_id'), // Optional: Link to a specific user if needed, or null for service accounts
-  keyHash: text('key_hash').notNull().unique(), // Store hashed key
-  prefix: text('prefix').notNull(), // e.g. 'sk_live_...'
-  name: text('name').notNull(),
-  isActive: boolean('is_active').default(true).notNull(),
-  rateLimit: integer('rate_limit').default(60).notNull(), // Requests per minute
-  createdAt: text('created_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: text('updated_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  lastUsedAt: text('last_used_at'),
-});
 
-export type ApiKey = typeof apiKeys.$inferSelect;
-export type NewApiKey = typeof apiKeys.$inferInsert;
-
-// User Salesforce Profiles table — maps local users to their Salesforce Contact & Account IDs
-// A user can belong to multiple accounts; composite PK prevents exact duplicates
-export const userSalesforceProfiles = pgTable(
-  'user_salesforce_profiles',
-  {
-    userId: uuid('user_id')
-      .primaryKey()
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-    contactId: text('contact_id').notNull(),
-  }
-);
-
-export const userSalesforceProfileRelations = relations(userSalesforceProfiles, ({ one }) => ({
-  user: one(users, {
-    fields: [userSalesforceProfiles.userId],
-    references: [users.id],
-  }),
-}));
-
-export type UserSalesforceProfile = typeof userSalesforceProfiles.$inferSelect;
-export type NewUserSalesforceProfile = typeof userSalesforceProfiles.$inferInsert;
 
 export * from './salesforce-schema';
