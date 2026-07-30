@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import algoliasearch from 'algoliasearch';
 import { InstantSearch, Configure, useInfiniteHits, useSearchBox, useInstantSearch } from 'react-instantsearch';
@@ -59,6 +59,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
   // Backs Quick Add only — the Browse Catalog panel itself is sourced live via InstantSearch/useInfiniteHits
   // (BrowseCatalogPanel below) so it is never capped by this one-shot fetch's hitsPerPage.
   const [catalog, setCatalog] = useState<any[]>([]);
+  const [catalogRefreshing, setCatalogRefreshing] = useState(false);
   const [addingIds, setAddingIds] = useState<Set<string>>(new Set());
   const [nextId, setNextId] = useState(1000);
 
@@ -79,6 +80,12 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
   const insertIdxRef = useRef<number>(-1);
   const [insertLineStyle, setInsertLineStyle] = useState<{ top: string, display: string }>({ top: '0', display: 'none' });
 
+  // Tracks quickAddOpen's previous value so the refetch effect below can fire only on the
+  // false -> true transition (reopening), not on every render while it stays open.
+  const prevQuickAddOpenRef = useRef(false);
+  // Ignores stale in-flight responses if fetchCatalog is called again before a prior call resolves.
+  const catalogFetchIdRef = useRef(0);
+
   const index = useMemo(() => searchClient.initIndex(indexName), [indexName]);
 
   // Load draft on mount
@@ -96,55 +103,78 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
     } catch (e) { }
   }, []);
 
-  // One-shot catalog snapshot, used only by Quick Add's lookup-by-search below. indexName is only ever the
-  // org's real index or "" (see app/configure/page.tsx) — an empty indexName means the org's index could not
-  // be resolved, and must never fall back to a shared/default index (FR-002), so no request is made.
-  useEffect(() => {
+  // Fetches the Quick-Add-only catalog snapshot. indexName is only ever the org's real index or ""
+  // (see app/configure/page.tsx) — an empty indexName means the org's index could not be resolved,
+  // and must never fall back to a shared/default index (FR-002), so no request is made.
+  //
+  // Called on mount, whenever Quick Add is (re)opened, and from the manual refresh control below —
+  // so Quick Add stays current with the latest completed catalog sync instead of showing a stale
+  // one-time snapshot (see specs/073-fix-stale-catalog-sync).
+  const fetchCatalog = useCallback(async () => {
     if (!indexName) {
       setCatalog([]);
       return;
     }
-    let cancelled = false;
-    index.search('', { hitsPerPage: 1000 })
-      .then(async ({ hits }) => {
-        if (cancelled) return;
-        const cat = (hits || []).map((h: any) => ({
-          id: h.objectID,
-          sku: h.sku || h.productcode || h.name || '',
-          name: h.name || '-',
-          desc: h.description || '',
-          mfr: h.manufacturer || '-',
-          brand: h.brand || h.brandName || h.Brand_Name__c || h.gtherp__Brand_Name__c || h.gtherp__brand_name__c || '-',
-          family: h.family || h.category || 'General',
-          groupingLabel: h.groupingLabel || '',
-          sell: h.price ?? 0,
-          avail: h.available_quantity ?? h.gtherp__available_quantity__c ?? h.stock_quantity ?? 0,
-        }));
+    const requestId = ++catalogFetchIdRef.current;
+    setCatalogRefreshing(true);
+    try {
+      const { hits } = await index.search('', { hitsPerPage: 1000 });
+      if (requestId !== catalogFetchIdRef.current) return;
 
-        const missingIds = cat.filter(p => p.brand === '-').map(p => p.id);
-        if (missingIds.length > 0) {
-          try {
-            for (let i = 0; i < missingIds.length; i += 100) {
-              const chunk = missingIds.slice(i, i + 100);
-              const res = await fetch(`/api/products/brands?ids=${chunk.join(',')}`);
-              if (res.ok) {
-                const mapping = await res.json();
-                // A key present with '' means "synced, no brand" — must resolve to a final
-                // display value, not be left at the '-' placeholder that means "unresolved".
-                cat.forEach(p => { if (p.id in mapping) p.brand = mapping[p.id] || 'No Brand'; });
-              }
+      const cat = (hits || []).map((h: any) => ({
+        id: h.objectID,
+        sku: h.sku || h.productcode || h.name || '',
+        name: h.name || '-',
+        desc: h.description || '',
+        mfr: h.manufacturer || '-',
+        brand: h.brand || h.brandName || h.Brand_Name__c || h.gtherp__Brand_Name__c || h.gtherp__brand_name__c || '-',
+        family: h.family || h.category || 'General',
+        groupingLabel: h.groupingLabel || '',
+        sell: h.price ?? 0,
+        avail: h.available_quantity ?? h.gtherp__available_quantity__c ?? h.stock_quantity ?? 0,
+      }));
+
+      const missingIds = cat.filter(p => p.brand === '-').map(p => p.id);
+      if (missingIds.length > 0) {
+        try {
+          for (let i = 0; i < missingIds.length; i += 100) {
+            const chunk = missingIds.slice(i, i + 100);
+            const res = await fetch(`/api/products/brands?ids=${chunk.join(',')}`);
+            if (res.ok) {
+              const mapping = await res.json();
+              // A key present with '' means "synced, no brand" — must resolve to a final
+              // display value, not be left at the '-' placeholder that means "unresolved".
+              cat.forEach(p => { if (p.id in mapping) p.brand = mapping[p.id] || 'No Brand'; });
             }
-          } catch (e) { console.error('Failed to fetch fallback brands', e); }
-        }
+          }
+        } catch (e) { console.error('Failed to fetch fallback brands', e); }
+      }
 
-        setCatalog(cat);
-      })
-      .catch(err => {
-        console.error('Error fetching catalog from Algolia:', err);
-        if (!cancelled) setCatalog([]);
-      });
-    return () => { cancelled = true; };
-  }, [index]);
+      if (requestId !== catalogFetchIdRef.current) return;
+      setCatalog(cat);
+    } catch (err) {
+      console.error('Error fetching catalog from Algolia:', err);
+      // Keep showing the last successfully loaded catalog rather than clearing it (FR-005).
+      toastError('Unable to refresh the product catalog. Showing the last loaded data.');
+    } finally {
+      if (requestId === catalogFetchIdRef.current) setCatalogRefreshing(false);
+    }
+    // toastError intentionally omitted: useToast() returns a new function identity on every
+    // ToastProvider render (its `error` helper isn't memoized), so depending on it here would
+    // re-trigger the mount effect below on unrelated re-renders. Calling a stale toastError
+    // closure is safe — it forwards to useToast's underlying (stable) showToast setter.
+  }, [index, indexName]);
+
+  useEffect(() => { fetchCatalog(); }, [fetchCatalog]);
+
+  // Refetches whenever Quick Add is reopened (false -> true), so a user who leaves Configure open
+  // across a catalog sync sees current data as soon as they re-engage with Quick Add (FR-001).
+  useEffect(() => {
+    if (quickAddOpen && !prevQuickAddOpenRef.current) {
+      fetchCatalog();
+    }
+    prevQuickAddOpenRef.current = quickAddOpen;
+  }, [quickAddOpen, fetchCatalog]);
 
   // Save draft on lines change
   useEffect(() => {
@@ -660,7 +690,17 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
               </div>
               <div className="relative" id="quickAddWrap">
                 <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-                <input type="text" placeholder="Quick add product..." value={quickAddQ} onChange={e => { setQuickAddQ(e.target.value); setQuickAddOpen(true); }} onClick={() => setQuickAddOpen(true)} className="pl-9 pr-4 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-purple-500 w-48 focus:w-56 transition-all" />
+                <input type="text" placeholder="Quick add product..." value={quickAddQ} onChange={e => { setQuickAddQ(e.target.value); setQuickAddOpen(true); }} onClick={() => setQuickAddOpen(true)} className="pl-9 pr-7 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-purple-500 w-48 focus:w-56 transition-all" />
+                <button
+                  type="button"
+                  title="Refresh catalog"
+                  aria-label="Refresh catalog"
+                  disabled={catalogRefreshing}
+                  onClick={() => fetchCatalog()}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <svg className={`w-3.5 h-3.5 ${catalogRefreshing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                </button>
                 {quickAddOpen && quickAddQ && (
                   <div className="absolute top-full left-0 mt-1 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 max-h-64 overflow-y-auto">
                     {filteredQuickAdd.length > 0 ? filteredQuickAdd.map(p => (

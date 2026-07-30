@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState, useMemo, useEffect, useRef } from "react";
+import { use, useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -395,6 +395,9 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
   // Product catalog loaded from Salesforce
   const [catalogProducts, setCatalogProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(false);
+  // Tracks viewMode's previous value so the refetch effect below can fire only on the
+  // transition into "catalog" (reactivating the tab), not on every render while it stays active.
+  const prevViewModeRef = useRef(viewMode);
 
   useEffect(() => {
     if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
@@ -592,71 +595,83 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
   }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
   // Load products from Algolia via server-side browse (no 1000-hit cap)
-  useEffect(() => {
-    if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
+  // Fetches the order's product catalog from Algolia (via the admin-key browse endpoint).
+  // Called on mount and whenever the Product Catalog tab is (re)activated (see effects below),
+  // so it stays current with the latest completed catalog sync instead of showing a stale
+  // one-time snapshot for the lifetime of the order page (see specs/073-fix-stale-catalog-sync).
+  const loadProducts = useCallback(async (signal?: AbortSignal) => {
+    try {
+      setProductsLoading(true);
+      // Use the server-side /api/algolia/browse endpoint which calls browseObjects()
+      // with the Admin API key — this bypasses Algolia's 1000-hit Search API cap
+      // and returns ALL records in the index.
+      const res = await fetch("/api/algolia/browse", { signal });
+      if (!res.ok) {
+        console.error("DEBUG: /api/algolia/browse failed:", res.status, await res.text());
+        // Keep showing the last successfully loaded catalog rather than clearing it (FR-005).
+        toastError("Unable to refresh the product catalog. Showing the last loaded data.");
+        return;
+      }
 
-    const controller = new AbortController();
+      const data = await res.json();
 
-    async function loadProducts() {
-      try {
-        setProductsLoading(true);
-        // Use the server-side /api/algolia/browse endpoint which calls browseObjects()
-        // with the Admin API key — this bypasses Algolia's 1000-hit Search API cap
-        // and returns ALL records in the index.
-        const res = await fetch("/api/algolia/browse", {
-          signal: controller.signal
-        });
-        if (!res.ok) {
-          console.error("DEBUG: /api/algolia/browse failed:", res.status, await res.text());
-          setCatalogProducts([]);
-          return;
-        }
+      if (signal?.aborted) return;
 
-        const data = await res.json();
+      if (!data.products || data.products.length === 0) {
+        setCatalogProducts([]);
+        return;
+      }
 
-        if (controller.signal.aborted) return;
+      // The browse endpoint already maps to the slim product shape we need
+      const mappedProducts: Product[] = (data.products as any[]).map((p) => ({
+        id: p.id,
+        name: p.name,
+        description: p.description,
+        productFamily: p.productFamily,
+        productGrouping: p.productGrouping,
+        sku: p.sku,
+        manufacturer: p.manufacturer,
+        brand: p.brand,
+        availableQty: Number(p.availableQty) || 0,
+        moq: Number(p.moq) || 1,
+        listPrice: Number(p.listPrice) || 0,
+        unitPrice: Number(p.unitPrice) || 0,
+        orderQty: 0,
+        subtotal: 0,
+      }));
 
-        if (!data.products || data.products.length === 0) {
-          setCatalogProducts([]);
-          return;
-        }
-
-        // The browse endpoint already maps to the slim product shape we need
-        const mappedProducts: Product[] = (data.products as any[]).map((p) => ({
-          id: p.id,
-          name: p.name,
-          description: p.description,
-          productFamily: p.productFamily,
-          productGrouping: p.productGrouping,
-          sku: p.sku,
-          manufacturer: p.manufacturer,
-          brand: p.brand,
-          availableQty: Number(p.availableQty) || 0,
-          moq: Number(p.moq) || 1,
-          listPrice: Number(p.listPrice) || 0,
-          unitPrice: Number(p.unitPrice) || 0,
-          orderQty: 0,
-          subtotal: 0,
-        }));
-
-        setCatalogProducts(mappedProducts);
-      } catch (error: any) {
-        if (error.name === "AbortError") return;
-        console.error("DEBUG: Error loading products from Algolia:", error);
-      } finally {
-        if (!controller.signal.aborted) {
-          setProductsLoading(false);
-        }
+      setCatalogProducts(mappedProducts);
+    } catch (error: any) {
+      if (error.name === "AbortError") return;
+      console.error("DEBUG: Error loading products from Algolia:", error);
+      // Keep showing the last successfully loaded catalog rather than clearing it (FR-005).
+      toastError("Unable to refresh the product catalog. Showing the last loaded data.");
+    } finally {
+      if (!signal?.aborted) {
+        setProductsLoading(false);
       }
     }
+    // toastError intentionally omitted: useToast() returns a new function identity on every
+    // ToastProvider render (its `error` helper isn't memoized), so depending on it here would
+    // re-trigger the mount/tab-activation effects below on unrelated re-renders. Calling a stale
+    // toastError closure is safe — it forwards to useToast's underlying (stable) showToast setter.
+  }, []);
 
-    // Always load products initially
-    loadProducts();
+  useEffect(() => {
+    if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
+    const controller = new AbortController();
+    loadProducts(controller.signal);
+    return () => { controller.abort(); };
+  }, [SF_ACCOUNT_ID, SF_CONTACT_ID, loadProducts]);
 
-    return () => {
-      controller.abort();
-    };
-  }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
+  // Refetches whenever the user (re)activates the Product Catalog tab, so switching back into
+  // it after a catalog sync shows current data (FR-002) instead of the original page-load snapshot.
+  useEffect(() => {
+    if (viewMode === "catalog" && prevViewModeRef.current !== "catalog") {
+      loadProducts();
+    }
+    prevViewModeRef.current = viewMode;
+  }, [viewMode, loadProducts]);
 
   // Auto-add transfer products once catalog loads
   useEffect(() => {
@@ -1760,6 +1775,18 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
+            {viewMode === "catalog" && (
+              <button
+                type="button"
+                title="Refresh catalog"
+                aria-label="Refresh catalog"
+                disabled={productsLoading}
+                onClick={() => loadProducts()}
+                className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+              >
+                <svg className={`w-5 h-5 ${productsLoading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              </button>
+            )}
             {/* Tab buttons — below search on mobile/tablet (<1024px), right on desktop (>=1024px) */}
             <div className="flex flex-nowrap gap-2 overflow-x-auto no-scrollbar pb-0.5 flex-shrink-0">
               <button
