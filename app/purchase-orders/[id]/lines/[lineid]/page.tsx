@@ -261,7 +261,7 @@ export default function POLineDetailPage({
                         <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded truncate">
                             Line {lineNumber} of {totalLines}
                         </span>
-                        <StatusBadge status={line.status === "Approved" ? "Awarded" : line.status} />
+                        <StatusBadge status={line.status} />
                     </div>
                 </div>
 
@@ -577,7 +577,7 @@ export default function POLineDetailPage({
                         ))}
                     </div>
 
-                    <div className="p-6">
+                    <div className="py-2">
                         {subTabLoading ? (
                             <div className="flex justify-center items-center py-20 min-w-0">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>

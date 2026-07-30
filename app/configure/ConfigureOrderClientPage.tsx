@@ -120,7 +120,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
           sell: h.price ?? 0,
           avail: h.available_quantity ?? h.gtherp__available_quantity__c ?? h.stock_quantity ?? 0,
         }));
-        
+
         const missingIds = cat.filter(p => p.brand === '-').map(p => p.id);
         if (missingIds.length > 0) {
           try {
@@ -136,7 +136,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
             }
           } catch (e) { console.error('Failed to fetch fallback brands', e); }
         }
-        
+
         setCatalog(cat);
       })
       .catch(err => {
@@ -728,7 +728,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
             </div>
           </div>
 
-          <div className="flex-1 overflow-auto relative"
+          <div className="flex-1 overflow-auto relative p-4"
             onDragLeave={(e) => {
               const r = e.currentTarget.getBoundingClientRect();
               if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) {
@@ -748,138 +748,141 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
             }}
           >
             <div className="absolute left-0 right-0 h-0.5 bg-blue-500 pointer-events-none z-50 transition-all duration-75" style={insertLineStyle}></div>
-            {lines.length === 0 ? (
-              <TableEmptyState
-                message="No lines in configuration"
-                description="Search to add products or drag them from the catalog."
-              />
-            ) : (
-              <Table className="text-left border-collapse min-w-[800px]">
-                <THead className="text-gray-900 dark:text-white sticky top-0 z-10">
-                  <tr>
-                    <Th className="w-10 text-center"><input type="checkbox" checked={lines.length > 0 && lines.every(l => l.sel)} onChange={e => selAll(e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Th>
-                    <Th className="px-1 w-8"></Th>
-                    <Th className="whitespace-nowrap">Level</Th>
-                    <Th className="whitespace-nowrap">Seq</Th>
-                    <Th className="whitespace-nowrap">Product Name</Th>
-                    <Th className="whitespace-nowrap">Description</Th>
-                    <Th className="whitespace-nowrap">Brand Name</Th>
-                    <Th className="text-right whitespace-nowrap">Sell Price</Th>
-                    <Th className="text-center whitespace-nowrap">Order Qty</Th>
-                    <Th className="text-center whitespace-nowrap">MOQ</Th>
-                    <Th className="text-center whitespace-nowrap w-28">Total Qty</Th>
-                    <Th className="text-right whitespace-nowrap">Total Price</Th>
-                    <Th className="w-10"></Th>
-                  </tr>
-                </THead>
-                <TBody>
-                  {lines.map((l, idx) => {
-                    const hidden = isHidden(l);
-                    const hasKids = lines.some(c => c.pid === l.id);
-                    if (hidden) return null;
+            <div className="overflow-x-auto">
 
-                    const q = searchQ.trim().toLowerCase();
-                    if (q && l.type === 'product' && !l.name.toLowerCase().includes(q) && !l.sku.toLowerCase().includes(q) && !l.desc.toLowerCase().includes(q) && !l.mfr.toLowerCase().includes(q)) {
-                      return null;
-                    }
+              {lines.length === 0 ? (
+                <TableEmptyState
+                  message="No lines in configuration"
+                  description="Search to add products or drag them from the catalog."
+                />
+              ) : (
+                <Table className="text-left border-collapse min-w-[800px]">
+                  <THead className="text-gray-900 dark:text-white sticky top-0 z-10">
+                    <tr>
+                      <Th className="w-10 text-center"><input type="checkbox" checked={lines.length > 0 && lines.every(l => l.sel)} onChange={e => selAll(e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Th>
+                      <Th className="px-1 w-8"></Th>
+                      <Th className="whitespace-nowrap">Level</Th>
+                      <Th className="whitespace-nowrap">Seq</Th>
+                      <Th className="whitespace-nowrap">Product Name</Th>
+                      <Th className="whitespace-nowrap">Description</Th>
+                      <Th className="whitespace-nowrap">Brand Name</Th>
+                      <Th className="text-left whitespace-nowrap">Sell Price</Th>
+                      <Th className="text-left whitespace-nowrap">Order Qty</Th>
+                      <Th className="text-left whitespace-nowrap">MOQ</Th>
+                      <Th className="text-left whitespace-nowrap w-28">Total Qty</Th>
+                      <Th className="text-left whitespace-nowrap">Total Price</Th>
+                      <Th className="text-left whitespace-nowrap">Action</Th>
+                    </tr>
+                  </THead>
+                  <TBody>
+                    {lines.map((l, idx) => {
+                      const hidden = isHidden(l);
+                      const hasKids = lines.some(c => c.pid === l.id);
+                      if (hidden) return null;
 
-                    if (l.type === 'group') {
-                      let s = { ts: 0, n: 0 };
-                      lines.forEach(c => { if (c.pid === l.id && c.type === 'product') { s.ts += c.sell * lineTotalQty(c); s.n++; } });
-                      const abbr = l.grpName.split(/[\s&]+/).map((w: string) => w[0]).join('').substring(0, 2).toUpperCase();
+                      const q = searchQ.trim().toLowerCase();
+                      if (q && l.type === 'product' && !l.name.toLowerCase().includes(q) && !l.sku.toLowerCase().includes(q) && !l.desc.toLowerCase().includes(q) && !l.mfr.toLowerCase().includes(q)) {
+                        return null;
+                      }
 
-                      return (
-                        <tr key={l.id} draggable className={`border-b border-gray-200 dark:border-gray-700 bg-indigo-50/50 dark:bg-indigo-900/10 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors ${l.sel ? 'bg-indigo-100/50 dark:bg-indigo-900/30' : ''}`} onDragStart={(e: any) => startDrag(e, 'row', l.id)} onDragOver={(e: any) => onDragOverRow(e, idx)} onDrop={(e: any) => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
-                          <Td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Td>
-                          <Td className="px-1 py-2 cursor-grab text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-center">&#9776;</Td>
-                          <Td colSpan={3} className="px-3 py-2">
-                            <div className="flex items-center gap-2">
-                              {hasKids ? <button className="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition-transform" onClick={() => toggleExp(l.id)} style={{ transform: l.exp ? 'rotate(0)' : 'rotate(-90deg)' }}>&#9660;</button> : <span className="w-5 inline-block"></span>}
-                              <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${l.grpColor}`}>{abbr}</span>
-                              <input className="font-bold text-sm bg-transparent border border-transparent hover:border-gray-300 focus:border-purple-500 focus:bg-white dark:focus:bg-gray-800 rounded px-1 py-0.5 outline-none transition-colors w-48 text-gray-900 dark:text-white" value={l.grpName} onChange={e => setLines(prev => prev.map(x => x.id === l.id ? { ...x, grpName: e.target.value } : x))} />
-                              <span className="text-xs text-gray-500 dark:text-gray-400">{s.n} item{s.n !== 1 ? 's' : ''}</span>
-                            </div>
-                          </Td>
-                          <Td colSpan={6}></Td>
-                          <Td className="px-3 py-2 text-right font-bold text-indigo-600 dark:text-indigo-400 text-sm">{fmt(s.ts)}</Td>
-                          <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
-                        </tr>
-                      );
-                    } else {
-                      const indent = (l.lv - 1) * 20;
-                      const lvColors = ['bg-gray-200 text-gray-700', 'bg-blue-100 text-blue-700', 'bg-green-100 text-green-700', 'bg-purple-100 text-purple-700'];
-                      const lvCls = lvColors[Math.min(l.lv - 1, 3)];
-                      const lineMoq = resolveMoq(l);
-                      const orderQty = safeOrderQty(l);
-                      const totalQty = lineTotalQty(l);
-                      const totalPrice = totalQty * l.sell;
-                      const atFloor = orderQty <= 1;
-                      return (
-                        <tr key={l.id} draggable className={`border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${l.sel ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`} onDragStart={(e: any) => startDrag(e, 'row', l.id)} onDragOver={(e: any) => onDragOverRow(e, idx)} onDrop={(e: any) => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
-                          <Td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Td>
-                          <Td className="px-1 py-2 cursor-grab text-gray-300 hover:text-gray-500 dark:hover:text-gray-400 text-center">&#9776;</Td>
-                          <Td className="px-3 py-2">
-                            <div className="flex items-center" style={{ paddingLeft: `${indent}px` }}>
-                              {hasKids ? <button className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-transform" onClick={() => toggleExp(l.id)} style={{ transform: l.exp ? 'rotate(0)' : 'rotate(-90deg)' }}>&#9660;</button> : <span className="w-5 inline-block"></span>}
-                              <span className={`ml-1 px-1.5 py-0.5 rounded text-xs font-bold ${lvCls}`}>{l.lv}</span>
-                            </div>
-                          </Td>
-                          <Td className="px-3 py-2 text-sm text-gray-500">{l.seq}</Td>
-                          <Td className="px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:underline cursor-pointer truncate max-w-[200px]" title={`${l.sku} - ${l.name}`}>{l.name}</Td>
-                          <Td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate max-w-[150px]" title={l.desc}>{l.desc}</Td>
-                          <Td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px]">{l.brand || '-'}</Td>
-                          <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-right">{fmt(l.sell)}</Td>
-                          <Td className="px-3 py-2 text-center">
-                            <div className="flex flex-col items-center gap-1">
-                              <div className="flex items-center justify-center gap-1">
-                                <button
-                                  type="button"
-                                  onClick={() => bumpQty(l.id, -1)}
-                                  disabled={atFloor}
-                                  aria-label="Decrease order quantity"
-                                  className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-gray-700"
-                                >
-                                  &#8722;
-                                </button>
-                                <input
-                                  type="text"
-                                  value={l.orderQty}
-                                  onChange={e => setOrderQty(l.id, e.target.value)}
-                                  onBlur={() => commitOrderQty(l.id)}
-                                  aria-label="Order quantity"
-                                  className="w-16 px-1 py-0.5 text-sm border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() => bumpQty(l.id, 1)}
-                                  aria-label="Increase order quantity"
-                                  className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
-                                >
-                                  &#43;
-                                </button>
+                      if (l.type === 'group') {
+                        let s = { ts: 0, n: 0 };
+                        lines.forEach(c => { if (c.pid === l.id && c.type === 'product') { s.ts += c.sell * lineTotalQty(c); s.n++; } });
+                        const abbr = l.grpName.split(/[\s&]+/).map((w: string) => w[0]).join('').substring(0, 2).toUpperCase();
+
+                        return (
+                          <tr key={l.id} draggable className={`border-b border-gray-200 dark:border-gray-700 bg-indigo-50/50 dark:bg-indigo-900/10 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors ${l.sel ? 'bg-indigo-100/50 dark:bg-indigo-900/30' : ''}`} onDragStart={(e: any) => startDrag(e, 'row', l.id)} onDragOver={(e: any) => onDragOverRow(e, idx)} onDrop={(e: any) => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
+                            <Td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Td>
+                            <Td className="px-1 py-2 cursor-grab text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-center">&#9776;</Td>
+                            <Td colSpan={3} className="px-3 py-2">
+                              <div className="flex items-center gap-2">
+                                {hasKids ? <button className="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition-transform" onClick={() => toggleExp(l.id)} style={{ transform: l.exp ? 'rotate(0)' : 'rotate(-90deg)' }}>&#9660;</button> : <span className="w-5 inline-block"></span>}
+                                <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${l.grpColor}`}>{abbr}</span>
+                                <input className="font-bold text-sm bg-transparent border border-transparent hover:border-gray-300 focus:border-purple-500 focus:bg-white dark:focus:bg-gray-800 rounded px-1 py-0.5 outline-none transition-colors w-48 text-gray-900 dark:text-white" value={l.grpName} onChange={e => setLines(prev => prev.map(x => x.id === l.id ? { ...x, grpName: e.target.value } : x))} />
+                                <span className="text-xs text-gray-500 dark:text-gray-400">{s.n} item{s.n !== 1 ? 's' : ''}</span>
                               </div>
-                              <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {lineMoq} / Avail: {l.avail ?? 0}</div>
-                            </div>
-                          </Td>
-                          <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">{lineMoq}</Td>
-                          <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-center">{totalQty}</Td>
-                          <Td className="px-3 py-2 text-sm font-semibold text-green-600 dark:text-green-400 text-right">{fmt(totalPrice)}</Td>
-                          <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
-                        </tr>
-                      );
-                    }
-                  })}
-                </TBody>
-                <tfoot className="bg-gray-50 dark:bg-gray-800/80 border-t-2 border-gray-200 dark:border-gray-700">
-                  <tr>
-                    <Td colSpan={8}></Td>
-                    <Td colSpan={3} className="px-3 py-3 text-right text-sm font-bold text-gray-700 dark:text-gray-300  tracking-wider">Order Total</Td>
-                    <Td className="px-3 py-3 text-right text-lg font-bold text-green-600 dark:text-green-400">{fmt(totalSell)}</Td>
-                    <Td></Td>
-                  </tr>
-                </tfoot>
-              </Table>
-            )}
+                            </Td>
+                            <Td colSpan={6}></Td>
+                            <Td className="px-3 py-2 text-right font-bold text-indigo-600 dark:text-indigo-400 text-sm">{fmt(s.ts)}</Td>
+                            <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
+                          </tr>
+                        );
+                      } else {
+                        const indent = (l.lv - 1) * 20;
+                        const lvColors = ['bg-gray-200 text-gray-700', 'bg-blue-100 text-blue-700', 'bg-green-100 text-green-700', 'bg-purple-100 text-purple-700'];
+                        const lvCls = lvColors[Math.min(l.lv - 1, 3)];
+                        const lineMoq = resolveMoq(l);
+                        const orderQty = safeOrderQty(l);
+                        const totalQty = lineTotalQty(l);
+                        const totalPrice = totalQty * l.sell;
+                        const atFloor = orderQty <= 1;
+                        return (
+                          <tr key={l.id} draggable className={`border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${l.sel ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`} onDragStart={(e: any) => startDrag(e, 'row', l.id)} onDragOver={(e: any) => onDragOverRow(e, idx)} onDrop={(e: any) => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
+                            <Td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Td>
+                            <Td className="px-1 py-2 cursor-grab text-gray-300 hover:text-gray-500 dark:hover:text-gray-400 text-center">&#9776;</Td>
+                            <Td className="px-3 py-2">
+                              <div className="flex items-center" style={{ paddingLeft: `${indent}px` }}>
+                                {hasKids ? <button className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-transform" onClick={() => toggleExp(l.id)} style={{ transform: l.exp ? 'rotate(0)' : 'rotate(-90deg)' }}>&#9660;</button> : <span className="w-5 inline-block"></span>}
+                                <span className={`ml-1 px-1.5 py-0.5 rounded text-xs font-bold ${lvCls}`}>{l.lv}</span>
+                              </div>
+                            </Td>
+                            <Td className="px-3 py-2 text-sm text-gray-500">{l.seq}</Td>
+                            <Td className="px-3 py-2 text-sm text-blue-600 dark:text-blue-400 hover:underline cursor-pointer truncate max-w-[200px]" title={`${l.sku} - ${l.name}`}>{l.name}</Td>
+                            <Td className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 truncate max-w-[150px]" title={l.desc}>{l.desc}</Td>
+                            <Td className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300 truncate max-w-[120px]">{l.brand || '-'}</Td>
+                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-right">{fmt(l.sell)}</Td>
+                            <Td className="px-3 py-2 text-center">
+                              <div className="flex flex-col items-center gap-1">
+                                <div className="flex items-center justify-center gap-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => bumpQty(l.id, -1)}
+                                    disabled={atFloor}
+                                    aria-label="Decrease order quantity"
+                                    className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-gray-700"
+                                  >
+                                    &#8722;
+                                  </button>
+                                  <input
+                                    type="text"
+                                    value={l.orderQty}
+                                    onChange={e => setOrderQty(l.id, e.target.value)}
+                                    onBlur={() => commitOrderQty(l.id)}
+                                    aria-label="Order quantity"
+                                    className="w-16 px-1 py-0.5 text-sm border border-gray-300 dark:border-gray-600 rounded text-center text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => bumpQty(l.id, 1)}
+                                    aria-label="Increase order quantity"
+                                    className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
+                                  >
+                                    &#43;
+                                  </button>
+                                </div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">MOQ: {lineMoq} / Avail: {l.avail ?? 0}</div>
+                              </div>
+                            </Td>
+                            <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 text-center">{lineMoq}</Td>
+                            <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium text-center">{totalQty}</Td>
+                            <Td className="px-3 py-2 text-sm font-semibold text-green-600 dark:text-green-400 text-right">{fmt(totalPrice)}</Td>
+                            <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
+                          </tr>
+                        );
+                      }
+                    })}
+                  </TBody>
+                  <tfoot className="bg-gray-50 dark:bg-gray-800/80 border-t-2 border-gray-200 dark:border-gray-700">
+                    <tr>
+                      <Td colSpan={8}></Td>
+                      <Td colSpan={3} className="px-3 py-3 text-right text-sm font-bold text-gray-700 dark:text-gray-300  tracking-wider">Order Total</Td>
+                      <Td className="px-3 py-3 text-right text-lg font-bold text-green-600 dark:text-green-400">{fmt(totalSell)}</Td>
+                      <Td></Td>
+                    </tr>
+                  </tfoot>
+                </Table>
+              )}
+            </div>
           </div>
         </div>
 
