@@ -27,6 +27,11 @@ export default function POLineDetailPage({
 
     const [promiseDate, setPromiseDate] = useState("");
     const [trackingNumber, setTrackingNumber] = useState("");
+    const [savedPromiseDate, setSavedPromiseDate] = useState("");
+    const [savedTrackingNumber, setSavedTrackingNumber] = useState("");
+    const [saving, setSaving] = useState(false);
+    const [saveError, setSaveError] = useState("");
+    const [isEditing, setIsEditing] = useState(false);
 
     const [activeTab, setActiveTab] = useState<"bills" | "returns" | "serialNumbers" | "files">("bills");
     const [bills, setBills] = useState<any[]>([]);
@@ -43,8 +48,14 @@ export default function POLineDetailPage({
     useEffect(() => {
         if (lines[currentLineIndex]) {
             const currentLine = lines[currentLineIndex];
-            setPromiseDate(currentLine.promiseDate ? currentLine.promiseDate.split("T")[0] : "");
-            setTrackingNumber(currentLine.trackingNumber || "");
+            const loadedPromiseDate = currentLine.promiseDate ? currentLine.promiseDate.split("T")[0] : "";
+            const loadedTrackingNumber = currentLine.trackingNumber || "";
+            setPromiseDate(loadedPromiseDate);
+            setTrackingNumber(loadedTrackingNumber);
+            setSavedPromiseDate(loadedPromiseDate);
+            setSavedTrackingNumber(loadedTrackingNumber);
+            setSaveError("");
+            setIsEditing(false);
         }
     }, [lines, currentLineIndex]);
 
@@ -172,6 +183,7 @@ export default function POLineDetailPage({
     }, [lineid, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
     const line = lines[currentLineIndex];
+    const isLineEditable = line ? (line.status === "Draft" || line.status === "Approved") : false;
     const totalLines = lines.length;
     const lineNumber = currentLineIndex + 1;
 
@@ -205,6 +217,58 @@ export default function POLineDetailPage({
         if (hasNextLine) {
             const nextLine = lines[currentLineIndex + 1];
             router.push(`/purchase-orders/${id}/lines/${nextLine.id}`);
+        }
+    };
+
+    const hasUnsavedLineChanges = trackingNumber !== savedTrackingNumber || promiseDate !== savedPromiseDate;
+
+    const handleCancelEdit = () => {
+        setTrackingNumber(savedTrackingNumber);
+        setPromiseDate(savedPromiseDate);
+        setSaveError("");
+        setIsEditing(false);
+    };
+
+    const handleSaveLine = async () => {
+        if (!line || !hasUnsavedLineChanges) return;
+
+        setSaving(true);
+        setSaveError("");
+        try {
+            const body: Record<string, string> = {
+                accountId: SF_ACCOUNT_ID,
+                contactId: SF_CONTACT_ID,
+            };
+            if (trackingNumber !== savedTrackingNumber) body.trackingNumber = trackingNumber;
+            if (promiseDate !== savedPromiseDate) body.promiseDate = promiseDate;
+
+            const res = await fetch(`/api/purchase-orders?lineId=${line.id}&purchaseOrderId=${id}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body),
+            });
+            const data = await res.json();
+
+            if (!res.ok || !data?.success) {
+                throw new Error(data?.error || "Failed to save changes");
+            }
+
+            const updatedTrackingNumber = data.trackingNumber ?? trackingNumber;
+            const updatedPromiseDate = data.promiseDate ? String(data.promiseDate).split("T")[0] : promiseDate;
+
+            setTrackingNumber(updatedTrackingNumber);
+            setPromiseDate(updatedPromiseDate);
+            setSavedTrackingNumber(updatedTrackingNumber);
+            setSavedPromiseDate(updatedPromiseDate);
+            setLines((prevLines) => prevLines.map((l, idx) =>
+                idx === currentLineIndex ? { ...l, trackingNumber: updatedTrackingNumber, promiseDate: updatedPromiseDate } : l
+            ));
+            setIsEditing(false);
+        } catch (err: any) {
+            console.error("Error saving purchase order line:", err);
+            setSaveError(err?.message || "Failed to save changes. Please try again.");
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -251,6 +315,38 @@ export default function POLineDetailPage({
                             </h1>
                         </div>
                         <div className="flex items-center gap-2 min-w-0">
+                            {isLineEditable && !isEditing && (
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className="px-3 py-1.5 text-sm rounded-lg transition-colors inline-flex items-center gap-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 truncate"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                                    Edit
+                                </button>
+                            )}
+                            {isEditing && (
+                                <>
+                                    <button
+                                        onClick={handleCancelEdit}
+                                        disabled={saving}
+                                        className="px-3 py-1.5 text-sm rounded-lg transition-colors inline-flex items-center gap-2 bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 truncate disabled:opacity-50"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleSaveLine}
+                                        disabled={!hasUnsavedLineChanges || saving}
+                                        className={`px-3 py-1.5 text-sm rounded-lg transition-colors inline-flex items-center gap-2 font-bold truncate ${hasUnsavedLineChanges && !saving
+                                            ? "bg-primary text-white hover:bg-primary/90"
+                                            : "bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                                            }`}
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                        {saving ? "Saving..." : "Save"}
+                                    </button>
+                                </>
+                            )}
                             <Link href={`/purchase-orders/${id}`} className="px-3 py-1.5 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2 font-bold truncate">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                                 Back to Purchase Order
@@ -262,6 +358,11 @@ export default function POLineDetailPage({
                             Line {lineNumber} of {totalLines}
                         </span>
                         <StatusBadge status={line.status} />
+                        {isEditing && saveError && (
+                            <span className="text-xs text-red-600 dark:text-red-400 truncate" title={saveError}>
+                                {saveError}
+                            </span>
+                        )}
                     </div>
                 </div>
 
@@ -358,97 +459,92 @@ export default function POLineDetailPage({
                         <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-x-4 gap-y-3">
                             {/* Product Name */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Product Name">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Product Name">
                                     Product Name
                                 </label>
                                 <input
                                     type="text"
                                     readOnly
                                     value={line.productName || ""}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
                                     title={line.productName || ""}
                                 />
                             </div>
 
                             {/* Description */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Description">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Description">
                                     Description
                                 </label>
                                 <input
                                     type="text"
                                     readOnly
                                     value={line.productDescription || "No description available"}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
                                     title={line.productDescription || "No description available"}
                                 />
                             </div>
 
                             {/* Brand Name */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Brand Name">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Brand Name">
                                     Brand Name
                                 </label>
                                 <input
                                     type="text"
                                     readOnly
                                     value={line.brand || "—"}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
                                     title={line.brand || "—"}
                                 />
                             </div>
 
                             {/* Need by Date */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Need by Date">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Need by Date">
                                     Need by Date
                                 </label>
                                 <input
                                     type="text"
                                     readOnly
                                     value={formatDate(line.needByDate, 'numeric-dash') || "—"}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
                                     title={formatDate(line.needByDate, 'numeric-dash') || "—"}
                                 />
                             </div>
 
                             {/* Ship by Date */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Ship by Date">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Ship by Date">
                                     Ship by Date
                                 </label>
                                 <input
                                     type="text"
                                     readOnly
                                     value={formatDate(line.shipByDate, 'numeric-dash') || "—"}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
                                     title={formatDate(line.shipByDate, 'numeric-dash') || "—"}
                                 />
                             </div>
 
                             {/* Promise Date */}
                             <div>
-                                <div className="flex items-center justify-between mb-1">
-                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 truncate" title="Promise Date">
-                                        Promise Date
-                                    </label>
-                                    {(line.status === "Draft" || line.status === "Approved" || line.status === "Awarded") && (
-                                        <span className="text-[10px] text-primary font-semibold uppercase tracking-wider">Editable</span>
-                                    )}
-                                </div>
-                                {(line.status === "Draft" || line.status === "Approved" || line.status === "Awarded") ? (
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Promise Date">
+                                    Promise Date
+                                </label>
+                                {(isLineEditable && isEditing) ? (
                                     <input
                                         type="date"
                                         value={promiseDate}
-                                        onChange={(e) => setPromiseDate(e.target.value)}
-                                        className="w-full px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:outline-none truncate"
+                                        onChange={(e) => { setPromiseDate(e.target.value); setSaveError(""); }}
+                                        className="w-full h-11 px-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:outline-none truncate"
                                     />
                                 ) : (
                                     <input
                                         type="text"
                                         readOnly
                                         value={formatDate(line.promiseDate, 'numeric-dash') || "—"}
-                                        className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
                                         title={formatDate(line.promiseDate, 'numeric-dash') || "—"}
                                     />
                                 )}
@@ -456,21 +552,16 @@ export default function POLineDetailPage({
 
                             {/* Tracking Number */}
                             <div>
-                                <div className="flex items-center justify-between mb-1">
-                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 truncate" title="Tracking Number">
-                                        Tracking Number
-                                    </label>
-                                    {(line.status === "Draft" || line.status === "Approved" || line.status === "Awarded") && (
-                                        <span className="text-[10px] text-primary font-semibold uppercase tracking-wider">Editable</span>
-                                    )}
-                                </div>
-                                {(line.status === "Draft" || line.status === "Approved" || line.status === "Awarded") ? (
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Tracking Number">
+                                    Tracking Number
+                                </label>
+                                {(isLineEditable && isEditing) ? (
                                     <input
                                         type="text"
                                         value={trackingNumber}
-                                        onChange={(e) => setTrackingNumber(e.target.value)}
+                                        onChange={(e) => { setTrackingNumber(e.target.value); setSaveError(""); }}
                                         placeholder="Enter tracking #"
-                                        className="w-full px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:outline-none truncate"
+                                        className="w-full h-11 px-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:outline-none truncate"
                                         title={trackingNumber}
                                     />
                                 ) : (
@@ -478,7 +569,7 @@ export default function POLineDetailPage({
                                         type="text"
                                         readOnly
                                         value={line.trackingNumber || "—"}
-                                        className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
                                         title={line.trackingNumber || "—"}
                                     />
                                 )}
@@ -486,28 +577,28 @@ export default function POLineDetailPage({
 
                             {/* Tracking Status */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Tracking Status">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Tracking Status">
                                     Tracking Status
                                 </label>
                                 <input
                                     type="text"
                                     readOnly
                                     value={line.trackingStatus || "—"}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
                                     title={line.trackingStatus || "—"}
                                 />
                             </div>
 
                             {/* Estimated Delivery Date */}
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Estimated Delivery Date">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Estimated Delivery Date">
                                     Estimated Delivery Date
                                 </label>
                                 <input
                                     type="text"
                                     readOnly
                                     value={formatDate(line.estimatedDeliveryDate, 'numeric-dash') || "—"}
-                                    className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
                                     title={formatDate(line.estimatedDeliveryDate, 'numeric-dash') || "—"}
                                 />
                             </div>

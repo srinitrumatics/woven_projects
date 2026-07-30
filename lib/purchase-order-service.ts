@@ -1,4 +1,4 @@
-import { getSalesforceSession } from './salesforce-service';
+import { getSalesforceSession, fetchWithLogging } from './salesforce-service';
 
 export async function getPurchaseOrderFilesFromSalesforce(accountId: string, contactId: string, objectId: string, objectName: string = "Purchase_Order__c"): Promise<any[]> {
     try {
@@ -83,5 +83,41 @@ export async function getPurchaseOrdersFromSalesforce(
     } catch (error) {
         console.error(`Error fetching Purchase Order data for ${tabName}:`, error);
         return [];
+    }
+}
+
+// Update Tracking Number / Promise Date on a Purchase Order Line in Salesforce
+export async function patchPurchaseOrderLineInSalesforce(payload: {
+    purchaseOrderLines: Array<{ Id: string; Tracking_Number__c?: string; Promise_Date__c?: string }>;
+    accountId: string;
+    contactId: string;
+}): Promise<any> {
+    try {
+        const session = await getSalesforceSession();
+        if (!session.accessToken) {
+            throw new Error("No Salesforce access token available");
+        }
+
+        const url = `${session.instanceUrl}/services/apexrest/gtherp/purchaseorderlines`;
+
+        const response = await fetchWithLogging(url, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${session.accessToken}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Salesforce API error details:", errorText);
+            throw new Error(`Salesforce API error: ${response.status} ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error updating purchase order line in Salesforce (PATCH):", error);
+        throw error;
     }
 }
