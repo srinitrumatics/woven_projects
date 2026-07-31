@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Organization } from '../../../db/schema';
-import { organizationApi } from '../../../lib/api/rbac-api';
+import { organizationApi } from '../../../lib/api/organization-api';
 import {
   Plus, Edit, Trash2, Building2, Sparkles, Search,
   ChevronLeft, ChevronRight, X, RefreshCw, ExternalLink,

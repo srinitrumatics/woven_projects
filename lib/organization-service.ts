@@ -1,6 +1,6 @@
 import { db } from '../db';
-import { organizations, users, userOrganizations } from '../db/schema';
-import { eq, and, inArray } from 'drizzle-orm';
+import { organizations } from '../db/schema';
+import { eq } from 'drizzle-orm';
 import { NewOrganization } from '../db/schema';
 
 /**
@@ -45,10 +45,6 @@ export async function updateOrganization(id: string, orgData: Partial<NewOrganiz
  */
 export async function deleteOrganization(id: string) {
   try {
-    // Remove all user-organization associations for this organization
-    await db.delete(userOrganizations).where(eq(userOrganizations.organizationId, id));
-
-    // Then delete the organization itself
     const deletedOrgs = await db.delete(organizations).where(eq(organizations.id, id)).returning();
     return deletedOrgs.length > 0;
   } catch (error) {
@@ -100,107 +96,3 @@ export async function getOrganizationByName(name: string) {
   }
 }
 
-/**
- * Gets all users in an organization
- * @param organizationId - The ID of the organization
- * @returns Promise with array of users in the organization
- */
-export async function getUsersInOrganization(organizationId: string) {
-  try {
-    const usersInOrg = await db
-      .select({
-        id: users.id,
-        name: users.name,
-        email: users.email,
-        createdAt: users.createdAt,
-        updatedAt: users.updatedAt,
-      })
-      .from(userOrganizations)
-      .innerJoin(users, eq(userOrganizations.userId, users.id))
-      .where(eq(userOrganizations.organizationId, organizationId));
-
-    return usersInOrg;
-  } catch (error) {
-    console.error('Error fetching users in organization:', error);
-    throw new Error('Failed to fetch users in organization');
-  }
-}
-
-/**
- * Gets all organizations for a user
- * @param userId - The ID of the user
- * @returns Promise with array of organizations for the user
- */
-export async function getUserOrganizations(userId: string) {
-  try {
-    const orgsForUser = await db
-      .select({
-        id: organizations.id,
-        name: organizations.name,
-        description: organizations.description,
-        createdAt: organizations.createdAt,
-        updatedAt: organizations.updatedAt,
-      })
-      .from(userOrganizations)
-      .innerJoin(organizations, eq(userOrganizations.organizationId, organizations.id))
-      .where(eq(userOrganizations.userId, userId));
-
-    return orgsForUser;
-  } catch (error) {
-    console.error('Error fetching organizations for user:', error);
-    throw new Error('Failed to fetch organizations for user');
-  }
-}
-
-/**
- * Assigns users to an organization
- * @param organizationId - The ID of the organization
- * @param userIds - Array of user IDs to assign
- * @returns Promise indicating success or failure
- */
-export async function assignUsersToOrganization(organizationId: string, userIds: string[]) {
-  try {
-    await db.transaction(async (tx) => {
-      // Remove existing user-organization associations for this organization
-      await tx.delete(userOrganizations).where(eq(userOrganizations.organizationId, organizationId));
-
-      // Insert new user-organization associations
-      if (userIds.length > 0) {
-        const userOrgValues = userIds.map((userId) => ({
-          userId,
-          organizationId,
-        }));
-        await tx.insert(userOrganizations).values(userOrgValues);
-      }
-    });
-
-    return true;
-  } catch (error) {
-    console.error("Error assigning users to organization:", error);
-    throw new Error("Failed to assign users to organization");
-  }
-}
-
-/**
- * Removes users from an organization
- * @param organizationId - The ID of the organization
- * @param userIds - Array of user IDs to remove
- * @returns Promise indicating success or failure
- */
-export async function removeUsersFromOrganization(organizationId: string, userIds: string[]) {
-  try {
-    const result = await db
-      .delete(userOrganizations)
-      .where(
-        and(
-          eq(userOrganizations.organizationId, organizationId),
-          inArray(userOrganizations.userId, userIds)
-        )
-      );
-
-    return result.changes > 0;
-  } catch (error) {
-    console.error('Error removing users from organization:', error);
-    throw new Error('Failed to remove users from organization');
-  }
-}

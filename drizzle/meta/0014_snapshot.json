@@ -1,0 +1,316 @@
+{
+  "id": "1ab3f92b-70e9-4743-9f42-21d19664221e",
+  "prevId": "e92a33a0-13d0-4efa-b574-846a14b8a8e3",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.organizations": {
+      "name": "organizations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "org_id": {
+          "name": "org_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "salesforce_url": {
+          "name": "salesforce_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "salesforce_auth_url": {
+          "name": "salesforce_auth_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "client_id": {
+          "name": "client_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "client_secret": {
+          "name": "client_secret",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "site_url": {
+          "name": "site_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "algolia_index_name": {
+          "name": "algolia_index_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "algolia_schema": {
+          "name": "algolia_schema",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "organizations_org_id_unique": {
+          "name": "organizations_org_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "org_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reset_password_code": {
+          "name": "reset_password_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reset_password_expires": {
+          "name": "reset_password_expires",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "salesforce.product2": {
+      "name": "product2",
+      "schema": "salesforce",
+      "columns": {
+        "sfid": {
+          "name": "sfid",
+          "type": "varchar(18)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "productcode": {
+          "name": "productcode",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isactive": {
+          "name": "isactive",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "family": {
+          "name": "family",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "image_url": {
+          "name": "image_url",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gtherp__price__c": {
+          "name": "gtherp__price__c",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "list_price__c": {
+          "name": "list_price__c",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gtherp__stock_quantity__c": {
+          "name": "gtherp__stock_quantity__c",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gtherp__available_quantity__c": {
+          "name": "gtherp__available_quantity__c",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gtherp__discount__c": {
+          "name": "gtherp__discount__c",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gtherp__category__c": {
+          "name": "gtherp__category__c",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gtherp__sub_category__c": {
+          "name": "gtherp__sub_category__c",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "manufacturer_name__c": {
+          "name": "manufacturer_name__c",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "product_availability__c": {
+          "name": "product_availability__c",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createddate": {
+          "name": "createddate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "systemmodstamp": {
+          "name": "systemmodstamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {
+    "salesforce": "salesforce"
+  },
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

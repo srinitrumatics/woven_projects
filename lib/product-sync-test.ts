@@ -3,9 +3,8 @@ import { organizations } from '../db/schema';
 import { eq } from 'drizzle-orm';
 
 /**
- * Ad-hoc verification script for the split Load/Index sync flow, following the
- * same standalone-tsx-script convention as lib/rbac-test.ts (run via
- * `npm run test:product-sync`). Exercises the real API routes against a
+ * Ad-hoc verification script for the split Load/Index sync flow, run via
+ * `npm run test:product-sync`. Exercises the real API routes against a
  * running dev server (`npm run dev`) for one organization, and asserts the
  * invariants described in specs/051-product-algolia-sync-split/quickstart.md.
  *
