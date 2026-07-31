@@ -7,6 +7,7 @@ import Pagination from "../../../../components/ui/Pagination";
 import { useUserSession } from "@/components/UserSessionContext";
 import { displayCell } from "@/lib/utils/formatting";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -215,7 +216,7 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                                             {displayCell(item.name)}
                                         </Td>
                                         <Td className="truncate">
-                                            <StatusBadge status={item.status} />
+                                            <StatusBadge status={item.status} variant="pill" />
                                         </Td>
 
                                         {activeTab === 'rma' ? (
@@ -451,44 +452,5 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                 />
             </div>
         </div>
-    );
-}
-function StatusBadge({ status }: { status: string }) {
-    const getStyles = () => {
-        switch (status) {
-            case "Approved":
-            case "Shipped":
-                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-            case "Accepted":
-            case "Draft":
-                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-            case "Pending Review":
-                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-            case "Under Review":
-                return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
-            case "Rejected":
-            case "Partial Rejected":
-                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-            case "Expired":
-                return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
-            case "Quote Requested":
-                return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400";
-            case "Quote Ready":
-                return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400";
-            case "Proposal Sent":
-                return "bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400";
-            case "Negotiation":
-                return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400";
-            case "Awarded":
-                return "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400";
-            default:
-                return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
-        }
-    };
-
-    return (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
-            {status}
-        </span>
     );
 }

@@ -6,6 +6,7 @@ import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import { Eye } from "lucide-react";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 
 interface QuoteLinesTabProps {
@@ -87,7 +88,7 @@ export default function QuoteLinesTab({
                                     </Link>
                                 </Td>
                                 <Td className="text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.status }}>
-                                    <StatusBadge status={line.status as QuoteStatus} />
+                                    <StatusBadge status={line.status as QuoteStatus} variant="pill" />
                                 </Td>
                                 <Td className="min-w-[160px] truncate" style={{ width: widths.proposedProductName }} title={line.proposedProductName}>
                                     {line.proposedProductId ? (
@@ -162,33 +163,4 @@ export default function QuoteLinesTab({
         </div>
     );
 }
-function StatusBadge({ status }: { status: QuoteStatus }) {
-    const getStyles = () => {
-        switch (status) {
-            case "Approved":
-                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-            case "Pending":
-                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-            case "Draft":
-                return "bg-blue-200 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
-            case "Rejected":
-                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-            case "Expired":
-                return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
-            case "Converted":
-                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-            case "Shipped":
-                return "bg-green-200 text-green-900 dark:bg-green-900/30 dark:text-green-500";
-            case "Partial Shipment":
-                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-            default:
-                return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
-        }
-    };
 
-    return (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
-            {status}
-        </span>
-    );
-}

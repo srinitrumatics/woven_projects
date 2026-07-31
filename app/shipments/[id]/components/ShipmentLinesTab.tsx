@@ -10,6 +10,7 @@ import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -229,7 +230,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                         className="text-primary font-medium hover:underline truncate"
                                         title={line.name}>{line.name}</Link>
                                 </Td>
-                                <TextCell v={<StatusBadge status={line.status} />} w={widths.status} title={line.status} />
+                                <TextCell v={<StatusBadge status={line.status || "N/A"} variant="pill" />} w={widths.status} title={line.status} />
                                 <TextCell
                                     v={displayCell(line.salesOrderLineName)}
                                     w={widths.salesOrderLineName}
@@ -317,34 +318,5 @@ function NumCell({ v, w }: { v: string; w: number }) {
         <Td className="text-left font-medium truncate" style={{ width: w }} title={v}>
             {v}
         </Td>
-    );
-}
-function StatusBadge({ status }: { status: string }) {
-    const getStyles = () => {
-        switch (status) {
-            case "Shipped":
-            case "Delivered":
-                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-            case "In Transit":
-            case "Inprogress":
-            case "Out for Delivery":
-                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-            case "Pending":
-            case "Draft":
-            case "Picked":
-            case "Packed":
-                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-            case "Cancelled":
-            case "Exception":
-                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-            default:
-                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400";
-        }
-    };
-
-    return (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
-            {status || "N/A"}
-        </span>
     );
 }

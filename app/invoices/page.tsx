@@ -12,6 +12,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useUserSession } from "@/components/UserSessionContext";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -529,7 +530,7 @@ export default function InvoicesPage() {
                           <Link href={`/invoices/${invoice.id}`} title={invoice.invoiceNumber} onClick={(e: React.MouseEvent) => e.stopPropagation()}>{invoice.invoiceNumber}</Link>
                         </Td>
                         <Td className="px-3 py-2 text-gray-600 dark:text-gray-400 truncate">
-                          <StatusBadge status={invoice.status} />
+                          <StatusBadge status={invoice.status} variant="pill" />
                         </Td>
                         <Td className="px-3 py-2 truncate">
                           <div className="text-sm font-medium text-gray-900 dark:text-white">{displayCell(invoice.salesOrderNumber)}</div>
@@ -658,39 +659,6 @@ export default function InvoicesPage() {
   );
 }
 
-function StatusBadge({ status }: { status: InvoiceStatus }) {
-  const getStyles = () => {
-    switch (status) {
-      case "Paid":
-        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-      case "Partial":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-      case "Sent":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
-      case "Viewed":
-        return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400";
-      case "Overdue":
-        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-      case "Draft":
-        return "bg-blue-200 text-blue-900 dark:bg-blue-800 dark:text-blue-400";
-      case "Cancelled":
-        return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
-      case "Shipped":
-        return "bg-green-200 text-green-900 dark:bg-green-900/30 dark:text-green-500";
-      case "Settled":
-      case "Approved":
-        return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
-    }
-  };
-
-  return (
-    <span className={`inline-flex items-center px-2.5 py-1.0 rounded-full text-sm ${getStyles()}`}>
-      {status}
-    </span>
-  );
-}
 
 function CollectionStatusBadge({ status }: { status?: string }) {
   const getStyles = () => {

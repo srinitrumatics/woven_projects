@@ -9,6 +9,7 @@ import { ShippingManifest, ShipmentStatus } from "./types";
 import { formatDate, formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useUserSession } from "@/components/UserSessionContext";
@@ -530,7 +531,7 @@ export default function ShipmentsPage() {
                         </Link>
                       </Td>
                       <Td className="truncate">
-                        <StatusBadge status={shipment.status} />
+                        <StatusBadge status={shipment.status || "N/A"} variant="pill" />
                       </Td>
                       <Td className="text-gray-900 dark:text-gray-300 truncate">
                         {displayCell(shipment.salesOrder)}
@@ -645,33 +646,3 @@ export default function ShipmentsPage() {
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const getStyles = () => {
-    switch (status) {
-      case "Shipped":
-      case "Delivered":
-      case "Approved":
-        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-      case "In Transit":
-      case "Inprogress":
-      case "Out for Delivery":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-      case "Pending":
-      case "Draft":
-      case "Picked":
-      case "Packed":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-      case "Cancelled":
-      case "Exception":
-        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400";
-    }
-  };
-
-  return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
-      {status || "N/A"}
-    </span>
-  );
-}

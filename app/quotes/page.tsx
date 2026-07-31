@@ -12,6 +12,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 type TabFilter = QuoteStatus | "All";
 
@@ -516,7 +517,7 @@ export default function QuotesPage() {
                         </Link>
                       </Td>
                       <Td className="truncate">
-                        <StatusBadge status={quote.status} />
+                        <StatusBadge status={quote.status} variant="pill" />
                       </Td>
                       <Td className="text-left truncate">
                         {quote.proposalId && quote.proposalName !== 'N/A' ? (
@@ -637,34 +638,3 @@ export default function QuotesPage() {
   );
 }
 
-function StatusBadge({ status }: { status: QuoteStatus }) {
-  const getStyles = () => {
-    switch (status) {
-      case "Approved":
-        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-      case "Pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-      case "Draft":
-        return "bg-blue-200 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
-      case "Rejected":
-      case "Partial Rejected":
-        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-      case "Expired":
-        return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
-      case "Converted":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-      case "Shipped":
-        return "bg-green-200 text-green-900 dark:bg-green-900/30 dark:text-green-500";
-      case "Partial Shipment":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
-    }
-  };
-
-  return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
-      {status}
-    </span>
-  );
-}

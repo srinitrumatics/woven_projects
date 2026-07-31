@@ -7,6 +7,7 @@ import Pagination from "../../../../components/ui/Pagination";
 import { useUserSession } from "../../../../components/UserSessionContext";
 import { displayCell } from "@/lib/utils/formatting";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface PurchasesTabProps {
     purchases: PurchaseOrder[];
@@ -152,7 +153,7 @@ export default function PurchasesTab({
                                                     )}
                                                 </Td>
                                                 <Td className="truncate">
-                                                    <StatusBadge status={purchase.status} />
+                                                    <StatusBadge status={purchase.status} variant="pill" />
                                                 </Td>
                                                 <Td className="truncate">
                                                     {purchase.customerQuoteName && purchase.customerQuoteId ? (
@@ -302,7 +303,7 @@ export default function PurchasesTab({
                                                     </Link>
                                                 </Td>
                                                 <Td className="truncate">
-                                                    <StatusBadge status={bill.status || 'N/A'} />
+                                                    <StatusBadge status={bill.status || 'N/A'} variant="pill" />
                                                 </Td>
                                                 <Td className="truncate">
                                                     {bill.purchaseOrderName && bill.purchaseOrderId ? (
@@ -398,34 +399,3 @@ export default function PurchasesTab({
     );
 }
 
-function StatusBadge({ status }: { status: string }) {
-    const getStyles = () => {
-        switch (status) {
-            case "Draft":
-                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
-            case "Submitted":
-            case "Open":
-            case "Acknowledged":
-                return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-            case "Approved":
-            case "Posted":
-            case "Received":
-                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-            case "In Progress":
-            case "Pending":
-                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-            case "Cancelled":
-            case "Canceled":
-            case "Rejected":
-                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-            default:
-                return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
-        }
-    };
-
-    return (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
-            {status}
-        </span>
-    );
-}

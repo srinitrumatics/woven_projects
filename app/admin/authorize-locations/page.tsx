@@ -8,10 +8,11 @@ import Pagination from "@/components/ui/Pagination";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
-import { AuthorizeLocation, LocationStatus } from "./types";
+import { AuthorizeLocation } from "./types";
 import LocationModal from "./components/LocationModal";
 import { useUserSession } from "@/components/UserSessionContext";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 type TabFilter = "Active" | "Inactive" | "Pending" | "All";
 
@@ -342,7 +343,7 @@ export default function AuthorizeLocationsPage() {
                                                         {loc.accountName}
                                                     </p>
                                                 </div>
-                                                <StatusBadge status={loc.status} />
+                                                <StatusBadge status={loc.status} variant="pill" />
                                             </div>
 
                                             <div className="space-y-3 mt-4 flex-grow">
@@ -446,7 +447,7 @@ export default function AuthorizeLocationsPage() {
                                             <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.insideDelivery, minWidth: widths.insideDelivery, maxWidth: widths.insideDelivery }}>{loc.insideDelivery ? 'Yes' : 'No'}</Td>
                                             <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={loc.deliveryNotes} style={{ width: widths.deliveryNotes, minWidth: widths.deliveryNotes, maxWidth: widths.deliveryNotes }}>{loc.deliveryNotes}</Td>
                                             <Td className="px-3 py-2 truncate" style={{ width: widths.status, minWidth: widths.status, maxWidth: widths.status }}>
-                                                <StatusBadge status={loc.status} />
+                                                <StatusBadge status={loc.status} variant="pill" />
                                             </Td>
                                             <Td className="px-3 py-2 truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                                 <div className="flex gap-2">
@@ -514,19 +515,3 @@ export default function AuthorizeLocationsPage() {
     );
 }
 
-function StatusBadge({ status }: { status: LocationStatus }) {
-    const getStyles = () => {
-        switch (status) {
-            case "Active": return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-            case "Pending": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-            case "Inactive": return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
-            default: return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
-        }
-    };
-
-    return (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStyles()}`}>
-            {status}
-        </span>
-    );
-}

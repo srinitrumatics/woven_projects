@@ -19,6 +19,7 @@ import DeliveryWindowModal from "./components/DeliveryWindowModal";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 export default function DeliveryWindowsPage() {
     const router = useRouter();
@@ -353,7 +354,7 @@ export default function DeliveryWindowsPage() {
                                         <Td className="text-gray-600 dark:text-gray-400 truncate" style={{ width: widths.closedForDeliveries, minWidth: widths.closedForDeliveries, maxWidth: widths.closedForDeliveries }}>{dw.closedForDeliveries ? 'Yes' : 'No'}</Td>
                                         <Td className="text-gray-600 dark:text-gray-400 max-w-[200px] truncate" title={dw.deliveryNotes} style={{ width: widths.deliveryNotes, minWidth: widths.deliveryNotes, maxWidth: widths.deliveryNotes }}>{dw.deliveryNotes}</Td>
                                         <Td className="truncate" style={{ width: widths.active, minWidth: widths.active, maxWidth: widths.active }}>
-                                            <StatusBadge active={dw.active} />
+                                            <StatusBadge status={dw.active ? "Active" : "Inactive"} variant="pill" />
                                         </Td>
                                         <Td className="truncate" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
                                             <div className="flex gap-2">
@@ -428,10 +429,3 @@ function StatCard({ label, value, color, active, onClick }: { label: string, val
     );
 }
 
-function StatusBadge({ active }: { active: boolean }) {
-    return (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${active ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}`}>
-            {active ? 'Active' : 'Inactive'}
-        </span>
-    );
-}

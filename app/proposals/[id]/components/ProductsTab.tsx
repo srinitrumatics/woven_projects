@@ -5,6 +5,7 @@ import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import Pagination from "../../../../components/ui/Pagination";
 import { displayCell } from "@/lib/utils/formatting";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -85,7 +86,9 @@ export default function ProductsTab({
                                     </Link>
                                 </Td>
                                 <Td className="text-left truncate" style={{ width: widths.status }}>
-                                    <StatusBadge status={product.status || ''} />
+                                    {product.status
+                                        ? <StatusBadge status={product.status} variant="compact" />
+                                        : <span className="text-gray-400">-</span>}
                                 </Td>
                                 <Td className="text-left truncate" style={{ width: widths.productName }} title={product.productName || ''}>
                                     {product.productId ? (
@@ -141,17 +144,3 @@ export default function ProductsTab({
     );
 }
 
-function StatusBadge({ status }: { status: string }) {
-    if (!status) return <span className="text-gray-400">-</span>;
-    const colorMap: Record<string, string> = {
-        'Active': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-        'Inactive': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-        'Draft': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-    };
-    const color = colorMap[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
-    return (
-        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${color}`}>
-            {status}
-        </span>
-    );
-}
