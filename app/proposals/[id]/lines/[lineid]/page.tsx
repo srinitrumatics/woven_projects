@@ -58,7 +58,7 @@ interface ProposalProductItem {
     Sales_Tax_Rate__c?: number;
     Site_Name?: string;
     Inventory_Account_Name?: string;
-    Status_c: string;
+    Status__c: string;
 }
 
 // Interface for mapped product data
@@ -452,7 +452,7 @@ export default function ProposalProductDetailPage({
                         unitCost: item.Unit_Cost__c != null ? `$${item.Unit_Cost__c.toFixed(2)}` : "Hide",
                         totalCost: item.Total_Cost__c != null ? `$${item.Total_Cost__c.toFixed(2)}` : "Hide",
                         moq: item.MOQ__c || 1,
-                        status: item.Status_c || "",
+                        status: item.Status__c || "Draft",
 
                         taxDetail: {
                             id: item.Id,

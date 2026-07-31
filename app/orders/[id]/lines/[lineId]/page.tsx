@@ -62,6 +62,7 @@ interface OrderLineItem {
   VAT_Rate__c?: number;
   Total_VAT_Amount__c?: number;
   Total_Taxes_Amount__c?: number;
+  Status__c?: string;
 }
 
 // Interface for mapped product data
@@ -91,6 +92,7 @@ interface ProductData {
   unitCost: string;
   totalCost: string;
   orderLineNotes: string;
+  status: string;
   // Tax Fields
   Sales_Tax_Rate__c?: number;
   Sales_Tax_Amount__c?: number;
@@ -202,6 +204,7 @@ export default function OrderLineDetailPage({
               unitCost: item.Unit_Cost__c != null ? `$${item.Unit_Cost__c.toFixed(2)}` : "Hide",
               totalCost: item.Total_Cost__c != null ? `$${item.Total_Cost__c.toFixed(2)}` : "Hide",
               orderLineNotes: item.Customer_Order_Line_Notes__c || "",
+              status: item.Status__c || "Draft",
               // Map Tax Fields
               Sales_Tax_Rate__c: item.Sales_Tax_Rate__c,
               Sales_Tax_Amount__c: item.Sales_Tax_Amount__c,
@@ -384,6 +387,7 @@ export default function OrderLineDetailPage({
         lineNumber={lineNumber}
         totalLines={totalLines}
         orderStatus={orderStatus}
+        lineStatus={product.status}
         isEditing={isEditing}
         isSubmitting={isSubmitting}
         onEditToggle={() => {
