@@ -629,7 +629,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                                 <Td className={`${tdBoldClass} ${stickyTdClass}`}>
 
                                                     {canLinkShipments && sm.Id ? (
-                                                        <Link href={`/shipments/${sm.Id}`} className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/shipments/${sm.Id}`} className="text-primary hover:underline" onClick={(e) => e.stopPropagation()} target="_blank">
                                                             {sm.Name || "—"}
                                                         </Link>
                                                     ) : (sm.Name || "—")}
@@ -725,7 +725,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                             <Tr key={inv.Id} className="group transition-colors">
                                                 <Td className={`${tdBoldClass} ${stickyTdClass}`}>
                                                     {canLinkInvoices && inv.Id ? (
-                                                        <Link href={`/invoices/${inv.Id}`} className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/invoices/${inv.Id}`} target="_blank" className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
                                                             {inv.Name || "—"}
                                                         </Link>
                                                     ) : (inv.Name || "—")}
