@@ -10,6 +10,7 @@ import ProductInformationCard from "./components/ProductInformationCard";
 import MetricsTable from "./components/MetricsTable";
 import BottomTabs from "./components/BottomTabs";
 import { useUserSession } from "@/components/UserSessionContext";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 // Interface for shipping manifest line item from Salesforce
 interface ManifestLineItem {
@@ -200,9 +201,7 @@ export default function ShipmentLineDetailPage({
                     <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded truncate">
                         (Line {lineNumber} of {totalLines})
                     </span>
-                    <div className="flex items-center justify-center bg-[#E5F1E5] text-[#2E7A2E] text-sm font-semibold rounded" style={{ padding: '0.125rem 0.5rem' }}>
-                        {product.Status__c || "Draft"}
-                    </div>
+                    <StatusBadge status={product.Status__c || "Draft"} variant="compact" />
                 </div>
             </div>
 
