@@ -239,15 +239,15 @@ export default function InvoiceLineDetailPage({
                             </svg>
                             Back to Invoice
                         </button>
-                        {product.status && (
-                            <StatusBadge status={product.status} />
-                        )}
                     </div>
                 </div>
                 <div className="flex items-center gap-2 mt-1 min-w-0">
                     <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded truncate">
                         Line {lineNumber} of {totalLines}
                     </span>
+                    {product.status && (
+                        <StatusBadge status={product.status} />
+                    )}
                 </div>
             </div>
 

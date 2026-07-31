@@ -193,9 +193,6 @@ export default function ShipmentLineDetailPage({
                             </svg>
                             Back to Shipment
                         </button>
-                        <div className="flex items-center pt-6 justify-center bg-[#E5F1E5] text-[#2E7A2E] text-sm font-semibold rounded" style={{ padding: '0.125rem 0.5rem', marginTop: '6px' }}>
-                            {product.Status__c || "Draft"}
-                        </div>
                     </div>
 
                 </div>
@@ -203,6 +200,9 @@ export default function ShipmentLineDetailPage({
                     <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded truncate">
                         (Line {lineNumber} of {totalLines})
                     </span>
+                    <div className="flex items-center justify-center bg-[#E5F1E5] text-[#2E7A2E] text-sm font-semibold rounded" style={{ padding: '0.125rem 0.5rem' }}>
+                        {product.Status__c || "Draft"}
+                    </div>
                 </div>
             </div>
 
