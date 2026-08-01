@@ -265,9 +265,9 @@ export default function QuoteLineFulfillmentsTab({
     }
 
     return (
-        <div className="flex flex-col h-full py-4 min-w-0">
+        <div className="flex flex-col h-full min-w-0">
             {/* Sub Tabs */}
-            <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 mb-6">
+            <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 mb-3">
                 {[
                     { key: "Orders", label: "Sales Orders Lines", count: soliData.length },
                     { key: "Manifests", label: "Shipping Manifests Lines", count: smliData.length },

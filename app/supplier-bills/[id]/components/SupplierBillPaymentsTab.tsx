@@ -73,7 +73,7 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
             <div className="flex gap-4 border-b border-gray-100 dark:border-gray-700 pb-2">
                 <button
                     onClick={() => setSubTab('bill-payments')}
-                    className={`text-sm font-bold pb-1 transition-all border-b-2 truncate max-w-[150px] ${subTab === 'bill-payments'
+                    className={`text-sm font-bold pb-1 transition-all border-b-2 no-wrap  ${subTab === 'bill-payments'
                         ? "text-primary border-primary"
                         : "text-gray-400 border-transparent hover:text-gray-600"
                         }`}
@@ -83,7 +83,7 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                 </button>
                 <button
                     onClick={() => setSubTab('applied-debits')}
-                    className={`text-sm font-bold pb-1 transition-all border-b-2 truncate max-w-[150px] ${subTab === 'applied-debits'
+                    className={`text-sm font-bold pb-1 transition-all border-b-2 no-wrap ${subTab === 'applied-debits'
                         ? "text-primary border-primary"
                         : "text-gray-400 border-transparent hover:text-gray-600"
                         }`}
@@ -97,7 +97,7 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
             <div className="mt-2">
                 {subTab === 'bill-payments' && (
                     billPayments.length === 0 ? (
-        <TableEmptyState
+                        <TableEmptyState
                             message="No Bill Payments Recorded"
                             description="There are no bill payments associated with this supplier bill."
                         />
@@ -154,7 +154,7 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                 )}
                 {subTab === 'applied-debits' && (
                     appliedDebits.length === 0 ? (
-        <TableEmptyState
+                        <TableEmptyState
                             message="No Applied Debit Memos"
                             description="There are no applied debit memos associated with this supplier bill."
                         />

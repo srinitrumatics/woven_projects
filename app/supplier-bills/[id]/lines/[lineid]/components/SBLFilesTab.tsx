@@ -250,7 +250,7 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
                 </Table>
             </div>
 
-            <div className="mt-4 px-3 py-2 border-t border-gray-200 dark:border-gray-700 text-left">
+            <div className="mt-4 px-3 py-2 text-left">
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}

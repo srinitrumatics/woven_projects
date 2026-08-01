@@ -285,7 +285,7 @@ export default function ShipmentFilesTab({ shipmentId, accountId, contactId, isE
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-            <div className="flex justify-between items-center mb-4 min-w-0">
+            <div className="flex justify-between items-center mb-2 min-w-0">
                 <div></div>
                 <div className="flex gap-2">
                     {selectedFileIds.size > 0 && (
