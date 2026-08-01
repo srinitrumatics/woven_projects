@@ -291,6 +291,7 @@ export interface CustomerQuote {
     proposalId?: string;
     proposalName?: string;
     proposalNumber?: string;
+    Proposal_Number__c?: string;
 }
 
 export interface PurchaseOrder {

@@ -1,4 +1,5 @@
 import { QuoteStatus } from "@/app/quotes/types";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface QuoteHeaderProps {
     quoteNumber: string;
@@ -32,14 +33,7 @@ export default function QuoteHeader({ quoteNumber, status, description }: QuoteH
                         </div>
                     </div>
                     <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end min-w-0">
-                        <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full mt-2 ${status === 'Draft' ? 'bg-blue-200 text-blue-900 dark:bg-blue-900 dark:text-blue-400' :
-                            status === 'Pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                                status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                                    status === 'Rejected' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
-                                        'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                            }`}>
-                            {status}
-                        </span>
+                        <StatusBadge status={status} variant="pill" />
                     </div>
                 </div>
             </div>

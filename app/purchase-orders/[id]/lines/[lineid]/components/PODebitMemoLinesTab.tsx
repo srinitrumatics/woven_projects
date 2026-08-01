@@ -9,6 +9,7 @@ import { formatDate, formatCurrency, displayCell } from "@/lib/utils/formatting"
 import Link from 'next/link';
 import { useUserSession } from "@/components/UserSessionContext";
 import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface DebitMemoLine {
     Id: string;
@@ -77,33 +78,6 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
 
     const totalPages = Math.ceil(lines.length / ITEMS_PER_PAGE);
 
-    const StatusBadge = ({ status }: { status: string }) => {
-        const getStyles = () => {
-            switch (status) {
-                case "Approved":
-                case "Paid":
-                case "Awarded":
-                case "Completed":
-                    return "bg-green-100/80 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50";
-                case "Pending":
-                    return "bg-yellow-100/80 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800/50";
-                case "Draft":
-                    return "bg-blue-100/80 text-blue-600 border-blue-200 dark:bg-blue-700 dark:text-blue-300 dark:border-blue-600/50";
-                case "Cancelled":
-                case "Closed":
-                    return "bg-red-100/80 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50";
-                default:
-                    return "bg-gray-100/80 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800/50";
-            }
-        };
-
-        return (
-            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${getStyles()}`} title={status || '-'}>
-                {status || '-'}
-            </span>
-        );
-    };
-
     if (lines.length === 0) {
         return (
             <TableEmptyState message="No Debit Memo lines found" description="There are no debit memo lines associated with this record." />
@@ -137,7 +111,7 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                                 <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={line.Name}>
                                     {line.Name}
                                 </Td>
-                                <Td className="truncate"><StatusBadge status={line.Status__c} /></Td>
+                                <Td className="truncate"><StatusBadge status={line.Status__c || '-'} variant="bordered" /></Td>
                                 <Td className="truncate" title={line.Debit_Memo_Name || '-'}>
                                     {displayCell(line.Debit_Memo_Name)}
                                 </Td>

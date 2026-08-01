@@ -29,6 +29,8 @@ export function StatusBadge({ status, variant = 'bordered' }: { status: string; 
             case "partial shipment":
             case "pending review":
             case "picked":
+            case "submitted":
+            case "pending shipment":
                 return "bg-yellow-100/80 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800/50";
             case "draft":
             case "in stock":
@@ -39,7 +41,7 @@ export function StatusBadge({ status, variant = 'bordered' }: { status: string; 
             case "inprogress":
             case "open":
             case "out for delivery":
-            case "submitted":
+            case "new":
                 return "bg-blue-100/80 text-blue-600 border-blue-200 dark:bg-blue-700 dark:text-blue-300 dark:border-blue-600/50";
             case "cancelled":
             case "closed":
@@ -55,6 +57,7 @@ export function StatusBadge({ status, variant = 'bordered' }: { status: string; 
                 return "bg-red-100/80 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50";
             case "conditional":
             case "expired":
+            case "on hold":
                 return "bg-orange-100/80 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800/50";
             case "sent":
             case "under review":

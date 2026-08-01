@@ -7,6 +7,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
 import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -85,9 +86,7 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                     {displayCell(cm.name)}
                                 </Td>
                                 <Td className="truncate">
-                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${cm.status === 'Posted' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
-                                        {cm.status}
-                                    </span>
+                                    <StatusBadge status={cm.status} variant="compact" />
                                 </Td>
                                 <Td className="truncate">
                                     {displayCell(cm.invoiceName)}

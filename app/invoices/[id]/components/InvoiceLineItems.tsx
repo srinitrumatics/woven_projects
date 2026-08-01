@@ -7,6 +7,7 @@ import { useSortableData } from "../../../../hooks/useSortableData";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -94,12 +95,7 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                                     )}
                                 </Td>
                                 <Td className="text-left truncate">
-                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${line.status === 'Paid' || line.status === 'Settled' || line.status === 'Approved'
-                                        ? 'bg-green-100 text-green-800'
-                                        : 'bg-blue-100 text-blue-800'
-                                        }`}>
-                                        {line.status}
-                                    </span>
+                                    <StatusBadge status={line.status} variant="compact" />
                                 </Td>
                                 <Td className="text-left truncate">
                                     {invoiceId ? (

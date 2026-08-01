@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface POHeaderProps {
     poNumber: string;
@@ -37,14 +38,7 @@ export default function POHeader({ poNumber, status, supplierName, onBack }: POH
                     </div>
 
                     <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end min-w-0">
-                        <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold truncate ${status === 'Draft' ? 'bg-blue-100 text-blue-800 dark:bg-blue-700 dark:text-blue-300' :
-                            status === 'Issued' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                                status === 'Acknowledged' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
-                                    status === 'Received' || status === 'Awarded' || status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                                        'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
-                            }`} title={status}>
-                            {status}
-                        </span>
+                        <StatusBadge status={status} variant="bordered" />
                     </div>
                 </div>
             </div>

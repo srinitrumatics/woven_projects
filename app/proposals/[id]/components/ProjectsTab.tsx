@@ -4,6 +4,7 @@ import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import Pagination from "../../../../components/ui/Pagination";
 import { displayCell } from "@/lib/utils/formatting";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -68,14 +69,7 @@ export default function ProjectsTab({ projects, loading, sortField, sortDirectio
                                         {displayCell(project.projectNumber)}
                                     </Td>
                                     <Td className="truncate">
-                                        <span className={`inline-block px-2 py-0.5 text-xs font-bold rounded-full ${project.status === 'New' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' :
-                                            project.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                                                project.status === 'Completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                                                    project.status === 'On Hold' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' :
-                                                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                            }`}>
-                                            {project.status}
-                                        </span>
+                                        <StatusBadge status={project.status} variant="bordered" />
                                     </Td>
                                     <Td className="truncate" title={project.name}>{displayCell(project.name)}</Td>
                                     <Td className="truncate" title={project.customerAccountName}>{displayCell(project.customerAccountName)}</Td>

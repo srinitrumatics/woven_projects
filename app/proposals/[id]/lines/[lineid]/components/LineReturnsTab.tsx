@@ -8,6 +8,7 @@ import { useResizableColumns } from "../../../../../../hooks/useResizableColumns
 import Pagination from "../../../../../../components/ui/Pagination";
 import { useUserSession } from "@/components/UserSessionContext";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -220,12 +221,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                     <div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate" title={rma.name}>{displayCell(rma.name)}</div>
                                                 </Td>
                                                 <Td className="text-left truncate">
-                                                    <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${rma.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
-                                                        rma.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                                                            'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                                        }`}>
-                                                        {rma.status}
-                                                    </span>
+                                                    <StatusBadge status={rma.status} variant="compact" />
                                                 </Td>
                                                 <Td className="text-left truncate">
                                                     <div className="text-sm truncate" title={rma.rmaName}>{displayCell(rma.rmaName)}</div>
@@ -303,11 +299,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                 <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate" title={rtv.name}>
                                                     <div className="text-sm font-medium font-medium text-gray-900 dark:text-white truncate">{displayCell(rtv.name)}</div></Td>
                                                 <Td className="truncate">
-                                                    <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${rtv.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
-                                                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                                        }`}>
-                                                        {rtv.status}
-                                                    </span>
+                                                    <StatusBadge status={rtv.status} variant="compact" />
                                                 </Td>
                                                 <Td className="truncate" title={rtv.rtvName}><div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(rtv.rtvName)}</div></Td>
                                                 <Td className="truncate" title={rtv.purchaseOrderLineName}><div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(rtv.purchaseOrderLineName)}</div></Td>
@@ -371,11 +363,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             <Tr key={item.id} className="transition-colors">
                                                 <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate">{displayCell(credit.name)}</Td>
                                                 <Td className="truncate">
-                                                    <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${credit.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
-                                                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                                        }`}>
-                                                        {credit.status}
-                                                    </span>
+                                                    <StatusBadge status={credit.status} variant="compact" />
                                                 </Td>
                                                 <Td className="truncate">{displayCell(credit.creditMemoName)}</Td>
                                                 <Td className="truncate">{displayCell(credit.salesOrderLineName)}</Td>
@@ -447,11 +435,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                             <Tr key={item.id} className="transition-colors">
                                                 <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate">{displayCell(debit.name)}</Td>
                                                 <Td className="truncate">
-                                                    <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${debit.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
-                                                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                                        }`}>
-                                                        {debit.status}
-                                                    </span>
+                                                    <StatusBadge status={debit.status} variant="compact" />
                                                 </Td>
                                                 <Td className="truncate">{displayCell(debit.debitMemoName)}</Td>
                                                 <Td className="truncate">{displayCell(debit.supplierBillLineName)}</Td>
@@ -505,12 +489,7 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                                                 <Tr key={item.id} className="transition-colors">
                                                     <Td className="font-medium truncate">{displayCell(item.name)}</Td>
                                                     <Td className="text-left truncate">
-                                                        <span className={`inline-block px-2 py-1 text-sm font-medium rounded ${item.status === 'Draft' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
-                                                            item.status === 'Approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
-                                                                'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                                            }`}>
-                                                            {item.status}
-                                                        </span>
+                                                        <StatusBadge status={item.status} variant="compact" />
                                                     </Td>
                                                     <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(r.requestDate)}</Td>
                                                     <Td className="font-semibold truncate">

@@ -10,6 +10,7 @@ import { useSortableData } from "../../../../hooks/useSortableData";
 import { useResizableColumns } from "../../../../hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -58,6 +59,7 @@ interface RMA {
     Logistics_Partner_Name: string;
     Logistics_Contact_Name: string;
     Goods_Receipt_Date__c: string;
+    Proposal_Number__c: string;
 }
 
 interface CreditMemo {
@@ -222,23 +224,6 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
         return <TableLoadingState />;
     }
 
-    const statusBadge = (status: string) => {
-        const s = (status || "").toLowerCase();
-        const color =
-            s === "approved" || s === "completed"
-                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                : s === "pending" || s === "submitted" || s === "draft"
-                    ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
-                    : s === "rejected" || s === "cancelled" || s === "canceled"
-                        ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
-                        : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300";
-        return (
-            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${color}`}>
-                {status || "—"}
-            </span>
-        );
-    };
-
     const emptyState = (label: string) => (
         <TableEmptyState message="No records found" description={`There are no ${label} associated with this order.`} />
     );
@@ -287,7 +272,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                         <SortableHeader label="Type" field="RMA_Type__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaType || 120} onResize={handleResize} />
                                         <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaSalesOrder || 150} onResize={handleResize} />
                                         <SortableHeader label="Customer Quote #" field="Customer_Quote_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaCustomerQuote || 170} onResize={handleResize} />
-                                        <SortableHeader label="Proposal #" field="Proposal_Number__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaProposalNum || 140} onResize={handleResize} />
+                                        <SortableHeader label="Proposal#" field="Proposal_Number__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaProposalNum || 140} onResize={handleResize} />
                                         <SortableHeader label="Proposal Name" field="Proposal_Name__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaProposalName || 160} onResize={handleResize} />
                                         <SortableHeader label="Ship from Account" field="Ship_from_Account_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaShipFromAccount || 160} onResize={handleResize} />
                                         <SortableHeader label="Ship from Contact" field="Ship_from_Contact_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaShipFromContact || 160} onResize={handleResize} />
@@ -312,7 +297,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                     {pagedRmaList.map((rma) => (
                                         <Tr key={rma.Id} className="group transition-colors">
                                             <Td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(rma.Name)}</Td>
-                                            <Td>{statusBadge(rma.Status__c)}</Td>
+                                            <Td><StatusBadge status={rma.Status__c || "—"} variant="compact" /></Td>
                                             <Td className={tdClass}>{displayCell(rma.RMA_Type__c)}</Td>
                                             <Td className={tdClass}>{displayCell(rma.Sales_Order_Name)}</Td>
                                             <Td className={tdClass}>
@@ -325,9 +310,9 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                             <Td className={tdClass}>
                                                 {canLinkProposals && rma.Proposal__c ? (
                                                     <Link href={`/proposals/${rma.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} title={displayCell(rma.Proposal_Name)}>
-                                                        {rma.Proposal_Name || "—"}
+                                                        {rma.Proposal_Number__c || "—"}
                                                     </Link>
-                                                ) : (rma.Proposal_Name || "—")}
+                                                ) : (rma.Proposal_Number__c || "—")}
                                             </Td>
                                             <Td title={displayCell(rma.Proposal_Name)} className={tdClass}>{displayCell(rma.Proposal_Name)}</Td>
                                             <Td className={tdClass}>{displayCell(rma.Ship_from_Account_Name)}</Td>
@@ -393,7 +378,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                     {pagedCreditMemos.map((cm) => (
                                         <Tr key={cm.Id} className="group transition-colors">
                                             <Td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(cm.Name)}</Td>
-                                            <Td>{statusBadge(cm.Status__c)}</Td>
+                                            <Td><StatusBadge status={cm.Status__c || "—"} variant="compact" /></Td>
                                             <Td className={tdClass}>{displayCell(cm.Invoice_Name)}</Td>
                                             <Td className={tdClass}>{displayCell(cm.Sales_Order_Name)}</Td>
                                             <Td className={tdClass}>
@@ -406,9 +391,9 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                             <Td className={tdClass}>
                                                 {canLinkProposals && cm.Proposal__c ? (
                                                     <Link href={`/proposals/${cm.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                                                        {cm.Proposal_Name || "—"}
+                                                        {cm.Proposal_Number__c || "—"}
                                                     </Link>
-                                                ) : (cm.Proposal_Name || "—")}
+                                                ) : (cm.Proposal_Number__c || "—")}
                                             </Td>
                                             <Td className={tdClass}>{displayCell(cm.Proposal_Name)}</Td>
                                             <Td className={tdClass}>{formatNumber(cm.Total_Lines__c)}</Td>
@@ -461,7 +446,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                     {pagedDebitMemos.map((dm) => (
                                         <Tr key={dm.Id} className="group transition-colors">
                                             <Td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(dm.Name)}</Td>
-                                            <Td>{statusBadge(dm.Status__c)}</Td>
+                                            <Td><StatusBadge status={dm.Status__c || "—"} variant="compact" /></Td>
                                             <Td className={tdClass}>{formatDate(dm.Issued_Date__c, "numeric-dash") || "—"}</Td>
                                             <Td className={tdClass}>{formatDate(dm.Settled_Date__c, "numeric-dash") || "—"}</Td>
                                             <Td className={tdClass}>{displayCell(dm.Debit_to_Account_Name)}</Td>
@@ -517,7 +502,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                     {pagedRtvList.map((rtv) => (
                                         <Tr key={rtv.Id} className="group transition-colors">
                                             <Td className={`${tdBoldClass} ${stickyTdClass}`}>{displayCell(rtv.Name)}</Td>
-                                            <Td>{statusBadge(rtv.Status__c)}</Td>
+                                            <Td><StatusBadge status={rtv.Status__c || "—"} variant="compact" /></Td>
                                             <Td className={tdClass}>{displayCell(rtv.RTV_Type__c)}</Td>
                                             <Td className={tdClass}>{formatDate(rtv.Issued_Date__c, "numeric-dash") || "—"}</Td>
                                             <Td className={tdClass}>{formatDate(rtv.Return_by_Date__c, "numeric-dash") || "—"}</Td>
