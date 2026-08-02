@@ -152,10 +152,7 @@ export default function QuoteShippingManifestsSubTab({
                                         <Td className="truncate" style={{ width: widths.shipConfirmedDate }}>{formatDate(manifest.shipConfirmedDate, 'numeric-dash')}</Td>
                                         <Td className="truncate" style={{ width: widths.trackingNumber }}>{displayCell(manifest.trackingNumber)}</Td>
                                         <Td className="truncate" style={{ width: widths.trackingStatus }}>
-                                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${manifest.trackingStatus === 'Delivered' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                                                }`}>
-                                                {manifest.trackingStatus}
-                                            </span>
+                                            {manifest.trackingStatus ? <StatusBadge status={manifest.trackingStatus} variant="compact" /> : "—"}
                                         </Td>
                                         <Td className="truncate" style={{ width: widths.estimatedDeliveryDate }}>{formatDate(manifest.estimatedDeliveryDate, 'numeric-dash')}</Td>
                                         <Td className="truncate" style={{ width: widths.actualDeliveryDate }}>{formatDate(manifest.actualDeliveryDate, 'numeric-dash')}</Td>

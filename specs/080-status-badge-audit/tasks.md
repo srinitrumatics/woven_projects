@@ -181,3 +181,14 @@ Task: "Delete dead getStatusColor in app/proposals/[id]/components/ProposalDetai
 - [P] tasks = different files, no dependencies.
 - Commit after each task or logical group, per this repo's established practice of asking before committing anything (see project memory).
 - Do not commit/push to the four sibling deployment folders without explicit user confirmation — `-prod` is a live production deployment.
+
+---
+
+## Post-Completion Re-Verification (2026-08-02)
+
+A follow-up request ("all datatables status and all status should come from one file `components/ui/statusbadge.tsx`") prompted a fresh, independent re-audit of this feature's "closed inventory" claim rather than assuming it still held.
+
+- **T034 [Gap found + fixed]** `app/quotes/[id]/components/QuoteShippingManifestsSubTab.tsx` — the `status` column was correctly migrated in the original `076`/`079` consolidation, but the adjacent `trackingStatus` column (line 154) was missed: it still rendered via a local inline ternary (`manifest.trackingStatus === 'Delivered' ? green : gray`) duplicating the shared component's generic vocabulary, instead of importing `StatusBadge` (which the file already imports and uses for `status`). This is the only place across all of `app/quotes/**` that colors `trackingStatus` at all — every sibling quote sub-tab (`QuoteRMASubTab`, `QuotePurchasesSubTab`, `QuoteLinePurchaseOrderLinesSubTab`, `QuoteLinePurchasesTab`) renders it as plain text via `displayCell()`. Fixed by replacing the inline span with `<StatusBadge status={manifest.trackingStatus} variant="compact" />` (guarded for empty string, matching `FulfillmentTab.tsx`'s `Tracking_Status__c` precedent). "Delivered" still resolves to green (shared component's `"delivered"` case); all other values fall to the same gray default as before — zero color regression, `npx tsc --noEmit` clean.
+- Re-confirmed all 14 originally-migrated files (`FulfillmentTab.tsx`, `ReturnsTab.tsx`, `ProposalHeader.tsx`, `ProjectsTab.tsx`, `LineReturnsTab.tsx`, `POHeader.tsx`, `PODebitMemoLinesTab.tsx`, `POSupplierBillLinesTable.tsx`, `PORtvLinesTab.tsx`, `QuoteHeader.tsx`, `InvoiceCredits.tsx`, `InvoiceLineItems.tsx`, `ShipmentHeader.tsx`, `supplier-bills/page.tsx`) still import the shared component with zero local duplicate logic — no regressions.
+- Re-confirmed `app/invoices/page.tsx`'s `CollectionStatusBadge` and `app/invoices/[id]/components/InvoicePayments.tsx`'s payment-status coloring remain genuinely distinct payment/collection vocabularies (Paid/Pending/Past Due; paid/posted/failed/processing) — correctly out of scope, not a missed gap.
+- **Updated inventory total**: 15 files migrated (was 14) + 1 dead-code deletion. `SC-001`/`SC-004` now hold against the corrected total.
