@@ -5,6 +5,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface SMLI {
     id: string;
@@ -112,9 +113,7 @@ export default function QuoteLineShippingManifestLinesSubTab({
                                             ) : displayCell(item.lineName)}
                                         </Td>
                                         <Td className="truncate" style={{ width: widths.status }}>
-                                            <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                                                {item.status}
-                                            </span>
+                                            <StatusBadge status={item.status} />
                                         </Td>
                                         <Td className="truncate" style={{ width: widths.manifestName }}>
                                             {item.manifestId ? (

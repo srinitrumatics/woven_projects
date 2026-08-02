@@ -4,6 +4,7 @@ import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface DebitMemoLine {
     id: string;
@@ -99,9 +100,7 @@ export default function QuoteLineDebitMemoLinesSubTab({
                                 <Tr key={item.id} className="border-b border-gray-200 dark:border-gray-700">
                                     <Td className="sticky left-0 bg-white dark:bg-gray-800 font-bold truncate" style={{ width: widths.lineName }}>{displayCell(item.lineName)}</Td>
                                     <Td className="truncate" style={{ width: widths.status }}>
-                                        <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                                            {item.status}
-                                        </span>
+                                        <StatusBadge status={item.status} />
                                     </Td>
                                     <Td className="truncate" style={{ width: widths.debitMemoName }}>
                                         {displayCell(item.debitMemoName)}

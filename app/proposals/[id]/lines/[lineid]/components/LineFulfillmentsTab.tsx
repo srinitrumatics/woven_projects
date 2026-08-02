@@ -7,6 +7,7 @@ import { useSortableData } from "../../../../../../hooks/useSortableData";
 import { useResizableColumns } from "../../../../../../hooks/useResizableColumns";
 import Pagination from "../../../../../../components/ui/Pagination";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -206,9 +207,7 @@ export default function LineFulfillmentsTab({
                                                     ) : displayCell(quote.name)}
                                                 </Td>
                                                 <Td className="truncate">
-                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
-                                                        {quote.status}
-                                                    </span>
+                                                    <StatusBadge status={quote.status} variant="compact" />
                                                 </Td>
                                                 <Td className="truncate">
                                                     {quote.customerQuoteName && quote.customerQuoteId ? (
@@ -308,9 +307,7 @@ export default function LineFulfillmentsTab({
                                             <Tr key={order.id}>
                                                 <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate">{displayCell(order.name)}</Td>
                                                 <Td className="truncate">
-                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 truncate">
-                                                        {order.status}
-                                                    </span>
+                                                    <StatusBadge status={order.status} variant="compact" />
                                                 </Td>
                                                 <Td className="truncate">
                                                     {order.salesOrderName && order.salesOrderId ? (
@@ -418,9 +415,7 @@ export default function LineFulfillmentsTab({
                                                     ) : <div className="truncate" title={invoice.name}>{displayCell(invoice.name)}</div>}
                                                 </Td>
                                                 <Td className="text-left truncate">
-                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
-                                                        {invoice.status}
-                                                    </span>
+                                                    <StatusBadge status={invoice.status} variant="compact" />
                                                 </Td>
                                                 <Td className="truncate">
 
@@ -556,9 +551,7 @@ export default function LineFulfillmentsTab({
                                                     ) : <div className="text-sm font-medium  text-gray-900 dark:text-white truncate">{displayCell(manifest.name)}</div>}
                                                 </Td>
                                                 <Td className="truncate">
-                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
-                                                        {manifest.status}
-                                                    </span>
+                                                    <StatusBadge status={manifest.status} variant="compact" />
                                                 </Td>
                                                 <Td className="truncate" title={manifest.shippingManifestName}>
                                                     <div className="text-sm text-gray-900 dark:text-white truncate">

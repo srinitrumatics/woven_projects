@@ -7,6 +7,7 @@ import { useSortableData } from "../../../../../../hooks/useSortableData";
 import { useResizableColumns } from "../../../../../../hooks/useResizableColumns";
 import Pagination from "../../../../../../components/ui/Pagination";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -162,9 +163,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                             <Tr key={p.id}>
                                                 <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate" title={p.name}><div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={p.name}>{displayCell(p.name)}</div></Td>
                                                 <Td className="truncate">
-                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
-                                                        {p.status}
-                                                    </span>
+                                                    <StatusBadge status={p.status} variant="compact" />
                                                 </Td>
                                                 <Td className="truncate">
                                                     {p.purchaseOrderName && p.purchaseOrderId ? (
@@ -253,9 +252,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                                     <div className="text-sm truncate" title={b.name}>{displayCell(b.name)}</div>
                                                 </Td>
                                                 <Td className="truncate">
-                                                    <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
-                                                        {b.status}
-                                                    </span>
+                                                    <StatusBadge status={b.status} variant="compact" />
                                                 </Td>
                                                 <Td className="truncate">
                                                     {b.supplierBillName && b.supplierBillId ? (

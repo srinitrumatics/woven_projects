@@ -8,6 +8,7 @@ import { formatCurrency, formatNumber, displayCell } from "@/lib/utils/formattin
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -160,9 +161,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                                 {/* Sticky column — z-10, inherits row bg */}
                                 <Td className="text-left sticky left-0 bg-white dark:bg-gray-800 truncate">{displayCell(item.lineName)}</Td>
                                 <Td className="truncate">
-                                    <span className="inline-block px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 truncate">
-                                        {item.status}
-                                    </span>
+                                    <StatusBadge status={item.status} variant="pill" />
                                 </Td>
                                 <Td className="truncate">{displayCell(item.creditMemoName)}</Td>
                                 <Td className="truncate">{displayCell(item.salesOrderLine)}</Td>
