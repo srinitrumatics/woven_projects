@@ -45,7 +45,7 @@ interface Invoice {
     Collection_Status__c: string;
     Customer_Order_Name: string;
     Customer_Quote_Name: string;
-    Customer_Quote_Id__c: string;
+    Customer_Quote__c: string;
     Sales_Order_Name: string;
     Bill_to_Account_Name: string;
     Authorized_Bill_To_Location_Name: string;
@@ -344,7 +344,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                             <Table className="table-fixed text-sm">
                                 <THead>
                                     <tr>
-                                        <SortableHeader label="Proposal#" field="Proposal_Number__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propNum || 160} onResize={handleResize} className={stickyThClass} />
+                                        <SortableHeader label="Proposal #" field="Proposal_Number__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propNum || 160} onResize={handleResize} className={stickyThClass} />
                                         <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propStatus || 120} onResize={handleResize} />
                                         <SortableHeader label="Proposal Name" field="Name" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propProposalName || 160} onResize={handleResize} />
                                         <SortableHeader label="Bill to Account" field="Bill_to_Account_Name" sortConfig={sortConfigProposals} requestSort={requestSortProposals} width={widths.propBillToAccount || 150} onResize={handleResize} />
@@ -418,7 +418,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                     <tr>
                                         <SortableHeader label="Customer Quote" field="Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqName || 180} onResize={handleResize} className={stickyThClass} />
                                         <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqStatus || 120} onResize={handleResize} />
-                                        <SortableHeader label="Proposal#" field="Proposal_Number__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqProposalNum || 140} onResize={handleResize} />
+                                        <SortableHeader label="Proposal #" field="Proposal_Number__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqProposalNum || 140} onResize={handleResize} />
                                         <SortableHeader label="Proposal Name" field="Proposal_Name__c" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqProposalName || 160} onResize={handleResize} />
                                         <SortableHeader label="Bill to Account" field="Bill_to_Account_Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqBillToAccount || 150} onResize={handleResize} />
                                         <SortableHeader label="Bill to Location" field="Bill_to_Location_Name" sortConfig={sortConfigCustomerQuotes} requestSort={requestSortCustomerQuotes} width={widths.cqBillToLocation || 150} onResize={handleResize} />
@@ -503,7 +503,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                         <SortableHeader label="Sales Order" field="Name" sortConfig={sortConfigSalesOrders} requestSort={requestSortSalesOrders} width={widths.soName || 160} onResize={handleResize} className={stickyThClass} />
                                         <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigSalesOrders} requestSort={requestSortSalesOrders} width={widths.soStatus || 120} onResize={handleResize} />
                                         <SortableHeader label="Customer Quote" field="Customer_Quote_Name" sortConfig={sortConfigSalesOrders} requestSort={requestSortSalesOrders} width={widths.soCustomerQuote || 170} onResize={handleResize} />
-                                        <SortableHeader label="Proposal#" field="Proposal_Number__c" sortConfig={sortConfigSalesOrders} requestSort={requestSortSalesOrders} width={widths.soProposalNum || 140} onResize={handleResize} />
+                                        <SortableHeader label="Proposal #" field="Proposal_Number__c" sortConfig={sortConfigSalesOrders} requestSort={requestSortSalesOrders} width={widths.soProposalNum || 140} onResize={handleResize} />
                                         <SortableHeader label="Proposal Name" field="Proposal_Name__c" sortConfig={sortConfigSalesOrders} requestSort={requestSortSalesOrders} width={widths.soProposalName || 160} onResize={handleResize} />
                                         <SortableHeader label="Bill to Account" field="Bill_to_Account_Name" sortConfig={sortConfigSalesOrders} requestSort={requestSortSalesOrders} width={widths.soBillToAccount || 150} onResize={handleResize} />
                                         <SortableHeader label="Bill to Location" field="Bill_to_Location_Name" sortConfig={sortConfigSalesOrders} requestSort={requestSortSalesOrders} width={widths.soBillToLocation || 150} onResize={handleResize} />
@@ -588,7 +588,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                             <SortableHeader label="Status" field="Status__c" sortConfig={sortConfigManifests} requestSort={requestSortManifests} width={widths.smStatus || 120} onResize={handleResize} />
                                             <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfigManifests} requestSort={requestSortManifests} width={widths.smSalesOrder || 150} onResize={handleResize} />
                                             <SortableHeader label="Customer Quote " field="Customer_Quote_Name" sortConfig={sortConfigManifests} requestSort={requestSortManifests} width={widths.smCustomerQuote || 170} onResize={handleResize} />
-                                            <SortableHeader label="Proposal#" field="Proposal_Number__c" sortConfig={sortConfigManifests} requestSort={requestSortManifests} width={widths.smProposalNum || 140} onResize={handleResize} />
+                                            <SortableHeader label="Proposal #" field="Proposal_Number__c" sortConfig={sortConfigManifests} requestSort={requestSortManifests} width={widths.smProposalNum || 140} onResize={handleResize} />
                                             <SortableHeader label="Proposal Name" field="Proposal_Name__c" sortConfig={sortConfigManifests} requestSort={requestSortManifests} width={widths.smProposalName || 160} onResize={handleResize} />
                                             <SortableHeader label="Ship to Account" field="Ship_to_Account_Name" sortConfig={sortConfigManifests} requestSort={requestSortManifests} width={widths.smShipToAccount || 150} onResize={handleResize} />
                                             <SortableHeader label="Ship to Location" field="Ship_to_Location_Name" sortConfig={sortConfigManifests} requestSort={requestSortManifests} width={widths.smShipToLocation || 150} onResize={handleResize} />
@@ -690,7 +690,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                             <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfigInvoices} requestSort={requestSortInvoices} width={widths.invSalesOrder || 150} onResize={handleResize} />
                                             <SortableHeader label="Purchase Order" field="Purchase_Order_Name" sortConfig={sortConfigInvoices} requestSort={requestSortInvoices} width={widths.invPurchaseOrder || 150} onResize={handleResize} />
                                             <SortableHeader label="Customer Quote" field="Customer_Quote_Name" sortConfig={sortConfigInvoices} requestSort={requestSortInvoices} width={widths.invCustomerQuote || 170} onResize={handleResize} />
-                                            <SortableHeader label="Proposal#" field="Proposal_Number__c" sortConfig={sortConfigInvoices} requestSort={requestSortInvoices} width={widths.invProposalNum || 140} onResize={handleResize} />
+                                            <SortableHeader label="Proposal #" field="Proposal_Number__c" sortConfig={sortConfigInvoices} requestSort={requestSortInvoices} width={widths.invProposalNum || 140} onResize={handleResize} />
                                             <SortableHeader label="Proposal Name" field="Proposal_Name__c" sortConfig={sortConfigInvoices} requestSort={requestSortInvoices} width={widths.invProposalName || 160} onResize={handleResize} />
                                             <SortableHeader label="Bill to Account" field="Bill_to_Account_Name" sortConfig={sortConfigInvoices} requestSort={requestSortInvoices} width={widths.invBillToAccount || 150} onResize={handleResize} />
                                             <SortableHeader label="Bill to Location" field="Bill_to_Location_Name" sortConfig={sortConfigInvoices} requestSort={requestSortInvoices} width={widths.invBillToLocation || 150} onResize={handleResize} />
@@ -722,8 +722,8 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                                 <Td className={tdClass}>{displayCell(inv.Sales_Order_Name)}</Td>
                                                 <Td className={tdClass}>{displayCell(inv.Purchase_Order_Name)}</Td>
                                                 <Td className={tdClass}>
-                                                    {canLinkQuotes && inv.Customer_Quote_Id__c ? (
-                                                        <Link href={`/quotes/${inv.Customer_Quote_Id__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    {canLinkQuotes && inv.Customer_Quote__c ? (
+                                                        <Link href={`/quotes/${inv.Customer_Quote__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                             {inv.Customer_Quote_Name || "—"}
                                                         </Link>
                                                     ) : (inv.Customer_Quote_Name || "—")}

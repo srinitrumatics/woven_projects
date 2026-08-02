@@ -75,7 +75,7 @@ interface CreditMemo {
     Total_Shipping_Charges__c: number;
     Customer_Order_Name: string;
     Customer_Quote_Name: string;
-    Customer_Quote_Id__c: string;
+    Customer_Quote__c: string;
     Invoice_Name: string;
     Sales_Order_Name: string;
     Credit_to_Account_Name: string;
@@ -272,7 +272,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                         <SortableHeader label="Type" field="RMA_Type__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaType || 120} onResize={handleResize} />
                                         <SortableHeader label="Sales Order" field="Sales_Order_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaSalesOrder || 150} onResize={handleResize} />
                                         <SortableHeader label="Customer Quote #" field="Customer_Quote_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaCustomerQuote || 170} onResize={handleResize} />
-                                        <SortableHeader label="Proposal#" field="Proposal_Number__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaProposalNum || 140} onResize={handleResize} />
+                                        <SortableHeader label="Proposal #" field="Proposal_Number__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaProposalNum || 140} onResize={handleResize} />
                                         <SortableHeader label="Proposal Name" field="Proposal_Name__c" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaProposalName || 160} onResize={handleResize} />
                                         <SortableHeader label="Ship from Account" field="Ship_from_Account_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaShipFromAccount || 160} onResize={handleResize} />
                                         <SortableHeader label="Ship from Contact" field="Ship_from_Contact_Name" sortConfig={sortConfigRma} requestSort={requestSortRma} width={widths.rmaShipFromContact || 160} onResize={handleResize} />
@@ -382,8 +382,8 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                             <Td className={tdClass}>{displayCell(cm.Invoice_Name)}</Td>
                                             <Td className={tdClass}>{displayCell(cm.Sales_Order_Name)}</Td>
                                             <Td className={tdClass}>
-                                                {canLinkQuotes && cm.Customer_Quote_Id__c ? (
-                                                    <Link href={`/quotes/${cm.Customer_Quote_Id__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                {canLinkQuotes && cm.Customer_Quote__c ? (
+                                                    <Link href={`/quotes/${cm.Customer_Quote__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {cm.Customer_Quote_Name || "—"}
                                                     </Link>
                                                 ) : (cm.Customer_Quote_Name || "—")}
