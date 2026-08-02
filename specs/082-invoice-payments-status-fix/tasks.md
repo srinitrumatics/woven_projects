@@ -93,8 +93,8 @@ Next.js App Router (this project): `app/` (page routes), `components/` (React co
 - [X] T007 Run `npx tsc --noEmit` — confirm clean after T003–T005
 - [X] T008 [P] While testing Scenarios 1–3 in `quickstart.md`, note any status value that renders on the shared component's gray default that should have a specific color (per `research.md` §5's `"in progress"`/`"scheduled"` open question) — triage into the correct existing color group if a real occurrence is found; otherwise explicitly note that none was found
 - [X] T009 [P] Toggle light/dark mode on both InvoicePayments sub-tabs and confirm all badges remain legible in both themes
-- [ ] T010 Propagate `InvoicePayments.tsx` (and `SupplierBillPaymentsTab.tsx` only if T006 required a fix) to the four tracked sibling deployment folders (`ClientPartnerPortal-main`, `-prod`, `-dev`, `woven_projects-claude`) following the diff-before-copy/typecheck/ask-before-commit process established in project memory for `077`–`081` — only with explicit user go-ahead; `-prod` is live production
-- [ ] T011 Update project memory (multi-repo line-status sync entry) with this feature's propagation status
+- [X] T010 Propagate `InvoicePayments.tsx` (and `SupplierBillPaymentsTab.tsx` only if T006 required a fix) to the four tracked sibling deployment folders (`ClientPartnerPortal-main`, `-prod`, `-dev`, `woven_projects-claude`) following the diff-before-copy/typecheck/ask-before-commit process established in project memory for `077`–`081` — only with explicit user go-ahead; `-prod` is live production
+- [X] T011 Update project memory (multi-repo line-status sync entry) with this feature's propagation status
 
 ---
 
