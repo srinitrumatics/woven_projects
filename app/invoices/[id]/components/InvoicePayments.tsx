@@ -7,6 +7,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
 import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -69,20 +70,6 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
         notes: 250
     });
 
-    const getStatusColor = (status: string) => {
-        const s = status.toLowerCase();
-        if (s.includes('paid') || s.includes('posted') || s.includes('completed') || s.includes('success')) {
-            return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-        }
-        if (s.includes('fail') || s.includes('error') || s.includes('rejected')) {
-            return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-        }
-        if (s.includes('process') || s.includes('sched')) {
-            return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-        }
-        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
-    };
-
     const renderReceivePayments = () => {
         if (receivePayments.length === 0) {
             return (
@@ -112,7 +99,7 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
                                 <Tr key={payment.id} className="transition-colors">
                                     <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={payment.name}>{payment.name}</Td>
                                     <Td className="truncate">
-                                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(payment.status)}`} title={payment.status}>{payment.status}</span>
+                                        <StatusBadge status={payment.status} variant="compact" />
                                     </Td>
                                     <Td className="font-semibold truncate" title={formatCurrency(payment.amount)}>{formatCurrency(payment.amount)}</Td>
                                     <Td className="truncate" title={payment.paymentMethod}>{displayCell(payment.paymentMethod)}</Td>
@@ -168,7 +155,7 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
                                 <Tr key={memo.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                     <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={memo.name}>{memo.name}</Td>
                                     <Td className="px-3 py-2 truncate">
-                                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${getStatusColor(memo.status)}`}>{memo.status}</span>
+                                        <StatusBadge status={memo.status} variant="compact" />
                                     </Td>
                                     <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-semibold truncate" title={formatCurrency(memo.appliedAmount)}>{formatCurrency(memo.appliedAmount)}</Td>
                                     <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={memo.creditMemoName}>{displayCell(memo.creditMemoName)}</Td>
