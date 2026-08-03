@@ -1,20 +1,11 @@
 "use client";
 
-import { useEffect, Suspense } from "react";
+import { Suspense } from "react";
 import SignUpForm from "@/components/SignUpForm";
+import { useForceLightMode } from "@/hooks/useForceLightMode";
 
 export default function SignUpPage() {
-  useEffect(() => {
-    document.documentElement.classList.remove("dark");
-    document.documentElement.classList.add("light");
-    document.body.classList.remove("dark");
-    document.body.classList.add("light");
-    document.body.style.backgroundColor = "#E5EDF1";
-    
-    return () => {
-      document.body.style.backgroundColor = "";
-    };
-  }, []);
+  useForceLightMode();
 
   return (
     <div className="min-h-screen bg-primary-light text-gray-800 light forced-light">

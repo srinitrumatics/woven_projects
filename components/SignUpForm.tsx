@@ -4,11 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUserSession } from './UserSessionContext';
 
-interface SignUpFormProps {
-  onToggle?: () => void;
-}
-
-export default function SignUpForm({ onToggle }: SignUpFormProps) {
+export default function SignUpForm() {
   const [formData, setFormData] = useState({
     name: "",
     surname: "",

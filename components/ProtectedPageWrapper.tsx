@@ -22,7 +22,7 @@ export default function ProtectedPageWrapper({
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      router.push('/auth');
+      router.push('/signin');
     }
   }, [isAuthenticated, loading, router]);
 

@@ -23,6 +23,14 @@ const nextConfig = {
             },
         ];
     },
+    async redirects() {
+        return [
+            { source: '/', destination: '/signin', permanent: true },
+            { source: '/auth', destination: '/signin', permanent: true },
+            { source: '/program360', destination: '/home', permanent: true },
+            { source: '/dashboard', destination: '/home', permanent: true },
+        ];
+    },
     experimental: {
         serverActions: {
             // 50 MB is generous; tighten this when file uploads are scoped

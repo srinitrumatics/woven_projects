@@ -5,11 +5,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUserSession } from './UserSessionContext';
 
-interface SignInFormProps {
-  onToggle?: () => void;
-}
-
-export default function SignInForm({ onToggle }: SignInFormProps) {
+export default function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -18,10 +14,6 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
   const searchParams = useSearchParams();
   const returnUrl = searchParams?.get('return') || '/home';
   const { login } = useUserSession();
-
-  const handleSignUpClick = () => {
-    router.push("/signup");
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -250,12 +242,6 @@ export default function SignInForm({ onToggle }: SignInFormProps) {
           <p className="text-white/90 text-base md:text-lg mb-6 leading-relaxed">
             Sign up and discover a great amount of new opportunities!
           </p>
-          {/*<button
-            onClick={handleSignUpClick}
-            className="w-full md:w-auto px-8 py-3 bg-white text-[var(--primary-dark)] rounded-full font-semibold hover:bg-gray-100 transition-all duration-200 shadow-lg"
-          >
-            Sign Up
-          </button>*/}
         </div>
       </div>
     </div>
