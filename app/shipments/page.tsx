@@ -322,7 +322,7 @@ export default function ShipmentsPage() {
         {/* Partial Shipment */}
         <button
           onClick={() => handleCardClick("Partial Shipment")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Pending"
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg ${activeTab === "Partial Shipment"
             ? "border-yellow-500 ring-2 ring-yellow-500/20"
             : "border-gray-200 dark:border-gray-700 hover:border-yellow-400"
             }`}

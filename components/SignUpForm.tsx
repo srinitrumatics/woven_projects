@@ -219,7 +219,7 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Name"
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" title={String(formData.name ?? '')}
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                 />
               </div>
 
@@ -236,7 +236,7 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
                   value={formData.surname}
                   onChange={handleChange}
                   placeholder="Surname"
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" title={String(formData.surname ?? '')}
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                 />
               </div>
             </div>
@@ -254,7 +254,7 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Email"
-                className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" title={String(formData.email ?? '')}
+                className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
               />
             </div>
 
@@ -273,7 +273,7 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Password"
-                    className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" title={String(formData.password ?? '')}
+                    className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                   />
                   <button
                     type="button"
@@ -299,7 +299,7 @@ export default function SignUpForm({ onToggle }: SignUpFormProps) {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   placeholder="Confirm Password"
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" title={String(formData.confirmPassword ?? '')}
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                 />
               </div>
             </div>

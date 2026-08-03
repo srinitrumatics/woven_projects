@@ -18,6 +18,24 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 
 type TabFilter = string;
 
+// Shared by the stat-card counts (below) and the table filter, so they can never disagree.
+function matchesTabCategory(status: string, tab: TabFilter): boolean {
+  switch (tab) {
+    case "All":
+      return true;
+    case "Total":
+      return ["Submitted", "Approved", "Closed"].includes(status);
+    case "Draft":
+      return status === "Draft";
+    case "Pending":
+      return status === "Pending" || status === "Submitted";
+    case "Success":
+      return status === "Success" || status === "Approved" || status === "Delivered";
+    default:
+      return status === tab;
+  }
+}
+
 const ITEMS_PER_PAGE = 10;
 
 export default function OrdersPage() {
@@ -163,19 +181,19 @@ export default function OrdersPage() {
     const allCount = uiOrders.length;
     const allValue = uiOrders.reduce((sum, o) => sum + (o.total || 0), 0);
 
-    const activeOrders = uiOrders.filter(o => ["Submitted", "Approved", "Closed"].includes(o.status));
+    const activeOrders = uiOrders.filter(o => matchesTabCategory(o.status, "Total"));
     const totalOrders = activeOrders.length;
     const totalValue = activeOrders.reduce((sum, o) => sum + (o.total || 0), 0);
 
-    const draftOrders = uiOrders.filter(o => o.status === "Draft");
+    const draftOrders = uiOrders.filter(o => matchesTabCategory(o.status, "Draft"));
     const draftCount = draftOrders.length;
     const draftValue = draftOrders.reduce((sum, o) => sum + (o.total || 0), 0);
 
-    const pendingOrders = uiOrders.filter(o => o.status === "Pending" || o.status === "Submitted");
+    const pendingOrders = uiOrders.filter(o => matchesTabCategory(o.status, "Pending"));
     const pendingCount = pendingOrders.length;
     const pendingValue = pendingOrders.reduce((sum, o) => sum + (o.total || 0), 0);
 
-    const fulfilledOrders = uiOrders.filter(o => o.status === "Success" || o.status === "Approved" || o.status === "Delivered");
+    const fulfilledOrders = uiOrders.filter(o => matchesTabCategory(o.status, "Success"));
     const fulfilledCount = fulfilledOrders.length;
     const fulfilledValue = fulfilledOrders.reduce((sum, o) => sum + (o.total || 0), 0);
 
@@ -192,9 +210,9 @@ export default function OrdersPage() {
   const filteredAndSearchedOrders = useMemo(() => {
     let filtered = uiOrders;
 
-    // Exact-match status filter ("All" = no filter)
+    // Same category predicate the stat cards use, so counts and filtering never disagree
     if (activeTab !== "All") {
-      filtered = filtered.filter(order => order.status === activeTab);
+      filtered = filtered.filter(order => matchesTabCategory(order.status, activeTab));
     }
 
     // Search

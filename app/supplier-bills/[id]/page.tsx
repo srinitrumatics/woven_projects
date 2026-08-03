@@ -132,19 +132,6 @@ export default function SupplierBillDetailPage() {
                         goodsReceiptDate: l.Goods_Receipt_Date__c || '',
                     }));
                     setLines(mappedLines);
-
-                    // Update bill counts only if we actually found lines to count
-                    if (mappedLines.length > 0) {
-                        setBill(prev => {
-                            if (!prev) return null;
-                            return {
-                                ...prev,
-                                productLineCount: 100,
-                                serviceLineCount: Math.floor(mappedLines.length / 2)
-                            };
-                        });
-                    }
-
                 }
                 // 3. Fetch files
                 const filesRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&objectName=Supplier_Bill__c&action=files`);
