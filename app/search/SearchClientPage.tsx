@@ -71,7 +71,7 @@ function InfiniteHits() {
                 );
               })()}
               {hit.price && (
-                <div className="absolute top-2 right-2 bg-indigo-600 text-white text-sm font-bold px-3 py-1.5 rounded-lg backdrop-blur-sm shadow-lg">
+                <div className="absolute top-2 right-2 bg-primary text-white text-sm font-bold px-3 py-1.5 rounded-lg backdrop-blur-sm shadow-lg">
                   ${typeof hit.price === 'number' ? hit.price.toFixed(2) : hit.price}
                 </div>
               )}
@@ -79,11 +79,11 @@ function InfiniteHits() {
 
             <div className="p-4 flex flex-col flex-grow">
               <div className="mb-2">
-                <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400  truncate">
+                <span className="text-xs font-medium text-primary  truncate">
                   {Array.isArray(hit.genre) ? hit.genre[0] : (hit.genre || hit.category || "Product")}
                 </span>
               </div>
-              <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors ">
+              <h3 className="text-base font-bold text-gray-900 dark:text-white line-clamp-2 mb-2 group-hover:text-primary transition-colors ">
                 {hit.title || hit.name || hit.original_title || "Untitled"}
               </h3>
 
@@ -101,7 +101,7 @@ function InfiniteHits() {
                 ) : (
                   <span className="text-sm text-gray-500 dark:text-gray-400 truncate">Price not available</span>
                 )}
-                <button className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg transition-colors truncate">
+                <button className="px-3 py-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-medium rounded-lg transition-colors truncate">
                   View
                 </button>
               </div>
@@ -114,7 +114,7 @@ function InfiniteHits() {
       {!isLastPage && (
         <div ref={sentinelRef} className="flex justify-center py-8">
           <div className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400">
-            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-primary"></div>
             <span className="text-sm truncate">Loading more products...</span>
           </div>
         </div>
@@ -125,7 +125,7 @@ function InfiniteHits() {
         <div className="flex justify-center mt-6">
           <button
             onClick={showMore}
-            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors shadow-sm truncate"
+            className="px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-colors shadow-sm truncate"
           >
             Load More Products
           </button>
@@ -199,7 +199,7 @@ export default function SearchClientPage({ indexName = "movies_index" }: { index
     return (
       <Sidebar>
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-600 mb-4"></div>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400 truncate" title="Initializing search...">Initializing search...</p>
         </div>
       </Sidebar>
@@ -231,7 +231,7 @@ export default function SearchClientPage({ indexName = "movies_index" }: { index
                 classNames={{
                   root: "w-full",
                   form: "relative",
-                  input: "w-full px-4 py-3 pl-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400",
+                  input: "w-full px-4 py-3 pl-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400",
                   submitIcon: "hidden",
                   resetIcon: "hidden"
                 }}
@@ -244,7 +244,7 @@ export default function SearchClientPage({ indexName = "movies_index" }: { index
                 classNames={{
                   root: "flex flex-wrap gap-2",
                   list: "flex flex-wrap gap-2",
-                  item: "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-3 py-1 rounded-full text-sm flex items-center gap-2",
+                  item: "bg-primary/10 dark:bg-primary/20 text-primary-dark dark:text-primary px-3 py-1 rounded-full text-sm flex items-center gap-2",
                   label: "font-medium",
                   category: "opacity-75",
                   delete: "hover:text-red-600 dark:hover:text-red-400 cursor-pointer ml-1"
@@ -262,7 +262,7 @@ export default function SearchClientPage({ indexName = "movies_index" }: { index
                     <ClearRefinements
                       classNames={{
                         root: "",
-                        button: "text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium",
+                        button: "text-sm text-primary hover:text-primary-dark font-medium",
                         disabledButton: "text-gray-400 cursor-not-allowed"
                       }}
                       translations={{
@@ -285,10 +285,10 @@ export default function SearchClientPage({ indexName = "movies_index" }: { index
                         item: "flex items-center",
                         selectedItem: "font-medium",
                         label: "flex items-center cursor-pointer w-full group",
-                        checkbox: "w-4 h-4 text-indigo-600 border-gray-300 dark:border-gray-600 rounded focus:ring-indigo-500 dark:focus:ring-indigo-400 cursor-pointer",
+                        checkbox: "w-4 h-4 text-primary border-gray-300 dark:border-gray-600 rounded focus:ring-primary cursor-pointer",
                         labelText: "ml-2 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white flex-1",
                         count: "ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full",
-                        showMore: "mt-3 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium cursor-pointer"
+                        showMore: "mt-3 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer"
                       }}
                       translations={{
                         showMoreButtonText({ isShowingMore }) {
@@ -313,10 +313,10 @@ export default function SearchClientPage({ indexName = "movies_index" }: { index
                         item: "flex items-center",
                         selectedItem: "font-medium",
                         label: "flex items-center cursor-pointer w-full group",
-                        checkbox: "w-4 h-4 text-indigo-600 border-gray-300 dark:border-gray-600 rounded focus:ring-indigo-500 dark:focus:ring-indigo-400 cursor-pointer",
+                        checkbox: "w-4 h-4 text-primary border-gray-300 dark:border-gray-600 rounded focus:ring-primary cursor-pointer",
                         labelText: "ml-2 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white flex-1",
                         count: "ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full",
-                        showMore: "mt-3 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium cursor-pointer"
+                        showMore: "mt-3 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer"
                       }}
                     />
                   </div>

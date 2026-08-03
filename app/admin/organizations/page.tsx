@@ -225,7 +225,7 @@ const OrganizationManagement: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-orange-50/20 to-amber-50/20 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-primary/5 to-primary-dark/10 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -236,7 +236,7 @@ const OrganizationManagement: React.FC = () => {
           <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
+                <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-lg">
                   <Building2 className="w-7 h-7 text-white" />
                 </div>
                 <div>
@@ -253,7 +253,7 @@ const OrganizationManagement: React.FC = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => { setFormData({ name: '', description: '', orgId: '', salesforceUrl: '', salesforceAuthUrl: '', clientId: '', clientSecret: '', siteUrl: '', algoliaIndexName: '', algoliaSchema: '' }); setEditingOrg(null); setShowForm(true); }}
-                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium"
+                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium"
                 >
                   <Plus className="w-5 h-5" />
                   Add New Organization
@@ -267,7 +267,7 @@ const OrganizationManagement: React.FC = () => {
         {showForm && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
             <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-orange-500 to-amber-600 px-6 py-4">
+              <div className="bg-gradient-to-r from-primary to-primary-dark px-6 py-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -298,27 +298,27 @@ const OrganizationManagement: React.FC = () => {
                       <label className="block text-sm font-semibold text-gray-700 mb-1">Organization Name *</label>
                       <input type="text" name="name" value={formData.name} onChange={handleInputChange}
                         placeholder="e.g., Acme Corporation"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                         required />
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
                       <input type="text" name="description" value={formData.description} onChange={handleInputChange}
                         placeholder="e.g., Main corporate entity"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" />
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-1">Org ID</label>
                       <input type="text" name="orgId" value={formData.orgId} onChange={handleInputChange}
                         placeholder="e.g., 00Dxxxxxxxxxxxxxxx"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" />
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
                       <p className="text-xs text-gray-400 mt-1">Salesforce Org ID (18-char)</p>
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-1">Site URL</label>
                       <input type="text" name="siteUrl" value={formData.siteUrl} onChange={handleInputChange}
                         placeholder="e.g., https://acme.wovn.app"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" />
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
                       <p className="text-xs text-gray-400 mt-1">Public-facing subdomain for Launch Webapp</p>
                     </div>
                   </div>
@@ -332,25 +332,25 @@ const OrganizationManagement: React.FC = () => {
                       <label className="block text-sm font-semibold text-gray-700 mb-1">Instance URL</label>
                       <input type="text" name="salesforceUrl" value={formData.salesforceUrl} onChange={handleInputChange}
                         placeholder="https://yourorg.my.salesforce.com/"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" />
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-1">Auth / Token URL</label>
                       <input type="text" name="salesforceAuthUrl" value={formData.salesforceAuthUrl} onChange={handleInputChange}
                         placeholder="https://yourorg.my.salesforce.com/services/oauth2/token"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" />
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-1">Client ID</label>
                       <input type="text" name="clientId" value={formData.clientId} onChange={handleInputChange}
                         placeholder="Connected App Consumer Key"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" />
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-1">Client Secret</label>
                       <input type="password" name="clientSecret" value={formData.clientSecret} onChange={handleInputChange}
                         placeholder="Connected App Consumer Secret"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" />
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
                     </div>
                   </div>
                 </div>
@@ -363,13 +363,13 @@ const OrganizationManagement: React.FC = () => {
                       <label className="block text-sm font-semibold text-gray-700 mb-1">Algolia Index Name</label>
                       <input type="text" name="algoliaIndexName" value={formData.algoliaIndexName} onChange={handleInputChange}
                         placeholder="e.g., woven_products_acme"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl font-mono text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" />
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl font-mono text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-1">Database Schema</label>
                       <input type="text" name="algoliaSchema" value={formData.algoliaSchema} onChange={handleInputChange}
                         placeholder="e.g., sf_00dxxxxxxx"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl font-mono text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" />
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl font-mono text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
                       <p className="text-xs text-gray-400 mt-1">Postgres schema that holds this org's product2 table</p>
                     </div>
                   </div>
@@ -384,7 +384,7 @@ const OrganizationManagement: React.FC = () => {
                           type="button"
                           onClick={() => handleSyncProducts(editingOrg)}
                           disabled={syncStates[editingOrg.id]?.status === 'loading'}
-                          className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl border border-indigo-300 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl border border-primary/30 text-primary-dark bg-primary/10 hover:bg-primary/20 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                         >
                           {syncStates[editingOrg.id]?.status === 'loading'
                             ? <Loader2 className="w-4 h-4 animate-spin" />
@@ -431,7 +431,7 @@ const OrganizationManagement: React.FC = () => {
                       Cancel
                     </button>
                     <button type="submit" disabled={isSaving}
-                      className="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                      className="px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
                       {isSaving ? (
                         <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>
                       ) : (
@@ -449,14 +449,14 @@ const OrganizationManagement: React.FC = () => {
         {!showForm && organizations.length > 0 && (
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             {/* Search Bar */}
-            <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-orange-50 to-amber-50">
+            <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-primary-light to-primary/10">
               <div className="flex items-center gap-4">
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text" placeholder="Search organizations..." value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   />
                 </div>
                 <div className="text-sm text-gray-600 font-medium">
@@ -488,12 +488,12 @@ const OrganizationManagement: React.FC = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.02 }}
-                        className="hover:bg-orange-50/50 transition-colors duration-150"
+                        className="hover:bg-primary/5 transition-colors duration-150"
                       >
                         {/* Name */}
                         <Td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center flex-shrink-0">
+                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center flex-shrink-0">
                               <Building2 className="w-5 h-5 text-white" />
                             </div>
                             <div className="text-sm font-semibold text-gray-900">{org.name}</div>
@@ -517,7 +517,7 @@ const OrganizationManagement: React.FC = () => {
                             )}
                             {org.algoliaIndexName && (
                               <div>
-                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono bg-purple-50 text-purple-700 border border-purple-200">
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono bg-blue-50 text-blue-700 border border-blue-200">
                                   {org.algoliaIndexName}
                                 </span>
                               </div>
@@ -535,7 +535,7 @@ const OrganizationManagement: React.FC = () => {
                             <div className="flex items-center gap-2">
                               <button
                                 onClick={() => handleEdit(org)}
-                                className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                                className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors"
                                 title="Edit Organization"
                               >
                                 <Edit className="w-4 h-4" />
@@ -554,7 +554,7 @@ const OrganizationManagement: React.FC = () => {
                               id={`sync-btn-${org.id}`}
                               onClick={() => handleSyncProducts(org)}
                               disabled={isSyncing}
-                              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-indigo-300 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 disabled:opacity-60 disabled:cursor-not-allowed transition-all whitespace-nowrap"
+                              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-primary/30 text-primary-dark bg-primary/10 hover:bg-primary/20 disabled:opacity-60 disabled:cursor-not-allowed transition-all whitespace-nowrap"
                               title="Pull products from Salesforce and push to Algolia index"
                             >
                               {isSyncing
@@ -634,7 +634,7 @@ const OrganizationManagement: React.FC = () => {
                             key={pageNum}
                             onClick={() => setCurrentPage(pageNum)}
                             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${currentPage === pageNum
-                              ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white'
+                              ? 'bg-gradient-to-r from-primary to-primary-dark text-white'
                               : 'border border-gray-300 hover:bg-gray-100'}`}
                           >
                             {pageNum}
@@ -676,10 +676,10 @@ const OrganizationManagement: React.FC = () => {
           >
             <div className="max-w-md mx-auto">
               <div className="relative inline-block mb-6">
-                <div className="w-24 h-24 bg-gradient-to-br from-orange-500/20 to-amber-600/20 rounded-2xl flex items-center justify-center">
-                  <Building2 className="w-12 h-12 text-orange-600" />
+                <div className="w-24 h-24 bg-gradient-to-br from-primary/20 to-primary-dark/20 rounded-2xl flex items-center justify-center">
+                  <Building2 className="w-12 h-12 text-primary" />
                 </div>
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-orange-400 to-amber-600 rounded-full flex items-center justify-center">
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center">
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
               </div>
@@ -691,7 +691,7 @@ const OrganizationManagement: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => { setFormData({ name: '', description: '', orgId: '', salesforceUrl: '', salesforceAuthUrl: '', clientId: '', clientSecret: '', siteUrl: '', algoliaIndexName: '', algoliaSchema: '' }); setEditingOrg(null); setShowForm(true); }}
-                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-xl hover:shadow-xl transition-all duration-200 font-semibold text-lg"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl hover:shadow-xl transition-all duration-200 font-semibold text-lg"
               >
                 <Plus className="w-6 h-6" />
                 Create Your First Organization

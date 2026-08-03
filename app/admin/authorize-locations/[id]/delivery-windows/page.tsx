@@ -247,7 +247,7 @@ export default function DeliveryWindowsPage() {
                     <div className="flex flex-col items-end gap-2 min-w-0">
                         <button
                             onClick={() => router.push(`/admin/authorize-locations`)}
-                            className="flex items-center gap-2 px-4 py-1.5 bg-[#A7C7E7] text-white rounded shadow-sm hover:bg-[#8FB8DE] transition-colors text-sm font-medium whitespace-nowrap"
+                            className="flex items-center gap-2 px-4 py-1.5 bg-primary text-white rounded shadow-sm hover:bg-primary/90 transition-colors text-sm font-medium whitespace-nowrap"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

@@ -690,7 +690,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
               </div>
               <div className="relative" id="quickAddWrap">
                 <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-                <input type="text" placeholder="Quick add product..." value={quickAddQ} onChange={e => { setQuickAddQ(e.target.value); setQuickAddOpen(true); }} onClick={() => setQuickAddOpen(true)} className="pl-9 pr-7 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-purple-500 w-48 focus:w-56 transition-all" />
+                <input type="text" placeholder="Quick add product..." value={quickAddQ} onChange={e => { setQuickAddQ(e.target.value); setQuickAddOpen(true); }} onClick={() => setQuickAddOpen(true)} className="pl-9 pr-7 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary w-48 focus:w-56 transition-all" />
                 <button
                   type="button"
                   title="Refresh catalog"
@@ -726,7 +726,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
               <button className="px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm" disabled={selectedCount === 0} onClick={() => doIndent(1)}>Indent</button>
               <div className="w-px h-5 bg-gray-300 dark:bg-gray-600 mx-1"></div>
               <div className="relative" id="grpWrap">
-                <button className="px-3 py-1.5 text-sm bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800 rounded-md hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors shadow-sm" onClick={() => setGrpDDOpen(!grpDDOpen)}>+ Add Group</button>
+                <button className="px-3 py-1.5 text-sm bg-primary/10 dark:bg-primary/20 text-primary-dark dark:text-primary border border-primary/30 dark:border-primary/50 rounded-md hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors shadow-sm" onClick={() => setGrpDDOpen(!grpDDOpen)}>+ Add Group</button>
                 {grpDDOpen && (
                   <div className="absolute top-full right-0 mt-1 w-70 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden">
                     {grpLabels.length > 0 && (
@@ -757,8 +757,8 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                       <input type="text" placeholder="Group name..." value={customGrpName}
                         onChange={e => { setCustomGrpName(e.target.value); setGrpNameError(false); }}
                         onKeyDown={e => e.key === 'Enter' && addGroup(customGrpName, 'bg-gray-500')}
-                        className={`flex-1 min-w-0 px-3 h-7 text-sm border rounded-md bg-white dark:bg-gray-700 focus:outline-none focus:border-purple-500 transition-colors ${grpNameError ? 'border-red-500 focus:border-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'}`} />
-                      <button onClick={() => addGroup(customGrpName, 'bg-gray-500')} className="px-2 py-1 text-xs bg-purple-600 text-white rounded hover:bg-purple-700">Add</button>
+                        className={`flex-1 min-w-0 px-3 h-7 text-sm border rounded-md bg-white dark:bg-gray-700 focus:outline-none focus:border-primary transition-colors ${grpNameError ? 'border-red-500 focus:border-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'}`} />
+                      <button onClick={() => addGroup(customGrpName, 'bg-gray-500')} className="px-2 py-1 text-xs bg-primary text-white rounded hover:bg-primary-dark">Add</button>
                     </div>
                   </div>
                 )}
@@ -831,25 +831,25 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
                         const abbr = l.grpName.split(/[\s&]+/).map((w: string) => w[0]).join('').substring(0, 2).toUpperCase();
 
                         return (
-                          <tr key={l.id} draggable className={`border-b border-gray-200 dark:border-gray-700 bg-indigo-50/50 dark:bg-indigo-900/10 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors ${l.sel ? 'bg-indigo-100/50 dark:bg-indigo-900/30' : ''}`} onDragStart={(e: any) => startDrag(e, 'row', l.id)} onDragOver={(e: any) => onDragOverRow(e, idx)} onDrop={(e: any) => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
+                          <tr key={l.id} draggable className={`border-b border-gray-200 dark:border-gray-700 bg-primary/5 dark:bg-primary/10 hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors ${l.sel ? 'bg-primary/10 dark:bg-primary/30' : ''}`} onDragStart={(e: any) => startDrag(e, 'row', l.id)} onDragOver={(e: any) => onDragOverRow(e, idx)} onDrop={(e: any) => { e.preventDefault(); e.stopPropagation(); execDrop(insertIdxRef.current); }}>
                             <Td className="px-3 py-2 text-center"><input type="checkbox" checked={l.sel} onChange={e => rowSel(l.id, e.target.checked)} className="rounded border-gray-300 text-primary focus:ring-primary" /></Td>
                             <Td className="px-1 py-2 cursor-grab text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-center">&#9776;</Td>
                             <Td colSpan={3} className="px-3 py-2">
                               <div className="flex items-center gap-2">
                                 {hasKids ? <button className="w-5 h-5 flex items-center justify-center text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition-transform" onClick={() => toggleExp(l.id)} style={{ transform: l.exp ? 'rotate(0)' : 'rotate(-90deg)' }}>&#9660;</button> : <span className="w-5 inline-block"></span>}
                                 <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-white ${l.grpColor}`}>{abbr}</span>
-                                <input className="font-bold text-sm bg-transparent border border-transparent hover:border-gray-300 focus:border-purple-500 focus:bg-white dark:focus:bg-gray-800 rounded px-1 py-0.5 outline-none transition-colors w-48 text-gray-900 dark:text-white" value={l.grpName} onChange={e => setLines(prev => prev.map(x => x.id === l.id ? { ...x, grpName: e.target.value } : x))} />
+                                <input className="font-bold text-sm bg-transparent border border-transparent hover:border-gray-300 focus:border-primary focus:bg-white dark:focus:bg-gray-800 rounded px-1 py-0.5 outline-none transition-colors w-48 text-gray-900 dark:text-white" value={l.grpName} onChange={e => setLines(prev => prev.map(x => x.id === l.id ? { ...x, grpName: e.target.value } : x))} />
                                 <span className="text-xs text-gray-500 dark:text-gray-400">{s.n} item{s.n !== 1 ? 's' : ''}</span>
                               </div>
                             </Td>
                             <Td colSpan={6}></Td>
-                            <Td className="px-3 py-2 text-right font-bold text-indigo-600 dark:text-indigo-400 text-sm">{fmt(s.ts)}</Td>
+                            <Td className="px-3 py-2 text-right font-bold text-primary text-sm">{fmt(s.ts)}</Td>
                             <Td className="px-3 py-2 text-center"><button className="text-gray-400 hover:text-red-500 transition-colors" onClick={() => delLine(l.id)}>&#10005;</button></Td>
                           </tr>
                         );
                       } else {
                         const indent = (l.lv - 1) * 20;
-                        const lvColors = ['bg-gray-200 text-gray-700', 'bg-blue-100 text-blue-700', 'bg-green-100 text-green-700', 'bg-purple-100 text-purple-700'];
+                        const lvColors = ['bg-gray-200 text-gray-700', 'bg-blue-100 text-blue-700', 'bg-green-100 text-green-700', 'bg-primary/20 text-primary-dark'];
                         const lvCls = lvColors[Math.min(l.lv - 1, 3)];
                         const lineMoq = resolveMoq(l);
                         const orderQty = safeOrderQty(l);

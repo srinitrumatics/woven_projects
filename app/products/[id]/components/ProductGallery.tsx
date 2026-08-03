@@ -56,7 +56,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
       </div>
 
       {/* Main Display Area */}
-      <div className="relative flex-1 bg-[#E8F1FC] dark:bg-gray-900 border border-blue-50 dark:border-gray-800 rounded-2xl flex items-center justify-center p-3 min-h-[100px] order-1 xl:order-2 overflow-hidden shadow-sm">
+      <div className="relative flex-1 bg-primary-light dark:bg-gray-900 border border-blue-50 dark:border-gray-800 rounded-2xl flex items-center justify-center p-3 min-h-[100px] order-1 xl:order-2 overflow-hidden shadow-sm">
         {/* Main Image */}
         {!isPlaceholder ? (
           <img
@@ -68,7 +68,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
           />
         ) : (
           <div className="flex flex-col items-center">
-            <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-[#9BB8F4] flex items-center justify-center mb-1 shadow-inner border border-blue-200">
+            <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-primary/40 flex items-center justify-center mb-1 shadow-inner border border-blue-200">
               <svg className="w-8 h-8 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
