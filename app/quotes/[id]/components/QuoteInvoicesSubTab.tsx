@@ -145,7 +145,7 @@ export default function QuoteInvoicesSubTab({
                                         <Td className="truncate" style={{ width: widths.issuedDate }}>{formatDate(invoice.issuedDate, 'numeric-dash')}</Td>
                                         <Td className="truncate" style={{ width: widths.paymentTerms }}>{displayCell(invoice.paymentTerms)}</Td>
                                         <Td className="truncate" style={{ width: widths.dueDate }}>{formatDate(invoice.dueDate, 'numeric-dash')}</Td>
-                                        <Td className="truncate" style={{ width: widths.collectionStatus }}>{displayCell(invoice.collectionStatus)}</Td>
+                                        <Td className="truncate" style={{ width: widths.collectionStatus }}>{invoice.collectionStatus ? <StatusBadge status={invoice.collectionStatus} variant="compact" /> : "—"}</Td>
                                         <Td className="truncate" style={{ width: widths.openBalance }}>{formatCurrency(invoice.openBalance)}</Td>
                                         <Td className="truncate" style={{ width: widths.settledDate }}>{formatDate(invoice.settledDate, 'numeric-dash')}</Td>
                                     </Tr>

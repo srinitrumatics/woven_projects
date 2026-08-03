@@ -200,7 +200,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                                                 <Td className="min-w-[171px] truncate">{formatNumber(p.openBalanceQty)}</Td>
                                                 <Td className="font-medium truncate">{displayCell(p.trackingNumber)}</Td>
                                                 <Td className="text-gray-600 dark:text-gray-400 min-w-[201px] truncate">{displayCell(p.estimatedDeliveryDate)}</Td>
-                                                <Td className="truncate">{displayCell(p.trackingStatus)}</Td>
+                                                <Td className="truncate">{p.trackingStatus ? <StatusBadge status={p.trackingStatus} variant="compact" /> : "—"}</Td>
                                                 <Td className="text-gray-600 dark:text-gray-400 min-w-[174px] truncate">{displayCell(p.actualDeliveryDate)}</Td>
                                                 <Td className="text-gray-600 dark:text-gray-400 min-w-[177px] truncate">{displayCell(p.goodsReceiptDate)}</Td>
                                                 <Td className="truncate">{displayCell(p.invoiceStatus)}</Td>

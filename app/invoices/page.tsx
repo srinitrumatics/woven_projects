@@ -614,7 +614,7 @@ export default function InvoicesPage() {
                         </Td>
                         <Td className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 truncate">{formatDate(invoice.dueDate, 'numeric-dash')}</Td>
                         <Td className="px-3 py-2 truncate">
-                          <CollectionStatusBadge status={invoice.collectionStatus} />
+                          <StatusBadge status={invoice.collectionStatus || 'N/A'} variant="compact" />
                         </Td>
                         <Td className="px-3 py-2 text-sm text-left truncate">
                           <span className={`font-semibold ${invoice.amountDue > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
@@ -658,26 +658,3 @@ export default function InvoicesPage() {
     </Sidebar >
   );
 }
-
-
-function CollectionStatusBadge({ status }: { status?: string }) {
-  const getStyles = () => {
-    switch (status) {
-      case "Paid":
-        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-      case "Pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-      case "Past Due":
-        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
-    }
-  };
-
-  return (
-    <span className={`inline-flex items-center px-2.5 py-1.0 rounded-full text-sm ${getStyles()}`}>
-      {displayCell(status)}
-    </span>
-  );
-}
-

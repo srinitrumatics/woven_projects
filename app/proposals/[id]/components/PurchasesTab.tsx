@@ -7,7 +7,7 @@ import Pagination from "../../../../components/ui/Pagination";
 import { useUserSession } from "../../../../components/UserSessionContext";
 import { displayCell } from "@/lib/utils/formatting";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
-import { StatusBadge } from "@/components/ui/StatusBadge";
+import { StatusBadge, RemittanceBadge } from "@/components/ui/StatusBadge";
 
 interface PurchasesTabProps {
     purchases: PurchaseOrder[];
@@ -237,7 +237,7 @@ export default function PurchasesTab({
                                                 <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.logisticsContact)}</Td>
                                                 <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.trackingNumber)}</Td>
                                                 <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.estimatedDeliveryDate)}</Td>
-                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.trackingStatus)}</Td>
+                                                <Td className="truncate">{purchase.trackingStatus ? <StatusBadge status={purchase.trackingStatus} variant="pill" /> : "—"}</Td>
                                                 <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.actualDeliveryDate)}</Td>
                                                 <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(purchase.goodsReceiptsDate)}</Td>
                                             </Tr>
@@ -370,7 +370,7 @@ export default function PurchasesTab({
                                                 <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.billedDate)}</Td>
                                                 <Td className="truncate">{displayCell(bill.paymentTerms)}</Td>
                                                 <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.dueDate)}</Td>
-                                                <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(bill.remittanceStatus)}</Td>
+                                                <Td className="truncate">{bill.remittanceStatus ? <RemittanceBadge status={bill.remittanceStatus} /> : "—"}</Td>
                                                 <Td className="truncate font-medium">
                                                     ${bill.openBalance?.toLocaleString('en-US', { minimumFractionDigits: 2 }) ?? '0.00'}
                                                 </Td>

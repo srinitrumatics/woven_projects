@@ -724,7 +724,7 @@ export default function FulfillmentsTab({
                                                 <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.shipDate)}</Td>
                                                 <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.deliveredDate)}</Td>
                                                 <Td className="truncate">{displayCell(manifest.trackingNumber)}</Td>
-                                                <Td className="truncate">{displayCell(manifest.trackingStatus)}</Td>
+                                                <Td className="truncate">{manifest.trackingStatus ? <StatusBadge status={manifest.trackingStatus} variant="pill" /> : "—"}</Td>
                                                 <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.estimatedDeliveryDate)}</Td>
                                                 <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(manifest.actualDeliveryDate)}</Td>
                                             </Tr>

@@ -6,7 +6,7 @@ import Pagination from "@/components/ui/Pagination";
 import { useState, useMemo } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
-import { StatusBadge } from "@/components/ui/StatusBadge";
+import { StatusBadge, RemittanceBadge } from "@/components/ui/StatusBadge";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -125,7 +125,7 @@ export default function QuoteSupplierBillsSubTab({
                                     <Td className="truncate" style={{ width: widths.billedDate }}>{formatDate(bill.billedDate, 'numeric-dash')}</Td>
                                     <Td className="truncate" style={{ width: widths.paymentTerms }}>{displayCell(bill.paymentTerms)}</Td>
                                     <Td className="truncate" style={{ width: widths.dueDate }}>{formatDate(bill.dueDate, 'numeric-dash')}</Td>
-                                    <Td className="truncate" style={{ width: widths.remittanceStatus }}>{displayCell(bill.remittanceStatus)}</Td>
+                                    <Td className="truncate" style={{ width: widths.remittanceStatus }}>{bill.remittanceStatus ? <RemittanceBadge status={bill.remittanceStatus} /> : "—"}</Td>
                                     <Td className="truncate" style={{ width: widths.openBalance }}>{formatCurrency(bill.openBalance)}</Td>
                                     <Td className="truncate" style={{ width: widths.daysOutstanding }}>{formatNumber(bill.daysOutstanding)}</Td>
                                     <Td className="truncate" style={{ width: widths.settledDate }}>{formatDate(bill.settledDate, 'numeric-dash')}</Td>

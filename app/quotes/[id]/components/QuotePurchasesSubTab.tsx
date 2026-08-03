@@ -136,7 +136,7 @@ export default function QuotePurchasesSubTab({
                                     <Td className="truncate" style={{ width: widths.logisticsContact }}>{displayCell(po.logisticsContact)}</Td>
                                     <Td className="truncate" style={{ width: widths.trackingNumber }}>{displayCell(po.trackingNumber)}</Td>
                                     <Td className="truncate" style={{ width: widths.estimatedDeliveryDate }}>{formatDate(po.estimatedDeliveryDate, 'numeric-dash')}</Td>
-                                    <Td className="truncate" style={{ width: widths.trackingStatus }}>{displayCell(po.trackingStatus)}</Td>
+                                    <Td className="truncate" style={{ width: widths.trackingStatus }}>{po.trackingStatus ? <StatusBadge status={po.trackingStatus} variant="pill" /> : "—"}</Td>
                                     <Td className="truncate" style={{ width: widths.actualDeliveryDate }}>{formatDate(po.actualDeliveryDate, 'numeric-dash')}</Td>
                                     <Td className="truncate" style={{ width: widths.goodsReceiptDate }}>{formatDate(po.goodsReceiptDate, 'numeric-dash')}</Td>
                                 </Tr>

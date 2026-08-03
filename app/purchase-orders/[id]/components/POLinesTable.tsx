@@ -180,7 +180,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                 <Td className="truncate" title={line.needByDate ? formatDate(line.needByDate, 'numeric-dash') : ''}>{line.needByDate ? formatDate(line.needByDate, 'numeric-dash') : ''}</Td>
                                 <Td className="truncate" title={line.promiseDate ? formatDate(line.promiseDate, 'numeric-dash') : ''}>{line.promiseDate ? formatDate(line.promiseDate, 'numeric-dash') : ''}</Td>
                                 <Td className="truncate" title={line.trackingNumber}>{displayCell(line.trackingNumber)}</Td>
-                                <Td className="truncate" title={line.trackingStatus}>{displayCell(line.trackingStatus)}</Td>
+                                <Td className="truncate" title={line.trackingStatus}><StatusBadge status={line.trackingStatus} /></Td>
                                 <Td className="truncate" title={line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}>{line.estimatedDeliveryDate ? formatDate(line.estimatedDeliveryDate, 'numeric-dash') : ''}</Td>
                                 <Td className="truncate" title={line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}>{line.actualDeliveryDate ? formatDate(line.actualDeliveryDate, 'numeric-dash') : ''}</Td>
                                 <Td className="truncate" title={line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}>{line.goodsReceiptDate ? formatDate(line.goodsReceiptDate, 'numeric-dash') : ''}</Td>

@@ -19,6 +19,7 @@ export function StatusBadge({ status, variant = 'bordered' }: { status: string; 
             case "lead":
             case "posted":
             case "shipped":
+            case "valid":
                 return "bg-green-100/80 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50";
             case "pending":
             case "issued":
@@ -52,6 +53,7 @@ export function StatusBadge({ status, variant = 'bordered' }: { status: string; 
             case "canceled":
             case "exception":
             case "overdue":
+            case "past due":
             case "partial rejected":
             case "rejected":
                 return "bg-red-100/80 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50";

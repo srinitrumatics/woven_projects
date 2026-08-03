@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface Order {
   id: string;
@@ -257,7 +258,7 @@ export default function AddToOrderModal({
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(order.total)}</p>
-                      <p className="text-xs font-bold text-amber-600 uppercase">{order.status}</p>
+                      <StatusBadge status={order.status} variant="compact" />
                     </div>
                   </button>
                 ))}

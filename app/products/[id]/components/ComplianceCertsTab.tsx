@@ -1,4 +1,5 @@
 import React from 'react';
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface ComplianceCertsTabProps {
   certifications: any[];
@@ -57,11 +58,8 @@ export const ComplianceCertsTab: React.FC<ComplianceCertsTabProps> = ({ certific
               </div>
 
               {/* Status Badge at bottom */}
-              <div className={`mt-auto px-5 py-0.5 rounded-md text-xs font-bold  ${cert.Certification_Status__c === 'Valid' ? 'bg-[#ECFDF5] text-[#10B981]' :
-                cert.Certification_Status__c === 'Pending' ? 'bg-yellow-50 text-yellow-600' :
-                  'bg-red-50 text-red-600'
-                }`}>
-                {cert.Certification_Status__c}
+              <div className="mt-auto">
+                <StatusBadge status={cert.Certification_Status__c} variant="compact" />
               </div>
             </div>
           ))

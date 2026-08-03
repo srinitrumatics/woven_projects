@@ -16,6 +16,7 @@ import {
 import { useUserSession } from "@/components/UserSessionContext";
 import { useState } from "react";
 import { textStyles } from "@/lib/text-styles";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface StatItem {
   title: string;
@@ -217,7 +218,6 @@ export default function HomePage() {
         customerPo: item.Customer_PO__c || "N/A",
         info: `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
-        pillClass: "bg-orange-50 text-orange-800"
       })),
       footer: "View all draft orders"
     },
@@ -232,7 +232,6 @@ export default function HomePage() {
         customerPo: item.Customer_PO__c || "N/A",
         info: `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
-        pillClass: "bg-blue-50 text-blue-800"
       })),
       footer: "View all proposals"
     },
@@ -247,7 +246,6 @@ export default function HomePage() {
         customerPo: item.Customer_PO__c || "N/A",
         info: item.Expiration_Date__c ? `Expires: ${item.Expiration_Date__c}` : `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
-        pillClass: item.Status__c === 'Expiring' ? "bg-orange-50 text-orange-800" : "bg-green-50 text-green-800"
       })),
       footer: "View all submitted quotes"
     },
@@ -262,7 +260,6 @@ export default function HomePage() {
         customerPo: item.Customer_PO__c || "N/A",
         info: item.Days_Outstanding__c ? `${item.Days_Outstanding__c} days outstanding` : `$${(item.Grand_Total__c || 0).toLocaleString()}`,
         status: item.Status__c,
-        pillClass: "bg-red-50 text-red-800"
       })),
       footer: "View all past due invoices"
     },
@@ -277,7 +274,6 @@ export default function HomePage() {
         customerPo: item.Customer_PO__c || "N/A",
         info: item.Estimated_Delivery_Date__c ? `ETA: ${new Date(item.Estimated_Delivery_Date__c).toLocaleDateString()}` : `Total: $${(item.Total_Price__c || 0).toLocaleString()}`,
         status: item.Status__c,
-        pillClass: item.Status__c === 'Delayed' ? "bg-red-50 text-red-800" : "bg-green-50 text-green-800"
       })),
       footer: "View all shipments"
     }
@@ -363,9 +359,7 @@ export default function HomePage() {
                         {['Invoices', 'Shipments'].includes(col.title) ? item.info : `Total Price: ${item.info}`}
                       </div>
                       <div className={`${textStyles.muted} mb-2`}>Customer PO: {item.customerPo}</div>
-                      <span className={`px-2 py-0.5 rounded-md text-xs font-bold  ${item.pillClass}`}>
-                        {item.status}
-                      </span>
+                      <StatusBadge status={item.status} variant="compact" />
                     </div>
                   ))}
                 </div>

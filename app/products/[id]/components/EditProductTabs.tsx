@@ -10,6 +10,7 @@ import DatasheetModal from './DatasheetModal';
 import CertificationModal from './CertificationModal';
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
@@ -601,11 +602,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
                     </div>
                     {cert.Certification_Status__c && (
                       <div className="mt-3">
-                        <span className={`px-2 py-0.5 text-xs font-bold tracking-wide uppercase rounded-full ${cert.Certification_Status__c === 'Valid' ? 'bg-green-100 text-green-700' :
-                          cert.Certification_Status__c === 'Expired' ? 'bg-red-100 text-red-700' :
-                            cert.Certification_Status__c === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
-                              'bg-gray-100 text-gray-700'
-                          }`}>{cert.Certification_Status__c}</span>
+                        <StatusBadge status={cert.Certification_Status__c} variant="compact" />
                       </div>
                     )}
                   </div>

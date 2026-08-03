@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface OrderHeaderProps {
     id: string;
@@ -82,24 +83,7 @@ export default function OrderHeader({ id, orderStatus, name, isEditing, onEditTo
 
                         <div className="flex items-center gap-4">
                             {/* Status Badge */}
-                            <span
-                                className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${orderStatus === "Delivered"
-                                    ? "bg-green-100 text-green-800"
-                                    : orderStatus === "Draft"
-                                        ? "bg-blue-100 text-blue-800"
-                                        : orderStatus === "Approved"
-                                            ? "bg-green-200 text-green-900"
-                                            : orderStatus === "In Progress"
-                                                ? "bg-yellow-100 text-yellow-800"
-                                                : orderStatus === "Submitted" || orderStatus === "Submit"
-                                                    ? "bg-yellow-200 text-yellow-900"
-                                                    : orderStatus === "Canceled"
-                                                        ? "bg-red-100 text-red-800"
-                                                        : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                                    }`}
-                            >
-                                {orderStatus}
-                            </span>
+                            <StatusBadge status={orderStatus} variant="pill" />
 
                             {/* Request Transfer Checkbox - only shown when true */}
                             {!!isTransfer && (

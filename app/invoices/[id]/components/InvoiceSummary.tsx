@@ -1,6 +1,7 @@
 "use client";
 
 import { formatCurrency, formatDate } from "@/lib/utils/formatting";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 function SectionTitle({ title, subtitle }: { title: string; subtitle: string }) {
     return (
@@ -97,7 +98,10 @@ export default function InvoiceSummary({
                     <div className="space-y-2">
                         <SummaryStatusRow label="Issued Date" value={issuedDate ? formatDate(issuedDate, 'numeric-dash') : ''} variant="neutral" />
                         <SummaryStatusRow label="Days Outstanding" value={daysOutstanding ? daysOutstanding : 0} variant="neutral" />
-                        <SummaryStatusRow label="Collection Status" value={collectionStatus} variant={collectionStatus === 'Past Due' ? 'danger' : 'neutral'} />
+                        <div className="flex justify-between items-center text-sm gap-2 min-w-0">
+                            <span className="text-gray-600 dark:text-gray-400 font-medium" title="Collection Status">Collection Status</span>
+                            {collectionStatus && <StatusBadge status={collectionStatus} variant="compact" />}
+                        </div>
                         <SummaryStatusRow label="Amount Paid" value={formatCurrency(amountPaid)} variant="success" />
                         <SummaryStatusRow label="Applied Credits" value={formatCurrency(appliedCredits)} variant="success" />
                         <SummaryStatusRow label="Open Balance" value={formatCurrency(amountDue)} variant="danger" />

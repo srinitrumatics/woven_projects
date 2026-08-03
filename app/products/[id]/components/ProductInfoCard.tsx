@@ -5,6 +5,7 @@ import { formatCurrency } from "@/lib/utils/formatting";
 import { useUserSession } from "@/components/UserSessionContext";
 import AddToOrderModal from "./AddToOrderModal";
 import PermissionGate from "@/components/PermissionGate";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface ProductInfoCardProps {
   product: any;
@@ -42,8 +43,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
       {/* Inventory Status */}
       <div className="flex items-center gap-3 border-b border-gray-100 dark:border-gray-700 mb-3 pb-3 overflow-x-auto scrollbar-hide">
         <div className="flex items-center gap-1.5 flex-shrink-0">
-          <div className="w-2 h-2 rounded-full bg-green-500 ring-2 ring-green-50"></div>
-          <span className="text-xs font-bold text-green-600">{product.status}</span>
+          <StatusBadge status={product.status} variant="compact" />
         </div>
         <div className="text-xs whitespace-nowrap font-bold text-gray-400">
           {product.onHand} Available • {product.warehouses} warehouses
