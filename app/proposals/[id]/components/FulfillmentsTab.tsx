@@ -8,6 +8,7 @@ import { useUserSession } from "../../../../components/UserSessionContext";
 import { displayCell } from "@/lib/utils/formatting";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import SubTabs from "@/components/ui/SubTabs";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -72,46 +73,16 @@ export default function FulfillmentsTab({
     return (
         <div className="space-y-4 h-full flex flex-col">
             {/* Sub-tabs */}
-            <div className="border-b border-gray-200 dark:border-gray-700">
-                <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-                    <button
-                        onClick={() => onTabChange("quotes")}
-                        className={`truncate py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "quotes"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
-                            }`}
-                    >
-                        Customer Quotes {fulfillmentData.customerQuotes.length > 0 && `(${fulfillmentData.customerQuotes.length})`}
-                    </button>
-                    <button
-                        onClick={() => onTabChange("sales")}
-                        className={`truncate py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "sales"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
-                            }`}
-                    >
-                        Sales Orders {fulfillmentData.salesOrders.length > 0 && `(${fulfillmentData.salesOrders.length})`}
-                    </button>
-                    <button
-                        onClick={() => onTabChange("shipping")}
-                        className={`truncate py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "shipping"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
-                            }`}
-                    >
-                        Shipping Manifests {fulfillmentData.shippingManifests.length > 0 && `(${fulfillmentData.shippingManifests.length})`}
-                    </button>
-                    <button
-                        onClick={() => onTabChange("invoices")}
-                        className={`truncate py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "invoices"
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
-                            }`}
-                    >
-                        Invoices {fulfillmentData.invoices.length > 0 && `(${fulfillmentData.invoices.length})`}
-                    </button>
-                </nav>
-            </div>
+            <SubTabs
+                tabs={[
+                    { key: "quotes", label: "Customer Quotes", count: fulfillmentData.customerQuotes.length },
+                    { key: "sales", label: "Sales Orders", count: fulfillmentData.salesOrders.length },
+                    { key: "shipping", label: "Shipping Manifests", count: fulfillmentData.shippingManifests.length },
+                    { key: "invoices", label: "Invoices", count: fulfillmentData.invoices.length },
+                ]}
+                activeKey={activeTab}
+                onChange={(key) => onTabChange(key as FulfillmentTabType)}
+            />
 
             <div className="flex-1 min-h-0">
                 {/* Customer Quotes Table */}

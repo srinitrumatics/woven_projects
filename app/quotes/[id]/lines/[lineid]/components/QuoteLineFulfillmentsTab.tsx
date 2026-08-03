@@ -4,6 +4,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import QuoteLineSalesOrderLinesSubTab from "./QuoteLineSalesOrderLinesSubTab";
 import QuoteLineInvoiceLinesSubTab from "./QuoteLineInvoiceLinesSubTab";
 import QuoteLineShippingManifestLinesSubTab from "./QuoteLineShippingManifestLinesSubTab";
+import SubTabs from "@/components/ui/SubTabs";
 
 interface SOLI {
     id: string;
@@ -267,24 +268,16 @@ export default function QuoteLineFulfillmentsTab({
     return (
         <div className="flex flex-col h-full min-w-0">
             {/* Sub Tabs */}
-            <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 mb-3">
-                {[
+            <SubTabs
+                tabs={[
                     { key: "Orders", label: "Sales Orders Lines", count: soliData.length },
                     { key: "Manifests", label: "Shipping Manifests Lines", count: smliData.length },
-                    { key: "Invoices", label: "Invoices Lines", count: inliData.length }
-                ].map((tab) => (
-                    <button
-                        key={tab.key}
-                        onClick={() => setActiveSubTab(tab.key as any)}
-                        className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeSubTab === tab.key
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                            }`}
-                    >
-                        {tab.label} {tab.count > 0 && `(${tab.count})`}
-                    </button>
-                ))}
-            </div>
+                    { key: "Invoices", label: "Invoices Lines", count: inliData.length },
+                ]}
+                activeKey={activeSubTab}
+                onChange={(key) => setActiveSubTab(key as any)}
+                className="flex gap-2 border-b border-gray-200 dark:border-gray-700 overflow-x-auto mb-3"
+            />
 
             {/* Table Area */}
             <div className="bg-white dark:bg-gray-800">

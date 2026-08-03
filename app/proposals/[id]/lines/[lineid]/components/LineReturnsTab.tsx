@@ -9,6 +9,7 @@ import Pagination from "../../../../../../components/ui/Pagination";
 import { useUserSession } from "@/components/UserSessionContext";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import SubTabs from "@/components/ui/SubTabs";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -161,20 +162,12 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
     return (
         <div>
             {/* Sub-tabs */}
-            <div className="flex gap-8 mb-6 border-b border-gray-200 dark:border-gray-700">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id as any)}
-                        className={`pb-3 text-sm font-medium transition-all truncate border-b-2 -mb-[2px] ${activeTab === tab.id
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                            }`}
-                    >
-                        {tab.label} {tab.count > 0 && `(${tab.count})`}
-                    </button>
-                ))}
-            </div>
+            <SubTabs
+                tabs={tabs.map((tab) => ({ key: tab.id, label: tab.label, count: tab.count }))}
+                activeKey={activeTab}
+                onChange={(key) => setActiveTab(key as any)}
+                className="flex gap-8 mb-6 border-b border-gray-200 dark:border-gray-700 overflow-x-auto"
+            />
 
             {/* Content */}
             <div>

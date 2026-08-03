@@ -14,6 +14,7 @@ import QuoteLineFilesTab from "./components/QuoteLineFilesTab";
 import { useUserSession } from "@/components/UserSessionContext";
 import { Table, THead, TBody, Tr, Th, Td } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import Tabs from "@/components/ui/Tabs";
 
 // Interface for quote line item from Salesforce
 interface QuoteLineItem {
@@ -647,10 +648,10 @@ export default function QuoteLineDetailPage({
             {/* Bottom Tabs */}
             <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                 {/* Tabs Header */}
-                <div className="flex flex-nowrap gap-2 overflow-x-auto items-center min-w-0">
-                    {(([
+                <Tabs
+                    tabs={(([
                         {
-                            id: "taxes",
+                            key: "taxes",
                             label: "Taxes",
                             count: (product?.salesTaxAmount > 0 ||
                                 product?.useTaxAmount > 0 ||
@@ -660,30 +661,19 @@ export default function QuoteLineDetailPage({
                                 product?.gstAmount > 0 ||
                                 product?.vatAmount > 0) ? 1 : 0
                         },
-                        { id: "fulfillment", label: "Fulfillment", count: counts.fulfillment },
-                        { id: "purchases", label: "Purchases", count: counts.purchases },
-                        { id: "returns", label: "Returns", count: counts.returns },
-                        { id: "files", label: "Files", count: counts.files }
-                    ] as { id: string; label: string; count: number }[]).filter(tab => {
+                        { key: "fulfillment", label: "Fulfillment", count: counts.fulfillment },
+                        { key: "purchases", label: "Purchases", count: counts.purchases },
+                        { key: "returns", label: "Returns", count: counts.returns },
+                        { key: "files", label: "Files", count: counts.files }
+                    ] as { key: string; label: string; count: number }[]).filter(tab => {
                         const isCustomerOrNSO = selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'customer' || selectedAccount?.Account_Type__c?.toLowerCase() === 'customer' || user?.role?.toLowerCase() === 'customer' || selectedAccount?.Account_Record_Type__c?.toLowerCase() === 'nso' || selectedAccount?.Account_Type__c?.toLowerCase() === 'nso' || user?.role?.toLowerCase() === 'nso';
-                        if (isCustomerOrNSO && tab.id === 'purchases') return false;
+                        if (isCustomerOrNSO && tab.key === 'purchases') return false;
                         return true;
-                    })).map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id as any)}
-                            className={`px-4 py-2 rounded-lg transition-colors  flex-shrink-0 ${activeTab === tab.id
-                                ? "bg-primary text-white"
-                                : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                                }`}
-                        >
-                            {tab.label}
-                            {tab.count !== undefined && tab.count > 0 && (
-                                "(" + tab.count + ")"
-                            )}
-                        </button>
-                    ))}
-                </div>
+                    }))}
+                    activeKey={activeTab}
+                    onChange={(key) => setActiveTab(key as typeof activeTab)}
+                    className="items-center min-w-0"
+                />
                 <div className="mt-4">
                     {activeTab === 'taxes' && (
                         <QuoteLineTaxesTab product={product} />

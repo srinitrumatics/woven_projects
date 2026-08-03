@@ -5,6 +5,7 @@ import QuoteRMASubTab from "./QuoteRMASubTab";
 import QuoteCreditMemoSubTab from "./QuoteCreditMemoSubTab";
 import QuoteRTVSubTab from "./QuoteRTVSubTab";
 import QuoteDebitMemoSubTab from "./QuoteDebitMemoSubTab";
+import SubTabs from "@/components/ui/SubTabs";
 
 type ReturnsSubTab = "rmas" | "creditMemo" | "rtvs" | "debitMemo";
 
@@ -26,12 +27,12 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
 
     const isCustomerOrNSO = accountType?.toLowerCase() === 'customer' || accountType?.toLowerCase() === 'nso';
 
-    const tabs: { id: ReturnsSubTab; label: string }[] = (([
-        { id: "rmas", label: "RMAs" },
-        { id: "creditMemo", label: "Credit Memos" },
-        { id: "rtvs", label: "RTVs" },
-        { id: "debitMemo", label: "Debit Memos" },
-    ] as { id: ReturnsSubTab; label: string }[]).filter(tab => {
+    const tabs: { id: ReturnsSubTab; label: string; count: number }[] = (([
+        { id: "rmas", label: "RMAs", count: rma.length },
+        { id: "creditMemo", label: "Credit Memos", count: creditMemos.length },
+        { id: "rtvs", label: "RTVs", count: rtv.length },
+        { id: "debitMemo", label: "Debit Memos", count: debitMemos.length },
+    ] as { id: ReturnsSubTab; label: string; count: number }[]).filter(tab => {
         if (isCustomerOrNSO && (tab.id === 'rtvs' || tab.id === 'debitMemo')) return false;
         return true;
     }));
@@ -196,29 +197,12 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
 
     return (
         <div className="flex flex-col h-full min-w-0">
-            <div className="border-b border-gray-200 dark:border-gray-700">
-                <nav className="-mb-px flex space-x-8 px-4" aria-label="Tabs">
-                    {tabs.map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveSubTab(tab.id)}
-                            className={`
-                                 py-4 px-1 border-b-2 font-medium text-sm transition-colors
-                                ${activeSubTab === tab.id
-                                    ? "border-primary text-primary"
-                                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
-                                }
-                            `}
-                        >
-                            {tab.label}
-                            {tab.id === "rmas" && rma.length > 0 && ` (${rma.length})`}
-                            {tab.id === "creditMemo" && creditMemos.length > 0 && ` (${creditMemos.length})`}
-                            {tab.id === "rtvs" && rtv.length > 0 && ` (${rtv.length})`}
-                            {tab.id === "debitMemo" && debitMemos.length > 0 && ` (${debitMemos.length})`}
-                        </button>
-                    ))}
-                </nav>
-            </div>
+            <SubTabs
+                tabs={tabs.map((tab) => ({ key: tab.id, label: tab.label, count: tab.count }))}
+                activeKey={activeSubTab}
+                onChange={(key) => setActiveSubTab(key as ReturnsSubTab)}
+                className="flex gap-8 mb-0 border-b border-gray-200 dark:border-gray-700 overflow-x-auto px-4"
+            />
 
             <div className="p-0 bg-gray-50 dark:bg-gray-900/50 py-2">
                 {activeSubTab === "rmas" && (

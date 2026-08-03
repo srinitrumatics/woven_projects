@@ -8,6 +8,7 @@ import { useResizableColumns } from "../../../../../../hooks/useResizableColumns
 import Pagination from "../../../../../../components/ui/Pagination";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import SubTabs from "@/components/ui/SubTabs";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -142,25 +143,17 @@ export default function LineFulfillmentsTab({
         <div>
             <div>
                 {/* Sub-tabs */}
-                <div className="flex gap-8 mb-6 border-b border-gray-200 dark:border-gray-700">
-                    {[
-                        { id: "quotes", label: "Customer Quotes Lines", count: fulfillmentData.customerQuotes.length },
-                        { id: "sales", label: "Sales Orders Lines", count: fulfillmentData.salesOrders.length },
-                        { id: "shipping", label: "Shipping Manifests Lines", count: fulfillmentData.shippingManifests.length },
-                        { id: "invoices", label: "Invoices Lines", count: fulfillmentData.invoices.length }
-                    ].map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => onTabChange(tab.id as any)}
-                            className={`pb-3 text-sm font-medium transition-all truncate border-b-2 -mb-[2px] ${activeTab === tab.id
-                                ? "border-primary text-primary"
-                                : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                                }`}
-                        >
-                            {tab.label} {tab.count > 0 && `(${tab.count})`}
-                        </button>
-                    ))}
-                </div>
+                <SubTabs
+                    tabs={[
+                        { key: "quotes", label: "Customer Quotes Lines", count: fulfillmentData.customerQuotes.length },
+                        { key: "sales", label: "Sales Orders Lines", count: fulfillmentData.salesOrders.length },
+                        { key: "shipping", label: "Shipping Manifests Lines", count: fulfillmentData.shippingManifests.length },
+                        { key: "invoices", label: "Invoices Lines", count: fulfillmentData.invoices.length },
+                    ]}
+                    activeKey={activeTab}
+                    onChange={(key) => onTabChange(key as any)}
+                    className="mb-6"
+                />
 
                 {/* Customer Quotes Table */}
                 {activeTab === "quotes" && (

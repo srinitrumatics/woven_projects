@@ -8,6 +8,7 @@ import { useUserSession } from "../../../../components/UserSessionContext";
 import { displayCell } from "@/lib/utils/formatting";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 import { StatusBadge, RemittanceBadge } from "@/components/ui/StatusBadge";
+import SubTabs from "@/components/ui/SubTabs";
 
 interface PurchasesTabProps {
     purchases: PurchaseOrder[];
@@ -63,34 +64,14 @@ export default function PurchasesTab({
     return (
         <div className="space-y-4">
             {/* Sub-tabs */}
-            <div className="border-b border-gray-200 dark:border-gray-700">
-                <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-                    <button
-                        onClick={() => setActiveTab("orders")}
-                        className={`
-                            py-4 px-1 border-b-2 font-medium text-sm
-                            ${activeTab === "orders"
-                                ? "border-primary text-primary"
-                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
-                            }
-                        `}
-                    >
-                        Purchase Orders {purchases.length > 0 && `(${purchases.length})`}
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("bills")}
-                        className={`
-                            py-4 px-1 border-b-2 font-medium text-sm
-                            ${activeTab === "bills"
-                                ? "border-primary text-primary"
-                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
-                            }
-                        `}
-                    >
-                        Supplier Bills {supplierBills.length > 0 && `(${supplierBills.length})`}
-                    </button>
-                </nav>
-            </div>
+            <SubTabs
+                tabs={[
+                    { key: "orders", label: "Purchase Orders", count: purchases.length },
+                    { key: "bills", label: "Supplier Bills", count: supplierBills.length },
+                ]}
+                activeKey={activeTab}
+                onChange={(key) => setActiveTab(key as TabType)}
+            />
 
             {/* Content using existing layout styles */}
             <div className="flex-1 min-h-0">

@@ -5,6 +5,7 @@ import QuoteLineRMALinesSubTab from "./QuoteLineRMALinesSubTab";
 import QuoteLineCreditMemoLinesSubTab from "./QuoteLineCreditMemoLinesSubTab";
 import QuoteLineRTVLinesSubTab from "./QuoteLineRTVLinesSubTab";
 import QuoteLineDebitMemoLinesSubTab from "./QuoteLineDebitMemoLinesSubTab";
+import SubTabs from "@/components/ui/SubTabs";
 
 interface DebitMemoLine {
     id: string;
@@ -301,8 +302,8 @@ export default function QuoteLineReturnsTab({
     return (
         <div className="flex flex-col h-full min-w-0">
             {/* Sub Tabs */}
-            <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 mb-3">
-                {(([
+            <SubTabs
+                tabs={(([
                     { key: "RMAs", label: "RMAs Lines", count: rmalData.length },
                     { key: "CreditMemos", label: "Credit Memos Lines", count: cmliData.length },
                     { key: "RTVs", label: "RTVs Lines", count: rtvlData.length },
@@ -310,19 +311,11 @@ export default function QuoteLineReturnsTab({
                 ] as { key: "DebitMemos" | "RTVs" | "CreditMemos" | "RMAs"; label: string; count: number }[]).filter(tab => {
                     if (isCustomerOrNSO && (tab.key === 'RTVs' || tab.key === 'DebitMemos')) return false;
                     return true;
-                })).map((tab) => (
-                    <button
-                        key={tab.key}
-                        onClick={() => setActiveSubTab(tab.key)}
-                        className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeSubTab === tab.key
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:white"
-                            }`}
-                    >
-                        {tab.label} {tab.count > 0 && `(${tab.count})`}
-                    </button>
-                ))}
-            </div>
+                }))}
+                activeKey={activeSubTab}
+                onChange={(key) => setActiveSubTab(key as any)}
+                className="flex gap-2 border-b border-gray-200 dark:border-gray-700 overflow-x-auto mb-3"
+            />
 
             {/* Table Area */}
             <div className="bg-white dark:bg-gray-800">

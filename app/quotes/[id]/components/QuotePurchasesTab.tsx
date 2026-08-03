@@ -4,6 +4,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import QuotePurchasesSubTab from "./QuotePurchasesSubTab";
 import QuoteSupplierBillsSubTab from "./QuoteSupplierBillsSubTab";
 import Pagination from "@/components/ui/Pagination";
+import SubTabs from "@/components/ui/SubTabs";
 
 type PurchasesSubTab = "purchases" | "supplierBills";
 
@@ -146,37 +147,18 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
     );
     const totalPagesBills = Math.ceil(supplierBills.length / ITEMS_PER_PAGE);
 
-    const tabs: { id: PurchasesSubTab; label: string }[] = [
-        { id:"purchases", label:"Purchases Order"},
-        { id:"supplierBills", label:"Supplier Bills"},
-    ];
-
     return (
         <div className="flex flex-col h-full min-w-0">
             {/* Sub-tabs Navigation */}
-            <div className="border-b border-gray-200 dark:border-gray-700">
-                <nav className="-mb-px flex space-x-8 px-4"aria-label="Tabs">
-                    {tabs.map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => {
-                                setActiveSubTab(tab.id);
-                            }}
-                            className={`
-                                 py-4 px-1 border-b-2 font-medium text-sm transition-colors
-                                ${activeSubTab === tab.id
-                                    ?"border-primary text-primary"
-                                    :"border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
-                                }
-                            `}
-                        >
-                            {tab.label}
-                            {tab.id ==="purchases"&& purchases.length > 0 && ` (${purchases.length})`}
-                            {tab.id ==="supplierBills"&& supplierBills.length > 0 && ` (${supplierBills.length})`}
-                        </button>
-                    ))}
-                </nav>
-            </div>
+            <SubTabs
+                tabs={[
+                    { key: "purchases", label: "Purchases Order", count: purchases.length },
+                    { key: "supplierBills", label: "Supplier Bills", count: supplierBills.length },
+                ]}
+                activeKey={activeSubTab}
+                onChange={(key) => setActiveSubTab(key as PurchasesSubTab)}
+                className="flex gap-8 mb-0 border-b border-gray-200 dark:border-gray-700 overflow-x-auto px-4"
+            />
 
             {/* Tab Content */}
             <div className="p-0 bg-gray-50 dark:bg-gray-900/50 py-2">

@@ -28,6 +28,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
 import algoliasearch from 'algoliasearch';
+import Tabs from "@/components/ui/Tabs";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || "",
@@ -1788,62 +1789,19 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
               </button>
             )}
             {/* Tab buttons — below search on mobile/tablet (<1024px), right on desktop (>=1024px) */}
-            <div className="flex flex-nowrap gap-2 overflow-x-auto no-scrollbar pb-0.5 flex-shrink-0">
-              <button
-                onClick={() => setViewMode("catalog")}
-                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "catalog"
-                  ? "bg-primary text-white"
-                  : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                  }`}
-              >
-                Add Products
-              </button>
-              <button
-                onClick={() => setViewMode("myOrder")}
-                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "myOrder"
-                  ? "bg-primary text-white"
-                  : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                  }`}
-              >
-                My Order {orderProducts.length > 0 && `(${orderProducts.length})`}
-              </button>
-              <button
-                onClick={() => setViewMode("taxes")}
-                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "taxes"
-                  ? "bg-primary text-white"
-                  : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                  }`}
-              >
-                Taxes {(!loadingOrder && !!orderData) && "(1)"}
-              </button>
-              <button
-                onClick={() => setViewMode("fulfillment")}
-                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "fulfillment"
-                  ? "bg-primary text-white"
-                  : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                  }`}
-              >
-                Fulfillment {fulfillmentCount > 0 && `(${fulfillmentCount})`}
-              </button>
-              <button
-                onClick={() => setViewMode("returns")}
-                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "returns"
-                  ? "bg-primary text-white"
-                  : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                  }`}
-              >
-                Returns {returnsCount > 0 && `(${returnsCount})`}
-              </button>
-              <button
-                onClick={() => setViewMode("files")}
-                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 ${viewMode === "files"
-                  ? "bg-primary text-white"
-                  : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                  }`}
-              >
-                Files {filesCount > 0 && `(${filesCount})`}
-              </button>
-            </div>
+            <Tabs
+              tabs={[
+                { key: "catalog", label: "Add Products" },
+                { key: "myOrder", label: "My Order", count: orderProducts.length },
+                { key: "taxes", label: "Taxes", count: (!loadingOrder && !!orderData) ? 1 : 0 },
+                { key: "fulfillment", label: "Fulfillment", count: fulfillmentCount },
+                { key: "returns", label: "Returns", count: returnsCount },
+                { key: "files", label: "Files", count: filesCount },
+              ]}
+              activeKey={viewMode}
+              onChange={(key) => setViewMode(key as typeof viewMode)}
+              className="no-scrollbar pb-0.5 flex-shrink-0"
+            />
           </div>
 
           {/* Tab Content area */}

@@ -8,6 +8,7 @@ import { useResizableColumns } from "../../../../../../hooks/useResizableColumns
 import Pagination from "../../../../../../components/ui/Pagination";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import SubTabs from "@/components/ui/SubTabs";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -97,23 +98,15 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
     return (
         <div>
             {/* Sub-tabs */}
-            <div className="flex gap-8 mb-6 border-b border-gray-200 dark:border-gray-700 px-6 pt-6">
-                {[
-                    { id: "purchases", label: "Purchases Lines", count: purchaseOrders.length },
-                    { id: "supplier_bills", label: "Supplier Bills Lines", count: supplierBills.length }
-                ].map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id as any)}
-                        className={`pb-3 text-sm font-medium transition-all truncate border-b-2 -mb-[2px] ${activeTab === tab.id
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                            }`}
-                    >
-                        {tab.label} {tab.count > 0 && `(${tab.count})`}
-                    </button>
-                ))}
-            </div>
+            <SubTabs
+                tabs={[
+                    { key: "purchases", label: "Purchases Lines", count: purchaseOrders.length },
+                    { key: "supplier_bills", label: "Supplier Bills Lines", count: supplierBills.length },
+                ]}
+                activeKey={activeTab}
+                onChange={(key) => setActiveTab(key as any)}
+                className="flex gap-8 mb-6 border-b border-gray-200 dark:border-gray-700 overflow-x-auto px-6 pt-6"
+            />
 
             {/* Content */}
             <div>

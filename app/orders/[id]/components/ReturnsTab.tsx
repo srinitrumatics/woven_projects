@@ -11,6 +11,7 @@ import { useResizableColumns } from "../../../../hooks/useResizableColumns";
 import Pagination from "@/components/ui/Pagination";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import SubTabs from "@/components/ui/SubTabs";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -244,20 +245,11 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
     return (
         <div>
             {/* Sub-tabs - underline style */}
-            <div className="flex gap-6 mb-4 border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveSubTab(tab.id)}
-                        className={`pb-2 text-sm font-medium transition-colors whitespace-nowrap border-b-2 -mb-px ${activeSubTab === tab.id
-                            ? "border-primary text-primary"
-                            : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                            }`}
-                    >
-                        {tab.label} {tab.count > 0 && `(${tab.count})`}
-                    </button>
-                ))}
-            </div>
+            <SubTabs
+                tabs={tabs.map((tab) => ({ key: tab.id, label: tab.label, count: tab.count }))}
+                activeKey={activeSubTab}
+                onChange={(key) => setActiveSubTab(key as typeof activeSubTab)}
+            />
 
             {/* RMAs */}
             {activeSubTab === "rma" && (

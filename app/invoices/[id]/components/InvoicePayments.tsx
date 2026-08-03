@@ -8,6 +8,7 @@ import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
 import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import SubTabs from "@/components/ui/SubTabs";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -186,26 +187,14 @@ export default function InvoicePayments({ receivePayments, creditMemos }: Invoic
 
     return (
         <div className="w-full">
-            <div className="flex border-b border-gray-200 dark:border-gray-700 mb-4">
-                <button
-                    onClick={() => setActiveSubTab("receive")}
-                    className={`px-4 py-2 text-sm font-bold transition-colors border-b-2 ${activeSubTab === "receive"
-                        ? "border-primary text-primary"
-                        : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                        }`}
-                >
-                    Receive Payments {receivePayments.length > 0 && `(${receivePayments.length})`}
-                </button>
-                <button
-                    onClick={() => setActiveSubTab("applied")}
-                    className={`px-4 py-2 text-sm font-bold transition-colors border-b-2 ${activeSubTab === "applied"
-                        ? "border-primary text-primary"
-                        : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                        }`}
-                >
-                    Applied Credit Payments {creditMemos.length > 0 && `(${creditMemos.length})`}
-                </button>
-            </div>
+            <SubTabs
+                tabs={[
+                    { key: "receive", label: "Receive Payments", count: receivePayments.length },
+                    { key: "applied", label: "Applied Credit Payments", count: creditMemos.length },
+                ]}
+                activeKey={activeSubTab}
+                onChange={(key) => setActiveSubTab(key as SubTabType)}
+            />
 
             <div className="mt-2">
                 {activeSubTab === "receive" ? renderReceivePayments() : renderAppliedCredits()}

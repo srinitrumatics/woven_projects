@@ -7,6 +7,7 @@ import Sidebar from "@/components/layouts/Sidebar";
 import { formatDate, formatCurrency } from "@/lib/utils/formatting";
 import { Table, THead, TBody, Tr, Th, Td } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import Tabs from "@/components/ui/Tabs";
 import { PurchaseOrderLine } from "../../../types";
 import POSupplierBillLinesTable from "./components/POSupplierBillLinesTable";
 import POSerialNumberLogLinesTab from "./components/poserialnumberloglinestab";
@@ -647,27 +648,17 @@ export default function POLineDetailPage({
                 {/* Row 3: Related Items Tabs (Supplier Bills, Serial Numbers, Returns, Files) */}
                 <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                     {/* Tabs Header */}
-                    <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 items-center min-w-0">
-                        {[
-                            { id: "bills", label: "Supplier Bill Line", count: bills.length },
-                            { id: "serialNumbers", label: "Serial Numbers", count: serialNumbers.length },
-                            { id: "returns", label: "Returns", count: debitMemos.length + rtv.length },
-                            { id: "files", label: "File", count: files.length }
-                        ].map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id as any)}
-                                className={`px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 text-sm font-medium ${activeTab === tab.id
-                                    ? "bg-primary text-white"
-                                    : "bg-primary-light dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600"
-                                    }`}
-                                title={`${tab.label}${tab.count > 0 ? ` (${tab.count})` : ''}`}
-                            >
-                                {tab.label}
-                                {tab.count > 0 && ` (${tab.count})`}
-                            </button>
-                        ))}
-                    </div>
+                    <Tabs
+                        tabs={[
+                            { key: "bills", label: "Supplier Bill Line", count: bills.length },
+                            { key: "serialNumbers", label: "Serial Numbers", count: serialNumbers.length },
+                            { key: "returns", label: "Returns", count: debitMemos.length + rtv.length },
+                            { key: "files", label: "File", count: files.length },
+                        ]}
+                        activeKey={activeTab}
+                        onChange={(key) => setActiveTab(key as typeof activeTab)}
+                        className="pb-2 items-center min-w-0"
+                    />
 
                     <div className="py-2">
                         {subTabLoading ? (

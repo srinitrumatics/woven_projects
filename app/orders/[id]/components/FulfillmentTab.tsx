@@ -11,6 +11,7 @@ import { usePermissions } from "@/components/PermissionContext";
 import Pagination from "@/components/ui/Pagination";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import SubTabs from "@/components/ui/SubTabs";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -288,53 +289,17 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
     return (
         <div>
             {/* Sub-tabs - underline style */}
-            <div className="flex gap-6 mb-4 border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
-                <button
-                    onClick={() => setActiveSubTab("proposals")}
-                    className={`pb-2 text-sm font-medium transition-colors whitespace-nowrap border-b-2 -mb-px ${activeSubTab === "proposals"
-                        ? "border-primary text-primary"
-                        : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                        }`}
-                >
-                    Proposals {proposals.length > 0 && `(${proposals.length})`}
-                </button>
-                <button
-                    onClick={() => setActiveSubTab("customerQuotes")}
-                    className={`pb-2 text-sm font-medium transition-colors whitespace-nowrap border-b-2 -mb-px ${activeSubTab === "customerQuotes"
-                        ? "border-primary text-primary"
-                        : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                        }`}
-                >
-                    Customer Quotes {customerQuotes.length > 0 && `(${customerQuotes.length})`}
-                </button>
-                <button
-                    onClick={() => setActiveSubTab("salesOrders")}
-                    className={`pb-2 text-sm font-medium transition-colors whitespace-nowrap border-b-2 -mb-px ${activeSubTab === "salesOrders"
-                        ? "border-primary text-primary"
-                        : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                        }`}
-                >
-                    Sales Orders {salesOrders.length > 0 && `(${salesOrders.length})`}
-                </button>
-                <button
-                    onClick={() => setActiveSubTab("manifests")}
-                    className={`pb-2 text-sm font-medium transition-colors whitespace-nowrap border-b-2 -mb-px ${activeSubTab === "manifests"
-                        ? "border-primary text-primary"
-                        : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                        }`}
-                >
-                    Shipping Manifests {manifests.length > 0 && `(${manifests.length})`}
-                </button>
-                <button
-                    onClick={() => setActiveSubTab("invoices")}
-                    className={`pb-2 text-sm font-medium transition-colors whitespace-nowrap border-b-2 -mb-px ${activeSubTab === "invoices"
-                        ? "border-primary text-primary"
-                        : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                        }`}
-                >
-                    Invoices {invoices.length > 0 && `(${invoices.length})`}
-                </button>
-            </div>
+            <SubTabs
+                tabs={[
+                    { key: "proposals", label: "Proposals", count: proposals.length },
+                    { key: "customerQuotes", label: "Customer Quotes", count: customerQuotes.length },
+                    { key: "salesOrders", label: "Sales Orders", count: salesOrders.length },
+                    { key: "manifests", label: "Shipping Manifests", count: manifests.length },
+                    { key: "invoices", label: "Invoices", count: invoices.length },
+                ]}
+                activeKey={activeSubTab}
+                onChange={(key) => setActiveSubTab(key as typeof activeSubTab)}
+            />
 
             {/* Proposals */}
             {activeSubTab === "proposals" && (

@@ -10,6 +10,7 @@ import Pagination from "@/components/ui/Pagination";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import Link from 'next/link';
 import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
+import SubTabs from "@/components/ui/SubTabs";
 
 interface SupplierBillPaymentsTabProps {
     billPayments: BillPayment[];
@@ -69,29 +70,16 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
 
     return (
         <div className="flex flex-col gap-4 min-w-0">
-            {/* Sub-tabs design from Proposal */}
-            <div className="flex gap-4 border-b border-gray-100 dark:border-gray-700 pb-2">
-                <button
-                    onClick={() => setSubTab('bill-payments')}
-                    className={`text-sm font-bold pb-1 transition-all border-b-2 no-wrap  ${subTab === 'bill-payments'
-                        ? "text-primary border-primary"
-                        : "text-gray-400 border-transparent hover:text-gray-600"
-                        }`}
-                    title={`Bill Payments (${billPayments.length})`}
-                >
-                    Bill Payments ({billPayments.length})
-                </button>
-                <button
-                    onClick={() => setSubTab('applied-debits')}
-                    className={`text-sm font-bold pb-1 transition-all border-b-2 no-wrap ${subTab === 'applied-debits'
-                        ? "text-primary border-primary"
-                        : "text-gray-400 border-transparent hover:text-gray-600"
-                        }`}
-                    title={`Applied Debit Memos (${appliedDebits.length})`}
-                >
-                    Applied Debit Memos ({appliedDebits.length})
-                </button>
-            </div>
+            {/* Sub-tabs */}
+            <SubTabs
+                tabs={[
+                    { key: "bill-payments", label: "Bill Payments", count: billPayments.length },
+                    { key: "applied-debits", label: "Applied Debit Memos", count: appliedDebits.length },
+                ]}
+                activeKey={subTab}
+                onChange={(key) => setSubTab(key as 'bill-payments' | 'applied-debits')}
+                className="flex gap-4 border-b border-gray-100 dark:border-gray-700 overflow-x-auto pb-2"
+            />
 
             {/* Sub Tab Content */}
             <div className="mt-2">
