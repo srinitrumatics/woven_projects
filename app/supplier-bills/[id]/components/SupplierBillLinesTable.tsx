@@ -111,7 +111,15 @@ export default function SupplierBillLinesTable({ lines }: SupplierBillLinesTable
                                         )
                                     ) : displayCell(line.proposedProduct)}
                                 </Td>
-                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate">{displayCell(line.productName)}</Td>
+                                <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productName}>
+                                    {line.productId ? (
+                                        <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                            {displayCell(line.productName)}
+                                        </Link>
+                                    ) : (
+                                        displayCell(line.productName)
+                                    )}
+                                </Td>
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={line.productDescription}>{displayCell(line.productDescription)}</Td>
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-gray-400 truncate">{displayCell(line.brand)}</Td>
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium truncate">{formatCurrency(line.unitCost)}</Td>

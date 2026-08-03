@@ -71,7 +71,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                         proposedProductId: item.Proposed_Product__c || "",
                         proposalId: item.Proposal__c || "",
                         productName: item.Product_Name || "",
-                        productId: item.Product__c || "",
+                        productId: item.Product_Name__c || "",
                         description: item.Product_Description__c || "",
                         manufacturerDBA: item.Manufacturer_DBA__c || "",
                         brand: item.Product_Brand_Name__c || "",
@@ -135,79 +135,79 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
     return (
         <div className="bg-white dark:bg-gray-800">
             <div className="rounded-lg shadow-sm overflow-hidden">
-            <div className="overflow-auto ">
-                <Table className="text-sm table-fixed">
-                    <THead>
-                        <tr>
-                            <SortableHeader label="Credit Memo Line" field="lineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.lineName} onResize={handleResize} className="sticky left-0 top-0 z-20 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Credit Memo #" field="creditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditMemoName} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Sales Order Line" field="salesOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Proposed Product" field="proposedProduct" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposedProduct} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Credited Qty" field="creditQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditQty} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                            <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
-                        </tr>
-                    </THead>
-                    <TBody>
-                        {paginatedData.map((item) => (
-                            <Tr key={item.id} className="border-b border-gray-100 dark:border-gray-700">
-                                {/* Sticky column — z-10, inherits row bg */}
-                                <Td className="text-left sticky left-0 bg-white dark:bg-gray-800 truncate">{displayCell(item.lineName)}</Td>
-                                <Td className="truncate">
-                                    <StatusBadge status={item.status} variant="pill" />
-                                </Td>
-                                <Td className="truncate">{displayCell(item.creditMemoName)}</Td>
-                                <Td className="truncate">{displayCell(item.salesOrderLine)}</Td>
-                                <Td className="truncate">
-                                    {item.customerQuoteId && item.customerQuoteLineId ? (
-                                        <Link href={`/quotes/${item.customerQuoteId}/lines/${item.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                            {displayCell(item.customerQuoteLine)}
-                                        </Link>
-                                    ) : item.customerQuoteId ? (
-                                        <Link href={`/quotes/${item.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                            {displayCell(item.customerQuoteLine)}
-                                        </Link>
-                                    ) : (
-                                        displayCell(item.customerQuoteLine)
-                                    )}
-                                </Td>
-                                <Td className="truncate">
-                                    {item.proposedProductId ? (
-                                        <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                            {displayCell(item.proposedProduct)}
-                                        </Link>
-                                    ) : (
-                                        displayCell(item.proposedProduct)
-                                    )}
-                                </Td>
-                                <Td className="truncate">
-                                    {item.productId ? (
-                                        <Link href={`/products/${item.productId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                            {displayCell(item.productName)}
-                                        </Link>
-                                    ) : (
-                                        displayCell(item.productName)
-                                    )}
-                                </Td>
-                                <Td className="min-w-[180px] truncate" title={item.description}>{displayCell(item.description)}</Td>
-                                <Td className="truncate">{displayCell(item.brand)}</Td>
-                                <Td className="truncate">{formatCurrency(item.unitPrice)}</Td>
-                                <Td className="truncate">{formatNumber(item.creditQty)}</Td>
-                                <Td className="truncate font-bold">{formatCurrency(item.totalPrice)}</Td>
-                                <Td className="truncate">{formatCurrency(item.shipping)}</Td>
-                                <Td className="truncate">{formatCurrency(item.taxes)}</Td>
-                            </Tr>
-                        ))}
-                    </TBody>
-                </Table>
-            </div>
+                <div className="overflow-auto ">
+                    <Table className="text-sm table-fixed">
+                        <THead>
+                            <tr>
+                                <SortableHeader label="Credit Memo Line" field="lineName" sortConfig={sortConfig} requestSort={requestSort} width={widths.lineName} onResize={handleResize} className="sticky left-0 top-0 z-20 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Credit Memo #" field="creditMemoName" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditMemoName} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Sales Order Line" field="salesOrderLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrderLine} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Customer Quote Line" field="customerQuoteLine" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteLine} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Proposed Product" field="proposedProduct" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposedProduct} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Product Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturerDBA} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Unit Price" field="unitPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Credited Qty" field="creditQty" sortConfig={sortConfig} requestSort={requestSort} width={widths.creditQty} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                                <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} className="sticky top-0 z-10 bg-primary-light dark:bg-gray-900" />
+                            </tr>
+                        </THead>
+                        <TBody>
+                            {paginatedData.map((item) => (
+                                <Tr key={item.id} className="border-b border-gray-100 dark:border-gray-700">
+                                    {/* Sticky column — z-10, inherits row bg */}
+                                    <Td className="text-left sticky left-0 bg-white dark:bg-gray-800 truncate">{displayCell(item.lineName)}</Td>
+                                    <Td className="truncate">
+                                        <StatusBadge status={item.status} variant="pill" />
+                                    </Td>
+                                    <Td className="truncate">{displayCell(item.creditMemoName)}</Td>
+                                    <Td className="truncate">{displayCell(item.salesOrderLine)}</Td>
+                                    <Td className="truncate">
+                                        {item.customerQuoteId && item.customerQuoteLineId ? (
+                                            <Link href={`/quotes/${item.customerQuoteId}/lines/${item.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                {displayCell(item.customerQuoteLine)}
+                                            </Link>
+                                        ) : item.customerQuoteId ? (
+                                            <Link href={`/quotes/${item.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                {displayCell(item.customerQuoteLine)}
+                                            </Link>
+                                        ) : (
+                                            displayCell(item.customerQuoteLine)
+                                        )}
+                                    </Td>
+                                    <Td className="truncate">
+                                        {item.proposedProductId ? (
+                                            <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                {displayCell(item.proposedProduct)}
+                                            </Link>
+                                        ) : (
+                                            displayCell(item.proposedProduct)
+                                        )}
+                                    </Td>
+                                    <Td className="truncate" title={item.productName}>
+                                        {item.productId ? (
+                                            <Link href={`/products/${item.productId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                {displayCell(item.productName)}
+                                            </Link>
+                                        ) : (
+                                            displayCell(item.productName)
+                                        )}
+                                    </Td>
+                                    <Td className="min-w-[180px] truncate" title={item.description}>{displayCell(item.description)}</Td>
+                                    <Td className="truncate">{displayCell(item.brand)}</Td>
+                                    <Td className="truncate">{formatCurrency(item.unitPrice)}</Td>
+                                    <Td className="truncate">{formatNumber(item.creditQty)}</Td>
+                                    <Td className="truncate font-bold">{formatCurrency(item.totalPrice)}</Td>
+                                    <Td className="truncate">{formatCurrency(item.shipping)}</Td>
+                                    <Td className="truncate">{formatCurrency(item.taxes)}</Td>
+                                </Tr>
+                            ))}
+                        </TBody>
+                    </Table>
+                </div>
             </div>
             <Pagination
                 currentPage={currentPage}

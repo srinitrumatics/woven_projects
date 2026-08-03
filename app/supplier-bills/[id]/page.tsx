@@ -119,6 +119,7 @@ export default function SupplierBillDetailPage() {
                         proposalId: l.Proposal__c || '',
                         purchaseOrderId: l.Purchase_Order__c || l.Purchase_Order_Line__r?.Purchase_Order__c || '',
                         purchaseOrderLineId: l.Purchase_Order_Line__c || '',
+                        productId: l.Product_Name__c || '',
                         productName: l.Product_Name || '',
                         productDescription: l.Product_Description__c || '',
                         brand: l.Product_Brand_Name__c || '',

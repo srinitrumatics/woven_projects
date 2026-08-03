@@ -59,6 +59,7 @@ export interface SupplierBillLine {
   purchaseOrderLineName: string;
   purchaseOrderId?: string;
   purchaseOrderLineId?: string;
+  productId: string;
   productName: string;
   productDescription: string;
   manufacturerDBA: string;
