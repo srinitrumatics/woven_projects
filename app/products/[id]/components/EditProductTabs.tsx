@@ -631,33 +631,31 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
         </button>
       </div>
 
-      {isDatasheetModalOpen && (
-        <DatasheetModal
-          productId={productToEdit?.Id}
-          datasheetToEdit={selectedDatasheet}
-          onClose={() => { setIsDatasheetModalOpen(false); setSelectedDatasheet(null); }}
-          onSuccess={() => {
-            setIsDatasheetModalOpen(false);
-            setSelectedDatasheet(null);
-            success("Datasheet saved successfully!");
-            setTimeout(() => window.location.reload(), 5000);
-          }}
-        />
-      )}
-      {isCertModalOpen && (
-        <CertificationModal
-          productId={productToEdit?.Id}
-          certificationToEdit={selectedCert}
-          picklists={picklists}
-          onClose={() => { setIsCertModalOpen(false); setSelectedCert(null); }}
-          onSuccess={() => {
-            setIsCertModalOpen(false);
-            setSelectedCert(null);
-            success("Certification saved successfully!");
-            setTimeout(() => window.location.reload(), 5000);
-          }}
-        />
-      )}
+      <DatasheetModal
+        isOpen={isDatasheetModalOpen}
+        productId={productToEdit?.Id}
+        datasheetToEdit={selectedDatasheet}
+        onClose={() => { setIsDatasheetModalOpen(false); setSelectedDatasheet(null); }}
+        onSuccess={() => {
+          setIsDatasheetModalOpen(false);
+          setSelectedDatasheet(null);
+          success("Datasheet saved successfully!");
+          setTimeout(() => window.location.reload(), 5000);
+        }}
+      />
+      <CertificationModal
+        isOpen={isCertModalOpen}
+        productId={productToEdit?.Id}
+        certificationToEdit={selectedCert}
+        picklists={picklists}
+        onClose={() => { setIsCertModalOpen(false); setSelectedCert(null); }}
+        onSuccess={() => {
+          setIsCertModalOpen(false);
+          setSelectedCert(null);
+          success("Certification saved successfully!");
+          setTimeout(() => window.location.reload(), 5000);
+        }}
+      />
     </div>
   );
 }

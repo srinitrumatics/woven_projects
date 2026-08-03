@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
+import Modal from "@/components/ui/Modal";
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -219,7 +220,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
     }
   };
 
-  if (!isOpen) return null;
+  if (inlineMode && !isOpen) return null;
 
   const renderField = (label: string, name: string, type: string = "text", options?: string[], required: boolean = false, isReadOnly: boolean = false) => {
     if (type === "select") {
@@ -298,22 +299,8 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
     </div>
   );
 
-  const formContent = (
-    <div className={`bg-white dark:bg-gray-800 flex flex-col ${inlineMode ? 'w-full h-full rounded-xl shadow-sm border border-gray-200 dark:border-gray-700' : 'rounded-lg shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700'}`}>
-
-      {/* Header - Hidden in inline mode since page already has header */}
-      {!inlineMode && (
-        <div className="px-6 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800">
-          <h2 className="text-lg font-bold text-gray-700 dark:text-white">{isEditingMode ? "Edit Product" : "Create Product"}</h2>
-          <button onClick={onClose} className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-400">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-          </button>
-        </div>
-      )}
-
-      {/* Form Body */}
-      <div className={`p-6 ${inlineMode ? '' : 'overflow-y-auto scrollbar-thin'}`}>
-
+  const bodyFields = (
+    <>
         <SectionHeader title="Product Header" />
         <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
           {renderField("Product Name", "name", "text", [], true)}
@@ -436,38 +423,56 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
           {renderField("Product Use Emissions", "productUseEmissions")}
           {renderField("Water Usage", "waterUsage")}
         </div>
-
-      </div>
-
-      {/* Footer */}
-      <div className={`${inlineMode ? 'p-6 rounded-b-xl' : 'p-4'} border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-end items-center gap-3`}>
-        <button
-          onClick={onClose}
-          disabled={isSubmitting}
-          className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all disabled:opacity-50"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleSubmit}
-          disabled={isSubmitting || !selectedAccount || !user}
-          className="px-10 py-2 bg-primary hover:bg-primary-dark text-white text-sm font-bold rounded-lg shadow-sm transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-        >
-          {isSubmitting && (
-            <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-          )}
-          {isSubmitting ? "Saving..." : (isEditingMode ? "Update" : "Save")}
-        </button>
-      </div>
-    </div>
+    </>
   );
 
-  return inlineMode ? formContent : (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      {formContent}
-    </div>
+  const footerButtons = (
+    <>
+      <button
+        onClick={onClose}
+        disabled={isSubmitting}
+        className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all disabled:opacity-50"
+      >
+        Cancel
+      </button>
+      <button
+        onClick={handleSubmit}
+        disabled={isSubmitting || !selectedAccount || !user}
+        className="px-10 py-2 bg-primary hover:bg-primary-dark text-white text-sm font-bold rounded-lg shadow-sm transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+      >
+        {isSubmitting && (
+          <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        )}
+        {isSubmitting ? "Saving..." : (isEditingMode ? "Update" : "Save")}
+      </button>
+    </>
+  );
+
+  if (inlineMode) {
+    return (
+      <div className="bg-white dark:bg-gray-800 flex flex-col w-full h-full rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="p-6">
+          {bodyFields}
+        </div>
+        <div className="p-6 rounded-b-xl border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-end items-center gap-3">
+          {footerButtons}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isEditingMode ? "Edit Product" : "Create Product"}
+      size="2xl"
+      footer={footerButtons}
+    >
+      {bodyFields}
+    </Modal>
   );
 }

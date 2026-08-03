@@ -3,15 +3,17 @@
 import { useState } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
+import Modal from "@/components/ui/Modal";
 
 interface DatasheetModalProps {
+  isOpen: boolean;
   productId: string;
   onClose: () => void;
   onSuccess: () => void;
   datasheetToEdit?: any;
 }
 
-export default function DatasheetModal({ productId, onClose, onSuccess, datasheetToEdit }: DatasheetModalProps) {
+export default function DatasheetModal({ isOpen, productId, onClose, onSuccess, datasheetToEdit }: DatasheetModalProps) {
   const { user, selectedAccount } = useUserSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { error: toastError, warning } = useToast();
@@ -80,20 +82,24 @@ export default function DatasheetModal({ productId, onClose, onSuccess, datashee
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="w-full max-w-lg bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex justify-between items-center">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-white">
-            {datasheetToEdit ? "Edit Datasheet" : "Add New Datasheet"}
-          </h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={datasheetToEdit ? "Edit Datasheet" : "Add New Datasheet"}
+      size="sm"
+      footer={
+        <>
+          <button onClick={onClose} disabled={isSubmitting} className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all disabled:opacity-50">
+            Cancel
           </button>
-        </div>
-
-        <div className="p-6 space-y-4">
+          <button onClick={handleSubmit} disabled={isSubmitting} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2">
+            {isSubmitting && <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>}
+            {isSubmitting ? "Saving..." : "Save Datasheet"}
+          </button>
+        </>
+      }
+    >
+        <div className="space-y-4">
           <div className="flex flex-col gap-1 w-full">
             <label className="text-xs font-semibold text-gray-600 dark:text-gray-400">MPN <span className="text-red-500">*</span></label>
             <input
@@ -156,17 +162,6 @@ export default function DatasheetModal({ productId, onClose, onSuccess, datashee
             </label>
           </div>
         </div>
-
-        <div className="px-6 py-4 rounded-b-xl border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-end items-center gap-3">
-          <button onClick={onClose} disabled={isSubmitting} className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all disabled:opacity-50">
-            Cancel
-          </button>
-          <button onClick={handleSubmit} disabled={isSubmitting} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2">
-            {isSubmitting && <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>}
-            {isSubmitting ? "Saving..." : "Save Datasheet"}
-          </button>
-        </div>
-      </div>
-    </div>
+    </Modal>
   );
 }

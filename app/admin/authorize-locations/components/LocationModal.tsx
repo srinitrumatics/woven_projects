@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { AuthorizeLocation } from "../types";
+import Modal from "@/components/ui/Modal";
 
 interface LocationModalProps {
     isOpen: boolean;
@@ -103,8 +104,6 @@ export default function LocationModal({
         }
     }, [location, mode, isOpen]);
 
-    if (!isOpen) return null;
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
         const val = type === "checkbox" ? (e.target as HTMLInputElement).checked : value;
@@ -114,35 +113,41 @@ export default function LocationModal({
     const title = mode === "add" ? "Add Location Details" : mode === "edit" ? "Edit Location Details" : "Location Details";
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={onClose}>
-            <div
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
-                onClick={e => e.stopPropagation()}
-            >
-                {/* Header */}
-                <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white truncate" title={title}>{title}</h2>
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            title={title}
+            size="lg"
+            footer={
+                <>
                     <button
+                        type="button"
                         onClick={onClose}
-                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors truncate"
+                        className="px-6 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors shadow-sm truncate"
                     >
-                        <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        {mode === "view" ? "Close" : "Cancel"}
                     </button>
-                </div>
-
-                {/* Content */}
+                    {mode !== "view" && (
+                        <button
+                            form="location-modal-form"
+                            type="submit"
+                            className="px-6 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm truncate"
+                        >
+                            Save Location
+                        </button>
+                    )}
+                </>
+            }
+        >
                 <form
+                    id="location-modal-form"
                     onSubmit={(e) => {
                         e.preventDefault();
                         if (onSave) {
                             onSave(formData);
                         }
                     }}
-                    className="flex-1 overflow-y-auto flex flex-col"
                 >
-                    <div className="flex-1 overflow-y-auto p-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="md:col-span-2">
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 truncate">
@@ -388,28 +393,7 @@ export default function LocationModal({
                                 />
                             </div>
                         </div>
-                    </div>
-
-                    {/* Footer */}
-                    <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900/40 border-t border-gray-100 dark:border-gray-700 flex justify-end gap-3">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="px-6 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors shadow-sm truncate"
-                        >
-                            {mode === "view" ? "Close" : "Cancel"}
-                        </button>
-                        {mode !== "view" && (
-                            <button
-                                type="submit"
-                                className="px-6 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm truncate"
-                            >
-                                Save Location
-                            </button>
-                        )}
-                    </div>
                 </form>
-            </div>
-        </div>
+        </Modal>
     );
 }

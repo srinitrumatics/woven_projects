@@ -213,3 +213,27 @@ th .line-clamp-2 {
 img {
   -webkit-user-drag: none;
 }
+
+/* Shared Modal component (components/ui/Modal.tsx) enter/exit animation,
+   driven by Radix Dialog's own data-state attribute so it stays in sync
+   with focus management and unmount timing rather than fighting it. */
+@keyframes modal-overlay-show {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes modal-overlay-hide {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes modal-content-show {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes modal-content-hide {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
+}
+.modal-overlay[data-state="open"] { animation: modal-overlay-show 150ms ease-out; }
+.modal-overlay[data-state="closed"] { animation: modal-overlay-hide 150ms ease-in; }
+.modal-content[data-state="open"] { animation: modal-content-show 150ms ease-out; }
+.modal-content[data-state="closed"] { animation: modal-content-hide 150ms ease-in; }

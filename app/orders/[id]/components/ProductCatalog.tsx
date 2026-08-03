@@ -6,6 +6,7 @@ import { formatCurrency, formatNumber, truncateText, displayCell } from "@/lib/u
 import { SortableHeader } from "../../../../components/ui/SortableHeader";
 import { SortConfig } from "../../../../hooks/useSortableData"; // Import SortConfig type
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
+import Modal from "@/components/ui/Modal";
 
 interface ProductCatalogProps {
     selectedProductIds: Set<string>;
@@ -278,68 +279,59 @@ export default function ProductCatalog({
                 </div>
             )}
             {/* Image Popup Modal */}
-            {
-                popupProduct && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={handleClosePopup}>
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-lg w-full p-6 relative" onClick={e => e.stopPropagation()}>
-                            <button
-                                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 truncate"
-                                onClick={handleClosePopup}
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
+            <Modal
+                isOpen={!!popupProduct}
+                onClose={handleClosePopup}
+                title={popupProduct?.name || ""}
+                size="sm"
+            >
+                {popupProduct && (
+                    <div className="flex flex-col items-center min-w-0">
+                        <div className="w-64 h-64 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center mb-6">
+                            <svg className="w-32 h-32 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        </div>
 
-                            <div className="flex flex-col items-center min-w-0">
-                                <div className="w-64 h-64 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center mb-6">
-                                    <svg className="w-32 h-32 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                    </svg>
-                                </div>
+                        <p className="text-sm font-mono text-gray-500 dark:text-gray-400 mb-4 truncate">{popupProduct.sku}</p>
 
-                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 text-center " title={popupProduct.name}>{popupProduct.name}</h3>
-                                <p className="text-sm font-mono text-gray-500 dark:text-gray-400 mb-4 truncate">{popupProduct.sku}</p>
-
-                                <div className="w-full grid grid-cols-2 gap-4 mb-6">
-                                    <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                                        <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Brand</span>
-                                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{popupProduct.brand}</span>
-                                    </div>
-                                    <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                                        <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Family</span>
-                                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{popupProduct.productFamily}</span>
-                                    </div>
-                                    <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                                        <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Price</span>
-                                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{formatCurrency(popupProduct.unitPrice)}</span>
-                                    </div>
-                                    <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                                        <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Available</span>
-                                        <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{formatNumber(popupProduct.availableQty)}</span>
-                                    </div>
-                                </div>
-
-                                <p className="text-gray-600 dark:text-gray-300 text-center mb-6 truncate">
-                                    {popupProduct.description || "No description available."}
-                                </p>
-
-                                {isEditing && (
-                                    <button
-                                        onClick={() => {
-                                            handleAddProduct(popupProduct);
-                                            handleClosePopup();
-                                        }}
-                                        className="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark transition-colors"
-                                    >
-                                        Add to Order
-                                    </button>
-                                )}
+                        <div className="w-full grid grid-cols-2 gap-4 mb-6">
+                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                                <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Brand</span>
+                                <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{popupProduct.brand}</span>
+                            </div>
+                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                                <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Family</span>
+                                <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{popupProduct.productFamily}</span>
+                            </div>
+                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                                <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Price</span>
+                                <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{formatCurrency(popupProduct.unitPrice)}</span>
+                            </div>
+                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                                <span className="text-xs text-gray-500 dark:text-gray-400 block truncate">Available</span>
+                                <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{formatNumber(popupProduct.availableQty)}</span>
                             </div>
                         </div>
+
+                        <p className="text-gray-600 dark:text-gray-300 text-center mb-6 truncate">
+                            {popupProduct.description || "No description available."}
+                        </p>
+
+                        {isEditing && (
+                            <button
+                                onClick={() => {
+                                    handleAddProduct(popupProduct);
+                                    handleClosePopup();
+                                }}
+                                className="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark transition-colors"
+                            >
+                                Add to Order
+                            </button>
+                        )}
                     </div>
-                )
-            }
+                )}
+            </Modal>
             {/* Pagination for Catalog */}
             {
                 paginatedCatalogProducts.length > 0 && (

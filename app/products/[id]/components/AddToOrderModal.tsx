@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import Modal from "@/components/ui/Modal";
 
 interface Order {
   id: string;
@@ -194,87 +195,14 @@ export default function AddToOrderModal({
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-        {/* Header */}
-        <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Add to Order</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
-          {/* Product Summary */}
-          <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
-            <div className="flex justify-between items-start gap-4">
-              <div>
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Product</p>
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white line-clamp-2">{product.name}</h3>
-              </div>
-              <div className="text-right">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Quantity</p>
-                <p className="text-sm font-bold text-primary">{formatNumber(quantity)}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Order Selection */}
-          <div>
-            <label className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-3 block">
-              Select Draft Order
-            </label>
-
-            {loading ? (
-              <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              </div>
-            ) : orders.length === 0 ? (
-              <div className="text-center py-8 bg-gray-50 dark:bg-gray-900/30 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">No draft orders found.</p>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {orders.map((order) => (
-                  <button
-                    key={order.id}
-                    onClick={() => setSelectedOrderId(order.id)}
-                    className={`w-full p-4 rounded-xl border transition-all text-left flex justify-between items-center ${selectedOrderId === order.id
-                      ? "border-primary bg-primary/5 ring-1 ring-primary"
-                      : "border-gray-200 dark:border-gray-700 hover:border-primary/50 bg-white dark:bg-gray-800"
-                      }`}
-                  >
-                    <div>
-                      <p className="text-sm font-bold text-gray-900 dark:text-white">{order.name}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[200px]">
-                        {order.proposal_name || "No Proposal Name"}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(order.total)}</p>
-                      <StatusBadge status={order.status} variant="compact" />
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {error && (
-            <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 text-xs rounded-lg">
-              {error}
-            </div>
-          )}
-        </div>
-
-        {/* Footer */}
-        <div className="p-6 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30 flex flex-wrap gap-3">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Add to Order"
+      size="sm"
+      footer={
+        <>
           <button
             onClick={onClose}
             className="flex-1 py-3 px-4 border border-gray-200 dark:border-gray-700 rounded-xl font-bold text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-800 transition-colors"
@@ -299,8 +227,71 @@ export default function AddToOrderModal({
               {adding ? "Adding..." : "Add to Order"}
             </button>
           )}
+        </>
+      }
+    >
+      <div className="space-y-6">
+        {/* Product Summary */}
+        <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
+          <div className="flex justify-between items-start gap-4">
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Product</p>
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white line-clamp-2">{product.name}</h3>
+            </div>
+            <div className="text-right">
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Quantity</p>
+              <p className="text-sm font-bold text-primary">{formatNumber(quantity)}</p>
+            </div>
+          </div>
         </div>
+
+        {/* Order Selection */}
+        <div>
+          <label className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-3 block">
+            Select Draft Order
+          </label>
+
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          ) : orders.length === 0 ? (
+            <div className="text-center py-8 bg-gray-50 dark:bg-gray-900/30 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">No draft orders found.</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {orders.map((order) => (
+                <button
+                  key={order.id}
+                  onClick={() => setSelectedOrderId(order.id)}
+                  className={`w-full p-4 rounded-xl border transition-all text-left flex justify-between items-center ${selectedOrderId === order.id
+                    ? "border-primary bg-primary/5 ring-1 ring-primary"
+                    : "border-gray-200 dark:border-gray-700 hover:border-primary/50 bg-white dark:bg-gray-800"
+                    }`}
+                >
+                  <div>
+                    <p className="text-sm font-bold text-gray-900 dark:text-white">{order.name}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[200px]">
+                      {order.proposal_name || "No Proposal Name"}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(order.total)}</p>
+                    <StatusBadge status={order.status} variant="compact" />
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {error && (
+          <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 text-xs rounded-lg">
+            {error}
+          </div>
+        )}
       </div>
-    </div>
+    </Modal>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DeliveryWindow } from "../types";
+import Modal from "@/components/ui/Modal";
 
 interface DeliveryWindowModalProps {
     isOpen: boolean;
@@ -207,20 +208,40 @@ export default function DeliveryWindowModal({
         }
     };
 
-    if (!isOpen) return null;
-
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden animate-in zoom-in-95 duration-200">
-                {/* Header */}
-                <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between bg-gray-50/50 dark:bg-gray-900/50">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white " title={title}>{title}</h2>
-                    <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors truncate">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            title={title}
+            size="md"
+            footer={
+                <>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="px-6 py-2 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all font-medium truncate"
+                    >
+                        Cancel
                     </button>
-                </div>
-
-                <form onSubmit={handleSubmit} className="p-6">
+                    <button
+                        form="delivery-window-modal-form"
+                        type="submit"
+                        disabled={loading}
+                        className={`px-8 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all font-semibold shadow-md flex items-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                    >
+                        {loading ? (
+                            <>
+                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                Saving...
+                            </>
+                        ) : (
+                            "Save Window"
+                        )}
+                    </button>
+                </>
+            }
+        >
+                <form id="delivery-window-modal-form" onSubmit={handleSubmit}>
                     {/* Error Display */}
                     {error && (
                         <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium animate-in slide-in-from-top-2 duration-300 flex justify-between items-center">
@@ -348,33 +369,7 @@ export default function DeliveryWindowModal({
                             />
                         </div>
                     </div>
-
-                    {/* Footer */}
-                    <div className="mt-8 flex gap-3 justify-end">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="px-6 py-2 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all font-medium truncate"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className={`px-8 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all font-semibold shadow-md flex items-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
-                        >
-                            {loading ? (
-                                <>
-                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                    Saving...
-                                </>
-                            ) : (
-                                "Save Window"
-                            )}
-                        </button>
-                    </div>
                 </form>
-            </div>
-        </div>
+        </Modal>
     );
 }
