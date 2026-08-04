@@ -108,29 +108,8 @@ export default function SignUpForm() {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
-      {/* CTA panel - shown after form on mobile, left on desktop */}
-      <aside className="w-full md:w-1/2 bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center px-6 md:px-12 py-10 relative overflow-hidden order-2 md:order-1">
-        <div className="hidden md:block absolute top-20 left-20 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="hidden md:block absolute bottom-20 right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 text-center max-w-md mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 md:mb-6">
-            One Of Us?
-          </h2>
-          <p className="text-white/90 text-base md:text-lg mb-6 md:mb-8 leading-relaxed">
-            If you already have an account, just sign in. We've missed you!
-          </p>
-          <button
-            onClick={handleSignInClick}
-            className="w-full md:w-auto px-6 md:px-12 py-3 bg-white text-[var(--primary-dark)] rounded-full font-semibold hover:bg-gray-100 transition duration-200 shadow"
-          >
-            Sign In
-          </button>
-        </div>
-      </aside>
-
-      {/* Sign Up form panel - shown first on mobile */}
-      <main className="w-full md:w-1/2 flex items-center justify-center bg-white px-6 md:px-12 py-10 order-1 md:order-2">
+      {/* Sign Up form panel - left on desktop, first on mobile */}
+      <main className="w-full md:w-1/2 flex items-center justify-center bg-white px-6 md:px-12 py-10">
         <div className="w-full max-w-md mx-auto">
           <h2 className="text-2xl md:text-4xl font-bold text-primary mb-2 text-center">
             Create Free Account
@@ -144,7 +123,7 @@ export default function SignUpForm() {
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <label htmlFor="signup-name" className="sr-only">
+                <label htmlFor="signup-name" className="block text-sm font-medium text-gray-700 mb-1">
                   Name
                 </label>
                 <input
@@ -161,7 +140,7 @@ export default function SignUpForm() {
               </div>
 
               <div>
-                <label htmlFor="signup-surname" className="sr-only">
+                <label htmlFor="signup-surname" className="block text-sm font-medium text-gray-700 mb-1">
                   Surname
                 </label>
                 <input
@@ -179,7 +158,7 @@ export default function SignUpForm() {
             </div>
 
             <div>
-              <label htmlFor="signup-email" className="sr-only">
+              <label htmlFor="signup-email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email
               </label>
               <input
@@ -197,7 +176,7 @@ export default function SignUpForm() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <label htmlFor="signup-password" title="Password" className="sr-only">
+                <label htmlFor="signup-password" title="Password" className="block text-sm font-medium text-gray-700 mb-1">
                   Password
                 </label>
                 <div className="relative">
@@ -246,7 +225,7 @@ export default function SignUpForm() {
               </div>
 
               <div>
-                <label htmlFor="signup-confirm-password" title="Confirm Password" className="sr-only">
+                <label htmlFor="signup-confirm-password" title="Confirm Password" className="block text-sm font-medium text-gray-700 mb-1">
                   Confirm Password
                 </label>
                 <input
@@ -297,6 +276,27 @@ export default function SignUpForm() {
           </form>
         </div>
       </main>
+
+      {/* CTA panel - right on desktop, shown after form on mobile */}
+      <aside className="w-full md:w-1/2 bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center px-6 md:px-12 py-10 relative overflow-hidden">
+        <div className="hidden md:block absolute top-20 right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="hidden md:block absolute bottom-20 left-20 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 text-center max-w-md mx-auto">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 md:mb-6">
+            One Of Us?
+          </h2>
+          <p className="text-white/90 text-base md:text-lg mb-6 md:mb-8 leading-relaxed">
+            If you already have an account, just sign in. We've missed you!
+          </p>
+          <button
+            onClick={handleSignInClick}
+            className="w-full md:w-auto px-6 md:px-12 py-3 bg-white text-[var(--primary-dark)] rounded-full font-semibold hover:bg-gray-100 transition duration-200 shadow"
+          >
+            Sign In
+          </button>
+        </div>
+      </aside>
     </div>
   );
 }
