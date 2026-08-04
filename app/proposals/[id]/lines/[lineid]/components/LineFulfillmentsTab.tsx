@@ -152,7 +152,6 @@ export default function LineFulfillmentsTab({
                     ]}
                     activeKey={activeTab}
                     onChange={(key) => onTabChange(key as any)}
-                    className="mb-6"
                 />
 
                 {/* Customer Quotes Table */}

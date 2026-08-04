@@ -11,7 +11,7 @@ export interface SubTabsProps {
 
 export default function SubTabs({ tabs, activeKey, onChange, className }: SubTabsProps) {
     return (
-        <div className={className ?? "flex gap-6 mb-4 border-b border-gray-200 dark:border-gray-700 overflow-x-auto"}>
+        <div className={`flex gap-6 mb-4 border-b border-gray-200 dark:border-gray-700 overflow-x-auto ${className ?? ""}`}>
             {tabs.map((tab) => (
                 <button
                     key={tab.key}

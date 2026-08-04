@@ -166,7 +166,6 @@ export default function LineReturnsTab({ returnsData, loading }: LineReturnsTabP
                 tabs={tabs.map((tab) => ({ key: tab.id, label: tab.label, count: tab.count }))}
                 activeKey={activeTab}
                 onChange={(key) => setActiveTab(key as any)}
-                className="flex gap-8 mb-6 border-b border-gray-200 dark:border-gray-700 overflow-x-auto"
             />
 
             {/* Content */}

@@ -78,7 +78,6 @@ export default function SupplierBillPaymentsTab({ billPayments, appliedDebits }:
                 ]}
                 activeKey={subTab}
                 onChange={(key) => setSubTab(key as 'bill-payments' | 'applied-debits')}
-                className="flex gap-4 border-b border-gray-100 dark:border-gray-700 overflow-x-auto pb-2"
             />
 
             {/* Sub Tab Content */}

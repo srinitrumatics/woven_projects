@@ -314,7 +314,6 @@ export default function QuoteLineReturnsTab({
                 }))}
                 activeKey={activeSubTab}
                 onChange={(key) => setActiveSubTab(key as any)}
-                className="flex gap-2 border-b border-gray-200 dark:border-gray-700 overflow-x-auto mb-3"
             />
 
             {/* Table Area */}

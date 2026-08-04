@@ -23,7 +23,6 @@ export default function POReturnsTab({ debitMemos, rtv }: POReturnsTabProps) {
                 ]}
                 activeKey={activeSubTab}
                 onChange={(key) => setActiveSubTab(key as "debitMemo" | "rtv")}
-                className="flex gap-4 border-b border-gray-100 dark:border-gray-700 overflow-x-auto pb-2"
             />
 
             {/* Sub-tab Content */}

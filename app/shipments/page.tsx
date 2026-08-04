@@ -631,16 +631,14 @@ export default function ShipmentsPage() {
           </div>
         </div>
         {/* Pagination Section */}
-        <div className="p-4 bg-gray-50/50 dark:bg-gray-800/50">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            totalItems={filteredShipments.length}
-            itemsPerPage={ITEMS_PER_PAGE}
-            onPageChange={setCurrentPage}
-            itemName="shipments"
-          />
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredShipments.length}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={setCurrentPage}
+          itemName="shipments"
+        />
       </div>
     </Sidebar >
   );

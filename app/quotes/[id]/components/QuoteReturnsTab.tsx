@@ -201,7 +201,6 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
                 tabs={tabs.map((tab) => ({ key: tab.id, label: tab.label, count: tab.count }))}
                 activeKey={activeSubTab}
                 onChange={(key) => setActiveSubTab(key as ReturnsSubTab)}
-                className="flex gap-8 mb-0 border-b border-gray-200 dark:border-gray-700 overflow-x-auto px-4"
             />
 
             <div className="p-0 bg-gray-50 dark:bg-gray-900/50 py-2">

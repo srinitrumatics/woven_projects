@@ -157,7 +157,6 @@ export default function QuotePurchasesTab({ quoteId, data, loading }: QuotePurch
                 ]}
                 activeKey={activeSubTab}
                 onChange={(key) => setActiveSubTab(key as PurchasesSubTab)}
-                className="flex gap-8 mb-0 border-b border-gray-200 dark:border-gray-700 overflow-x-auto px-4"
             />
 
             {/* Tab Content */}

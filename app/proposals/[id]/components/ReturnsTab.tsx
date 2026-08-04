@@ -78,7 +78,6 @@ export default function ReturnsTab({ returnsData, loading, widths, onResize }: R
                 tabs={tabs.map((tab) => ({ key: tab.id, label: tab.label, count: tab.count }))}
                 activeKey={activeTab}
                 onChange={(key) => handleTabChange(key as ReturnsTabType)}
-                className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto mb-6"
             />
 
             {/* Content */}

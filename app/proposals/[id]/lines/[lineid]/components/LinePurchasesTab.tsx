@@ -105,7 +105,7 @@ export default function LinePurchasesTab({ purchasesData, loading }: LinePurchas
                 ]}
                 activeKey={activeTab}
                 onChange={(key) => setActiveTab(key as any)}
-                className="flex gap-8 mb-6 border-b border-gray-200 dark:border-gray-700 overflow-x-auto px-6 pt-6"
+                className="px-6 pt-6"
             />
 
             {/* Content */}

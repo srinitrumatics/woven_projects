@@ -730,7 +730,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
               }}
             />
           </div>
-          <div className="px-4">
+          <div className="p-4">
             {activeTab === 'quotelines' && (
               <QuoteLinesTab
                 products={sortedLines}
