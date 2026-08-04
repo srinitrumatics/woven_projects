@@ -1,11 +1,11 @@
 import { PurchaseOrder } from "../../types";
 import { formatDate } from "@/lib/utils/formatting";
 
-interface POSupplierInfoProps {
+interface POBillingInfoProps {
     po: PurchaseOrder;
 }
 
-export default function POSupplierInfo({ po }: POSupplierInfoProps) {
+export default function POBillingInfo({ po }: POBillingInfoProps) {
     const formatAddress = (addr: any) => {
         if (!addr) return 'N/A';
         const parts = [
