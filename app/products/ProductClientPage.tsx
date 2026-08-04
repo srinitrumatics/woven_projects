@@ -24,6 +24,8 @@ import { Product } from "../orders/types";
 import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
 import AddProductModal from "./components/AddProductModal";
+import AddToOrderModal from "./[id]/components/AddToOrderModal";
+import PermissionGate from "@/components/PermissionGate";
 import { getCategoryFromAccountType, MANUFACTURER_GROUP } from "@/lib/permissions";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
 
@@ -154,6 +156,19 @@ function Content({ indexName }: { indexName: string }) {
   const [showOnlyMine, setShowOnlyMine] = useState(false);
   const [productToEdit, setProductToEdit] = useState<any>(null);
   const [stockFilter, setStockFilter] = useState<'all' | 'in_stock' | 'out_of_stock'>('all');
+  const accountId = selectedAccount?.Id || selectedAccount?.id || "";
+  const contactId = user?.contact?.Id || user?.contact?.id || "";
+  const [addToOrderProduct, setAddToOrderProduct] = useState<{ id: string; name: string; price: number } | null>(null);
+  const [addToOrderQuantity, setAddToOrderQuantity] = useState(1);
+
+  const openAddToOrder = (p: any) => {
+    setAddToOrderProduct({
+      id: p.objectID || p.id,
+      name: p.name,
+      price: typeof p.price === 'number' ? p.price : (p.unitPrice || 0),
+    });
+    setAddToOrderQuantity(parseInt(p.moq) || 1);
+  };
 
   const canEditProduct = (p: any) => {
     if (isAdmin) return true;
@@ -439,11 +454,13 @@ function Content({ indexName }: { indexName: string }) {
               products={products}
               canEditProduct={canEditProduct}
               onEdit={(p) => { setProductToEdit(p); setIsAddModalOpen(true); }}
+              onAddToOrder={openAddToOrder}
             />
           ) : (
             <ListView
               canEditProduct={canEditProduct}
               onEdit={(p) => { setProductToEdit(p); setIsAddModalOpen(true); }}
+              onAddToOrder={openAddToOrder}
             />
           )}
         </div>
@@ -473,6 +490,16 @@ function Content({ indexName }: { indexName: string }) {
           setProductToEdit(null);
         }}
         productToEdit={productToEdit}
+      />
+
+      <AddToOrderModal
+        isOpen={!!addToOrderProduct}
+        onClose={() => setAddToOrderProduct(null)}
+        product={addToOrderProduct}
+        quantity={addToOrderQuantity}
+        moq={addToOrderQuantity}
+        accountId={accountId}
+        contactId={contactId}
       />
     </div>
   );
@@ -505,9 +532,10 @@ interface ViewProps {
   products: Product[];
   canEditProduct: (p: any) => boolean;
   onEdit: (p: any) => void;
+  onAddToOrder: (p: any) => void;
 }
 /* card View Products Function Start */
-const CardView = ({ products, canEditProduct, onEdit }: ViewProps) => (
+const CardView = ({ products, canEditProduct, onEdit, onAddToOrder }: ViewProps) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {products.length === 0 ? (
       <div key="no-matches" className="col-span-full text-center py-12 text-gray-500 dark:text-gray-400">
@@ -578,18 +606,21 @@ const CardView = ({ products, canEditProduct, onEdit }: ViewProps) => (
                   </span>
                 </div>*/}
                 <div className="flex gap-2 w-full mt-2">
-                  <button
-                    disabled={product.availableQty <= 0}
-                    className={`flex-1 px-2 py-1.5 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-1 ${product.availableQty <= 0
-                      ? "bg-gray-400 cursor-not-allowed text-white opacity-70"
-                      : "bg-primary hover:bg-primary-dark text-white"
-                      }`}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 20 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <span className="truncate">{product.availableQty === 0 ? "Out of Stock" : "Add to Order"}</span>
-                  </button>
+                  <PermissionGate requiredPermissions={['order-create']} fallback={null}>
+                    <button
+                      disabled={product.availableQty <= 0}
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); onAddToOrder(p); }}
+                      className={`flex-1 px-2 py-1.5 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-1 ${product.availableQty <= 0
+                        ? "bg-gray-400 cursor-not-allowed text-white opacity-70"
+                        : "bg-primary hover:bg-primary-dark text-white"
+                        }`}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 20 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                      <span className="truncate">{product.availableQty === 0 ? "Out of Stock" : "Add to Order"}</span>
+                    </button>
+                  </PermissionGate>
                 </div>
               </div>
             </div>
@@ -602,7 +633,7 @@ const CardView = ({ products, canEditProduct, onEdit }: ViewProps) => (
 /* List View Products Function Start */
 const LIST_ITEMS_PER_PAGE = 10;
 
-function ListView({ canEditProduct, onEdit }: Omit<ViewProps, 'products'>) {
+function ListView({ canEditProduct, onEdit, onAddToOrder }: Omit<ViewProps, 'products'>) {
   const { hits } = useHits();
   const { currentRefinement, nbHits, nbPages, refine } = usePagination();
   
@@ -670,18 +701,21 @@ function ListView({ canEditProduct, onEdit }: Omit<ViewProps, 'products'>) {
                     <Td className="px-4 py-3 text-sm text-left text-gray-900 dark:text-white font-semibold" style={{ width: widths.sellingPrice, minWidth: widths.sellingPrice }}>{formatCurrency(sellingPrice)}</Td>
                     <Td className="px-4 py-3 text-left">
                       <div className="flex items-center gap-2">
-                        <button
-                          disabled={product.availableQty <= 0}
-                          title={product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
-                          className={`p-2 rounded-lg transition-colors ${product.availableQty <= 0
-                            ? "bg-gray-100 dark:bg-gray-700 cursor-not-allowed text-gray-400"
-                            : "bg-primary text-white hover:bg-primary-dark"
-                            }`}
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                          </svg>
-                        </button>
+                        <PermissionGate requiredPermissions={['order-create']} fallback={null}>
+                          <button
+                            disabled={product.availableQty <= 0}
+                            title={product.availableQty === 0 ? "Out of Stock" : "Add to Order"}
+                            onClick={() => onAddToOrder(p)}
+                            className={`p-2 rounded-lg transition-colors ${product.availableQty <= 0
+                              ? "bg-gray-100 dark:bg-gray-700 cursor-not-allowed text-gray-400"
+                              : "bg-primary text-white hover:bg-primary-dark"
+                              }`}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                          </button>
+                        </PermissionGate>
                       </div>
                     </Td>
                   </Tr>
