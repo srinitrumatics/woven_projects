@@ -13,7 +13,11 @@ export default function ReportsPage() {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <div className="flex items-center justify-between mb-4 min-w-0">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white ">Available Reports</h2>
-          <button className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors truncate">
+          <button
+            disabled
+            title="Report generation is not yet available"
+            className="px-4 py-2 bg-primary text-white rounded-lg transition-colors truncate opacity-50 cursor-not-allowed"
+          >
             Generate Report
           </button>
         </div>

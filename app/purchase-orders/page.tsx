@@ -50,8 +50,7 @@ export default function PurchaseOrdersPage() {
         trackingStatus: 170,
         estimatedDeliveryDate: 200,
         actualDeliveryDate: 190,
-        goodsReceiptDate: 190,
-        actions: 100
+        goodsReceiptDate: 190
     });
 
     const { user, selectedAccount } = useUserSession();
@@ -327,7 +326,6 @@ export default function PurchaseOrdersPage() {
                                     <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={handleResize} />
                                     <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={handleResize} />
                                     <SortableHeader label="Goods Receipt Date" field="goodsReceiptsDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.goodsReceiptDate} onResize={handleResize} />
-                                    <Th className="px-2 py-2 font-bold text-gray-700 dark:text-gray-200">Action</Th>
                                 </tr>
                             </THead>
                             <TBody>
@@ -398,13 +396,6 @@ export default function PurchaseOrdersPage() {
                                         <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.estimatedDeliveryDate ? formatDate(po.estimatedDeliveryDate, 'numeric-dash') : '-'}>{po.estimatedDeliveryDate ? formatDate(po.estimatedDeliveryDate, 'numeric-dash') : '-'}</Td>
                                         <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.actualDeliveryDate ? formatDate(po.actualDeliveryDate, 'numeric-dash') : '-'}>{po.actualDeliveryDate ? formatDate(po.actualDeliveryDate, 'numeric-dash') : '-'}</Td>
                                         <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.goodsReceiptsDate ? formatDate(po.goodsReceiptsDate, 'numeric-dash') : '-'}>{po.goodsReceiptsDate ? formatDate(po.goodsReceiptsDate, 'numeric-dash') : '-'}</Td>
-                                        <Td className="px-2 truncate">
-                                            <div className="flex items-center gap-2 min-w-0">
-                                                <button className="p-1.5 text-gray-400 hover:text-primary transition-colors hover:bg-primary/10 rounded-lg truncate">
-                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                                                </button>
-                                            </div>
-                                        </Td>
                                     </Tr>
                                 ))}
                             </TBody>

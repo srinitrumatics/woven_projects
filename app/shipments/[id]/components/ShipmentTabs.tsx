@@ -1,6 +1,6 @@
 import Tabs from "@/components/ui/Tabs";
 
-export type ShipmentTabId = "lines" | "inventory" | "serial" | "files" | "tracking";
+export type ShipmentTabId = "lines" | "inventory" | "serial" | "files";
 
 interface ShipmentTabsProps {
     activeTab: ShipmentTabId;
@@ -10,7 +10,6 @@ interface ShipmentTabsProps {
         inventory?: number;
         serial?: number;
         files?: number;
-        tracking?: number;
     };
 }
 

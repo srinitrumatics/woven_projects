@@ -15,7 +15,6 @@ import ShipmentTabs, { ShipmentTabId } from "./components/ShipmentTabs";
 import ShipmentLinesTab from "./components/ShipmentLinesTab";
 import InventoryTab from "./components/InventoryTab";
 import ShipmentFilesTab from "./components/ShipmentFilesTab";
-import { TrackingTimelineTab } from "./components/PlaceholderTabs";
 import SerialNumbersTab from "./components/SerialNumbersTab";
 import { useUserSession } from "@/components/UserSessionContext";
 
@@ -199,7 +198,6 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
             {activeTab === "inventory" && <InventoryTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onCountLoaded={setInventoryCount} />}
             {activeTab === "serial" && <SerialNumbersTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onCountLoaded={setSerialCount} />}
             {activeTab === "files" && <ShipmentFilesTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onFilesCountChange={setFilesCount} />}
-            {activeTab === "tracking" && <TrackingTimelineTab trackingData={trackingData} />}
           </div>
         </div>
       </div>

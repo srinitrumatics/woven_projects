@@ -13,7 +13,7 @@ import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
 import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
 
-type TabFilter = "All" | "On Hold" | "Put-Away";
+type TabFilter = "All" | "On Hold" | "Put-Away" | "Average Aged";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -81,6 +81,7 @@ export default function InventoryPage() {
         if (activeTab === "All") rawRecords = inventoryData["Total Inventory Value"] || [];
         else if (activeTab === "On Hold") rawRecords = inventoryData["Products On Hold"] || [];
         else if (activeTab === "Put-Away") rawRecords = inventoryData["Put-Away"] || [];
+        else if (activeTab === "Average Aged") rawRecords = inventoryData["Average Aged"] || [];
 
         const recordsToMap = Array.isArray(rawRecords) ? rawRecords : [];
 
@@ -417,8 +418,12 @@ export default function InventoryPage() {
                 </button>
 
                 {/* Card 2: Average Aged */}
-                <div
-                    className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-lg flex flex-col h-full transition-all duration-200"
+                <button
+                    onClick={() => handleCardClick("Average Aged")}
+                    className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "Average Aged"
+                        ? "border-slate-500 ring-2 ring-slate-500/20"
+                        : "border-gray-200 dark:border-gray-700 hover:border-slate-500/50"
+                        }`}
                 >
 
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-slate-500 to-slate-300"></div>
@@ -449,7 +454,7 @@ export default function InventoryPage() {
                             </span>
                         </div>
                     </div>
-                </div>
+                </button>
 
                 {/* Card 3: Put-Away */}
 
@@ -567,7 +572,7 @@ export default function InventoryPage() {
                             </svg>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
-                            {(["All", "On Hold", "Put-Away"] as TabFilter[]).map((tab) => (
+                            {(["All", "On Hold", "Put-Away", "Average Aged"] as TabFilter[]).map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => handleCardClick(tab)}
@@ -586,47 +591,47 @@ export default function InventoryPage() {
                 </div>
 
                 <div className="rounded-lg shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    {loading ? (
-                        <TableLoadingState message="Loading inventory data..." />
-                    ) : paginatedInventory.length === 0 ? (
-                        <TableEmptyState
-                            message="No inventory items found"
-                            description="Try adjusting your filters or search query to find what you're looking for."
-                        />
-                    ) : (
-                        <Table className="text-sm table-fixed">
-                            <THead>
-                                <tr>
-                                    <Th className="sticky left-0 z-30 text-center" style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
-                                        <input
-                                            type="checkbox"
-                                            className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
-                                            checked={
-                                                paginatedInventory.filter(i => i.qtyAvailable > 0).length > 0 &&
-                                                paginatedInventory.filter(i => i.qtyAvailable > 0).every(i => selectedItems.has(i.productId || i.id))
-                                            }
-                                            onChange={toggleSelectAll}
-                                        />
-                                    </Th>
-                                    <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} className="sticky bg-primary-light dark:bg-gray-900 z-20" style={{ left: widths.checkbox }} />
-                                    <SortableHeader label="Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
-                                    <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} />
-                                    <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.family} onResize={handleResize} />
-                                    <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} />
-                                    <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} />
-                                    <SortableHeader label="Avg Unit Price" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
-                                    <SortableHeader label="Total OH Value" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalValue} onResize={handleResize} />
-                                    <SortableHeader label="Total CV (IN)" field="totalUnitCVInches" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvIn} onResize={handleResize} />
-                                    <SortableHeader label="Total CV (SQFT)" field="totalUnitCVSQFT" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvSqft} onResize={handleResize} />
-                                    <SortableHeader label="Avg Age (Days)" field="avgInventoryAge" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} />
-                                    <SortableHeader label="Total Positions" field="totalPositions" sortConfig={sortConfig} requestSort={requestSort} width={widths.positions} onResize={handleResize} />
-                                    <SortableHeader label="Sites" field="countSites" sortConfig={sortConfig} requestSort={requestSort} width={widths.sites} onResize={handleResize} />
-                                    <Th style={{ width: widths.actions }}>Action</Th>
-                                </tr>
-                            </THead>
-                            <TBody>
-                                {paginatedInventory.map((item) => (
+                    <div className="overflow-x-auto">
+                        {loading ? (
+                            <TableLoadingState message="Loading inventory data..." />
+                        ) : paginatedInventory.length === 0 ? (
+                            <TableEmptyState
+                                message="No inventory items found"
+                                description="Try adjusting your filters or search query to find what you're looking for."
+                            />
+                        ) : (
+                            <Table className="text-sm table-fixed">
+                                <THead>
+                                    <tr>
+                                        <Th className="sticky left-0 z-30 text-center" style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
+                                            <input
+                                                type="checkbox"
+                                                className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                                                checked={
+                                                    paginatedInventory.filter(i => i.qtyAvailable > 0).length > 0 &&
+                                                    paginatedInventory.filter(i => i.qtyAvailable > 0).every(i => selectedItems.has(i.productId || i.id))
+                                                }
+                                                onChange={toggleSelectAll}
+                                            />
+                                        </Th>
+                                        <SortableHeader label="Product Name" field="productName" sortConfig={sortConfig} requestSort={requestSort} width={widths.productName} onResize={handleResize} className="sticky bg-primary-light dark:bg-gray-900 z-20" style={{ left: widths.checkbox }} />
+                                        <SortableHeader label="Description" field="productDescription" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} />
+                                        <SortableHeader label="Brand Name" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.manufacturer} onResize={handleResize} />
+                                        <SortableHeader label="Product Family" field="productFamily" sortConfig={sortConfig} requestSort={requestSort} width={widths.family} onResize={handleResize} />
+                                        <SortableHeader label="Qty On Hand" field="qtyOnHand" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyOnHand} onResize={handleResize} />
+                                        <SortableHeader label="Qty Available" field="qtyAvailable" sortConfig={sortConfig} requestSort={requestSort} width={widths.qtyAvailable} onResize={handleResize} />
+                                        <SortableHeader label="Avg Unit Price" field="unitCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.unitPrice} onResize={handleResize} />
+                                        <SortableHeader label="Total OH Value" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalValue} onResize={handleResize} />
+                                        <SortableHeader label="Total CV (IN)" field="totalUnitCVInches" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvIn} onResize={handleResize} />
+                                        <SortableHeader label="Total CV (SQFT)" field="totalUnitCVSQFT" sortConfig={sortConfig} requestSort={requestSort} width={widths.cvSqft} onResize={handleResize} />
+                                        <SortableHeader label="Avg Age (Days)" field="avgInventoryAge" sortConfig={sortConfig} requestSort={requestSort} width={widths.age} onResize={handleResize} />
+                                        <SortableHeader label="Total Positions" field="totalPositions" sortConfig={sortConfig} requestSort={requestSort} width={widths.positions} onResize={handleResize} />
+                                        <SortableHeader label="Sites" field="countSites" sortConfig={sortConfig} requestSort={requestSort} width={widths.sites} onResize={handleResize} />
+                                        <Th style={{ width: widths.actions }}>Action</Th>
+                                    </tr>
+                                </THead>
+                                <TBody>
+                                    {paginatedInventory.map((item) => (
                                         <Tr key={item.id} className={`group ${selectedItems.has(item.productId || item.id) ? 'bg-primary/5 dark:bg-primary/10' : ''}`}>
                                             <Td className={`px-3 py-2 sticky left-0 z-30 text-center ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
                                                 <input
@@ -678,11 +683,11 @@ export default function InventoryPage() {
                                                 )}
                                             </Td>
                                         </Tr>
-                                ))}
-                            </TBody>
-                        </Table>
-                    )}
-                </div>
+                                    ))}
+                                </TBody>
+                            </Table>
+                        )}
+                    </div>
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">

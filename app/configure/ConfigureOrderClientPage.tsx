@@ -728,7 +728,7 @@ export default function ConfigureOrderClientPage({ indexName }: { indexName: str
               <div className="relative" id="grpWrap">
                 <button className="px-3 py-1.5 text-sm bg-primary/10 dark:bg-primary/20 text-primary-dark dark:text-primary border border-primary/30 dark:border-primary/50 rounded-md hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors shadow-sm" onClick={() => setGrpDDOpen(!grpDDOpen)}>+ Add Group</button>
                 {grpDDOpen && (
-                  <div className="absolute top-full right-0 mt-1 w-70 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden">
+                  <div className="absolute top-full right-0 mt-1 w-72 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden">
                     {grpLabels.length > 0 && (
                       <>
                         <div className="px-3 py-2 text-xs font-bold text-gray-500 tracking-wider bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700">Product Groups</div>

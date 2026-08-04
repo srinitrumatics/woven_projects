@@ -10,7 +10,7 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import Tabs from "@/components/ui/Tabs";
 import { PurchaseOrderLine } from "../../../types";
 import POSupplierBillLinesTable from "./components/POSupplierBillLinesTable";
-import POSerialNumberLogLinesTab from "./components/poserialnumberloglinestab";
+import POSerialNumberLogLinesTab from "./components/POSerialNumberLogLinesTab";
 import POReturnsTab from "./components/POReturnsTab";
 import FileTabsLines from "./components/FileTabsLines";
 import { useUserSession } from "@/components/UserSessionContext";

@@ -149,7 +149,7 @@ export default function QuoteSalesOrdersSubTab({
                 )}
             </div>
             </div>
-            <div className="PX-3 Py-2">
+            <div className="px-3 py-2">
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
