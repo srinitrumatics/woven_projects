@@ -21,7 +21,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
   const contactId = user?.contact?.Id || user?.contact?.id || "";
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-5 xl:p-6 h-full flex flex-col transition-all duration-300 hover:shadow-2xl">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 xl:p-6 h-full flex flex-col">
       {/* Category Tag */}
       <div className="flex items-center gap-2 mb-1.5">
         <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>

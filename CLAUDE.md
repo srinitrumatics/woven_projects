@@ -101,5 +101,5 @@ Each business domain has a dedicated service file in `lib/`:
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/095-visual-hygiene-fixes/plan.md
+at specs/096-card-consistency-fixes/plan.md
 <!-- SPECKIT END -->
