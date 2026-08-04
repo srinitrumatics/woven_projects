@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function CreateOrderPage() {
   const router = useRouter();
@@ -16,10 +17,7 @@ export default function CreateOrderPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen min-w-0">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-gray-600 dark:text-gray-400 truncate" title="Creating new order...">Creating new order...</p>
-      </div>
+      <LoadingSpinner size="md" text="Creating new order..." />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { use, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { formatDate, formatCurrency } from "@/lib/utils/formatting";
 import { Table, THead, TBody, Tr, Th, Td } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -278,7 +279,7 @@ export default function POLineDetailPage({
         return (
             <Sidebar>
                 <div className="flex items-center justify-center min-h-[400px] min-w-0">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <LoadingSpinner size="md" />
                 </div>
             </Sidebar>
         );
@@ -663,7 +664,7 @@ export default function POLineDetailPage({
                     <div className="py-2">
                         {subTabLoading ? (
                             <div className="flex justify-center items-center py-20 min-w-0">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                                <LoadingSpinner size="sm" />
                             </div>
                         ) : (
                             <>

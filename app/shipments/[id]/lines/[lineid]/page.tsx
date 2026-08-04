@@ -4,6 +4,7 @@ import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { formatDate } from "@/lib/utils/formatting";
 
 import ProductInformationCard from "./components/ProductInformationCard";
@@ -143,7 +144,7 @@ export default function ShipmentLineDetailPage({
         return (
             <Sidebar>
                 <div className="flex items-center justify-center h-64 min-w-0">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <LoadingSpinner size="md" />
                 </div>
             </Sidebar>
         );

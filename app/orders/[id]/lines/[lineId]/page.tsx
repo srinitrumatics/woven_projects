@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import LineTaxesTab from "../../components/LineTaxesTab";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 // Import sub-components
 import LineHeader from "./components/LineHeader";
@@ -348,10 +349,7 @@ export default function OrderLineDetailPage({
     return (
       <>
         <div className="flex items-center justify-center h-64 min-w-0">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-gray-500 dark:text-gray-400 truncate" title="Loading order line details...">Loading order line details...</p>
-          </div>
+          <LoadingSpinner size="md" text="Loading order line details..." />
         </div>
       </>
     );

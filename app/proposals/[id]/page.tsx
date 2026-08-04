@@ -3,6 +3,7 @@
 import { use, useState, useMemo, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { ProposalStatus, Proposal } from "../types";
 import {
   ProposalElement,
@@ -1391,7 +1392,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           <div className="space-y-6 opacity-60">
             <div className="h-64 bg-gray-100 dark:bg-gray-800 animate-pulse rounded-lg bg-white shadow-sm border border-gray-200 dark:border-gray-700"></div>
             <div className="flex items-center justify-center h-48 min-w-0">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              <LoadingSpinner size="md" />
             </div>
           </div>
         </>

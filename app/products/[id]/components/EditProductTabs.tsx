@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { getCategoryFromAccountType } from "@/lib/permissions";
 import React from 'react';
 import ProductTabs from './ProductTabs';
@@ -522,7 +523,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
             </div>
             {datasheetsLoading ? (
               <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg flex justify-center items-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+                <LoadingSpinner size="sm" />
               </div>
             ) : datasheets.length === 0 ? (
               <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center text-center">
@@ -575,7 +576,7 @@ export default function EditProductTabs({ productToEdit, onClose }: EditProductT
             </div>
             {certsLoading ? (
               <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg flex justify-center items-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+                <LoadingSpinner size="sm" />
               </div>
             ) : certifications.length === 0 ? (
               <div className="py-12 bg-gray-50 dark:bg-gray-900 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center text-center">

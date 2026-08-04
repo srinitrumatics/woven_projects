@@ -1,4 +1,5 @@
 import React from 'react';
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 interface DatasheetsTabProps {
   datasheets: any[];
@@ -12,9 +13,8 @@ export const DatasheetsTab: React.FC<DatasheetsTabProps> = ({ datasheets, isLoad
 
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
         {isLoading ? (
-          <div className="col-span-full py-12 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-2 text-sm text-gray-500">Loading datasheets...</p>
+          <div className="col-span-full">
+            <LoadingSpinner size="sm" text="Loading datasheets..." />
           </div>
         ) : datasheets.length === 0 ? (
           <div className="col-span-full py-12 text-center text-gray-500">No datasheets available for this product.</div>

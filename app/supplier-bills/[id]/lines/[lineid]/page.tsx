@@ -4,6 +4,7 @@ import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { formatDate, formatCurrency } from "@/lib/utils/formatting";
 import { SupplierBillLine } from "../../../types";
 import SBLFilesTab from "./components/SBLFilesTab";
@@ -168,7 +169,7 @@ export default function SupplierBillLineDetailPage({
         return (
             <Sidebar>
                 <div className="flex items-center justify-center min-h-[400px] min-w-0">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <LoadingSpinner size="md" />
                 </div>
             </Sidebar>
         );
@@ -390,7 +391,7 @@ export default function SupplierBillLineDetailPage({
                     <div className="p-4">
                         {subTabLoading ? (
                             <div className="flex justify-center items-center py-20 min-w-0">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                                <LoadingSpinner size="sm" />
                             </div>
                         ) : (
                             <>

@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import InvoiceHeader from "@/app/invoices/[id]/components/InvoiceHeader";
 import InvoiceTabs, { InvoiceTabType } from "@/app/invoices/[id]/components/InvoiceTabs";
 import InvoiceDetails from "@/app/invoices/[id]/components/InvoiceDetails";
@@ -271,7 +272,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
     return (
       <Sidebar>
         <div className="flex items-center justify-center min-h-[400px] min-w-0">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <LoadingSpinner size="md" />
         </div>
       </Sidebar>
     );

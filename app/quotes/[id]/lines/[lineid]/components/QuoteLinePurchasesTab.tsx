@@ -4,6 +4,7 @@ import { useResizableColumns } from "@/hooks/useResizableColumns";
 import QuoteLinePurchaseOrderLinesSubTab from "./QuoteLinePurchaseOrderLinesSubTab";
 import QuoteLineSupplierBillLinesSubTab from "./QuoteLineSupplierBillLinesSubTab";
 import SubTabs from "@/components/ui/SubTabs";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 interface POLI {
     id: string;
@@ -183,7 +184,7 @@ export default function QuoteLinePurchasesTab({
     if (loading && activeData.length === 0) {
         return (
             <div className="flex justify-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <LoadingSpinner size="sm" />
             </div>
         );
     }

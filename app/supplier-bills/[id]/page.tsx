@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Sidebar from "@/components/layouts/Sidebar";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import SupplierBillHeader from './components/SupplierBillHeader';
 import SupplierBillDetail from './components/SupplierBillDetail';
 import SupplierBillNotes from './components/SupplierBillNotes';
@@ -262,7 +263,7 @@ export default function SupplierBillDetailPage() {
         return (
             <Sidebar>
                 <div className="flex items-center justify-center h-screen min-w-0">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <LoadingSpinner size="md" />
                 </div>
             </Sidebar>
         );

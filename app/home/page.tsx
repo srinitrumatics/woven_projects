@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Sidebar from "@/components/layouts/Sidebar";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import Link from "next/link";
 import { Chart, registerables } from "chart.js";
 import {
@@ -284,10 +285,7 @@ export default function HomePage() {
       <div className="p-8 max-w-[1600px] mx-auto space-y-8 min-h-screen relative">
         {loading && (
           <div className="absolute inset-0 bg-white/50 dark:bg-slate-900/50 backdrop-blur-[1px] z-50 flex items-center justify-center rounded-2xl">
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Updating dashboard...</p>
-            </div>
+            <LoadingSpinner size="sm" text="Updating dashboard..." />
           </div>
         )}
 

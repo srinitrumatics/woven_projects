@@ -2,6 +2,7 @@
 
 import { use, useState, useEffect } from "react";
 import Sidebar from "@/components/layouts/Sidebar";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import ProductGallery from "./components/ProductGallery";
 import ProductInfoCard from "./components/ProductInfoCard";
 import ProductTabs from "./components/ProductTabs";
@@ -142,7 +143,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     return (
       <Sidebar>
         <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <LoadingSpinner size="md" />
         </div>
       </Sidebar>
     );

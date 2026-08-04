@@ -1,4 +1,5 @@
 import React from "react";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export function Table({ children, className = "", style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
     return <table className={`w-full ${className}`} style={style}>{children}</table>;
@@ -48,10 +49,5 @@ export function TableEmptyState({ message = "No records found", description }: {
 }
 
 export function TableLoadingState({ message }: { message?: string } = {}) {
-    return (
-        <div className="flex justify-center items-center py-12 min-w-0">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            {message && <span className="ml-3 text-sm text-gray-500 dark:text-gray-400">{message}</span>}
-        </div>
-    );
+    return <LoadingSpinner size="sm" text={message} />;
 }

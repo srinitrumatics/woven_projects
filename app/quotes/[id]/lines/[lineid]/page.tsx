@@ -4,6 +4,7 @@ import { use, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { formatDate, formatCurrency, formatNumber, decodeHtmlEntities } from "@/lib/utils/formatting";
 import { QuoteLine } from "../../../types";
 import QuoteLineFulfillmentsTab from "./components/QuoteLineFulfillmentsTab";
@@ -322,7 +323,7 @@ export default function QuoteLineDetailPage({
         return (
             <Sidebar>
                 <div className="flex items-center justify-center h-64 min-w-0">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <LoadingSpinner size="md" />
                 </div>
             </Sidebar>
         );

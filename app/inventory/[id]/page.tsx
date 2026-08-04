@@ -10,6 +10,7 @@ import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
 import { Table, THead, TBody, Tr, Td, TableEmptyState } from "@/components/ui/DataTable";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 
 const ITEMS_PER_PAGE = 10;
@@ -140,7 +141,7 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
     if (loading) {
         return (
             <div className="flex h-screen items-center justify-center p-6 min-w-0">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                <LoadingSpinner size="md" />
             </div>
         );
     }

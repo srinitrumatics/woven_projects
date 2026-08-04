@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 // Component imports
 import ShipmentHeader from "./components/ShipmentHeader";
@@ -117,9 +118,8 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
   if (loading) {
     return (
       <Sidebar>
-        <div className="flex flex-col items-center justify-center min-h-[400px] min-w-0">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4" />
-          <p className="text-gray-500 dark:text-gray-400 truncate" title="Loading shipment details...">Loading shipment details...</p>
+        <div className="flex items-center justify-center min-h-[400px] min-w-0">
+          <LoadingSpinner size="md" text="Loading shipment details..." />
         </div>
       </Sidebar>
     );

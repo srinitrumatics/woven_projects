@@ -1,5 +1,6 @@
 import React from 'react';
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 interface ComplianceCertsTabProps {
   certifications: any[];
@@ -13,9 +14,8 @@ export const ComplianceCertsTab: React.FC<ComplianceCertsTabProps> = ({ certific
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {isLoading ? (
-          <div className="col-span-full py-12 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-2 text-sm text-gray-500">Loading certifications...</p>
+          <div className="col-span-full">
+            <LoadingSpinner size="sm" text="Loading certifications..." />
           </div>
         ) : certifications.length === 0 ? (
           <div className="col-span-full py-12 text-center text-gray-500">No certifications found for this product.</div>

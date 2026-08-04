@@ -3,6 +3,7 @@
 import { use, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Sidebar from "@/components/layouts/Sidebar";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import LineFulfillmentsTab from "./components/LineFulfillmentsTab";
 import LinePurchasesTab from "./components/LinePurchasesTab";
 import LineReturnsTab from "./components/LineReturnsTab";
@@ -594,10 +595,7 @@ export default function ProposalProductDetailPage({
                 </div>
 
                 <div className="flex items-center justify-center h-64 min-w-0">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                        <p className="text-gray-500 dark:text-gray-400 truncate" title="Loading product details...">Loading product details...</p>
-                    </div>
+                    <LoadingSpinner size="md" text="Loading product details..." />
                 </div>
             </Sidebar>
         );

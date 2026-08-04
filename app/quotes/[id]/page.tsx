@@ -3,6 +3,7 @@
 import { use, useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { QuoteDetails, QuoteLine, QuoteStatus, QuoteTax, QuoteFile } from "../types";
 import QuoteHeader from "./components/QuoteHeader";
 import QuoteDetailsSection from "./components/QuoteDetails";
@@ -668,9 +669,8 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   if (loading) {
     return (
       <Sidebar>
-        <div className="flex flex-col items-center justify-center min-h-[400px] min-w-0">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-          <p className="text-gray-500 dark:text-gray-400" title="Loading quote details...">Loading quote details...</p>
+        <div className="flex items-center justify-center min-h-[400px] min-w-0">
+          <LoadingSpinner size="md" text="Loading quote details..." />
         </div>
       </Sidebar>
     );

@@ -5,6 +5,7 @@ import { useUserSession } from "@/components/UserSessionContext";
 import Sidebar from "@/components/layouts/Sidebar";
 import { formatNumber } from "@/lib/utils/formatting";
 import { useToast } from "@/components/ui/Toast";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function ProfilePage() {
     const { user, selectedAccount } = useUserSession();
@@ -43,7 +44,7 @@ export default function ProfilePage() {
         return (
             <Sidebar>
                 <div className="flex items-center justify-center min-h-[60vh]">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <LoadingSpinner size="md" />
                 </div>
             </Sidebar>
         );
