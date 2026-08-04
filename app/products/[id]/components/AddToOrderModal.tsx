@@ -83,7 +83,7 @@ export default function AddToOrderModal({
   };
 
   const handleAddToOrder = async () => {
-    if (!selectedOrderId) return;
+    if (!selectedOrderId || !product) return;
 
     try {
       setAdding(true);
@@ -132,6 +132,8 @@ export default function AddToOrderModal({
   };
 
   const handleCreateOrder = async () => {
+    if (!product) return;
+
     try {
       setCreating(true);
       setError(null);
@@ -236,7 +238,7 @@ export default function AddToOrderModal({
           <div className="flex justify-between items-start gap-4">
             <div>
               <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Product</p>
-              <h3 className="text-sm font-bold text-gray-900 dark:text-white line-clamp-2">{product.name}</h3>
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white line-clamp-2">{product?.name}</h3>
             </div>
             <div className="text-right">
               <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Quantity</p>
