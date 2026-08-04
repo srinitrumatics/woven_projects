@@ -10,6 +10,7 @@ export function StatusBadge({ status, variant = 'bordered' }: { status: string; 
             case "paid":
             case "awarded":
             case "completed":
+            case "completed_with_errors":
             case "active":
             case "yes":
             case "received":

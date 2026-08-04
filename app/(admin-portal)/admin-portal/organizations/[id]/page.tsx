@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import {
   ArrowLeftIcon,
   GlobeAltIcon,
@@ -305,7 +306,7 @@ export default function EditOrganizationPage() {
     <div className="w-full space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Edit Tenant: {formData.name}</h1>
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Edit Tenant: {formData.name}</h1>
           <p className="text-sm text-gray-500 mt-1">Modify organization details and integration configurations.</p>
         </div>
         <button
@@ -659,9 +660,7 @@ export default function EditOrganizationPage() {
                       <span className="text-gray-500 dark:text-gray-400">
                         {new Date(run.startedAt).toLocaleString()}
                       </span>
-                      <span className={`font-medium ${run.status.startsWith('completed') ? 'text-green-600' : run.status === 'failed' ? 'text-red-600' : 'text-gray-500'}`}>
-                        {run.status}
-                      </span>
+                      <StatusBadge status={run.status} variant="compact" />
                     </div>
                     <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
                       {run.type === 'load'
