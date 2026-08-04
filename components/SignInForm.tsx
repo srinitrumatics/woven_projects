@@ -75,7 +75,7 @@ export default function SignInForm() {
 
           <form method="POST" onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div role="alert" className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
+              <div role="alert" className="bg-red-50 text-red-500 p-3 rounded-md text-sm border border-red-100 animate-in fade-in slide-in-from-top-1">
                 {error}
               </div>
             )}
