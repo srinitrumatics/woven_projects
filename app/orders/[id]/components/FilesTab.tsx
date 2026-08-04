@@ -401,16 +401,14 @@ export default function FilesTab({ orderId, accountId, contactId, isEditing = fa
                 </div>
             )}
 
-            <div className="mt-4 px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-left">
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                    totalItems={files.length}
-                    itemsPerPage={ITEMS_PER_PAGE}
-                    itemName="Files"
-                />
-            </div>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                totalItems={files.length}
+                itemsPerPage={ITEMS_PER_PAGE}
+                itemName="Files"
+            />
         </div>
     );
 }

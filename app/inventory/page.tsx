@@ -690,7 +690,7 @@ export default function InventoryPage() {
                     </div>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                <div className="-mx-4 -mb-4 mt-2">
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}

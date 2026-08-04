@@ -276,6 +276,18 @@ export default function ProductCatalog({
                             </TBody>
                         </Table>
                     </div>
+                    {
+                        paginatedCatalogProducts.length > 0 && (
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                totalItems={itemsPerPage * totalPages}
+                                itemsPerPage={itemsPerPage}
+                                onPageChange={setCurrentPage}
+                                itemName="products"
+                            />
+                        )
+                    }
                 </div>
             )}
             {/* Image Popup Modal */}
@@ -332,19 +344,6 @@ export default function ProductCatalog({
                     </div>
                 )}
             </Modal>
-            {/* Pagination for Catalog */}
-            {
-                paginatedCatalogProducts.length > 0 && (
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        totalItems={itemsPerPage * totalPages} // Estimating total items based on pages, or pass total items count prop
-                        itemsPerPage={itemsPerPage}
-                        onPageChange={setCurrentPage}
-                        itemName="products"
-                    />
-                )
-            }
         </>
     );
 }

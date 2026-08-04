@@ -221,20 +221,20 @@ export default function MyOrderTable({
                             </TBody>
                         </Table>
                     </div>
+                    {
+                        sortedProducts.length > 0 && (
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                totalItems={sortedProducts.length}
+                                itemsPerPage={ITEMS_PER_PAGE}
+                                onPageChange={setCurrentPage}
+                                itemName="products"
+                            />
+                        )
+                    }
                 </div>
             )}
-            {
-                sortedProducts.length > 0 && (
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        totalItems={sortedProducts.length}
-                        itemsPerPage={ITEMS_PER_PAGE}
-                        onPageChange={setCurrentPage}
-                        itemName="products"
-                    />
-                )
-            }
         </div>
     );
 }

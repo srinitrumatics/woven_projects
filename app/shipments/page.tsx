@@ -469,7 +469,7 @@ export default function ShipmentsPage() {
         </div>
 
         {/* Table Area */}
-        <div className="p-4">
+        <div className="p-4 pb-0">
           <div className="rounded-lg shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             {loading ? (

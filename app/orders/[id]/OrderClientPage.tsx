@@ -1760,7 +1760,7 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
           <div className="flex flex-col lg:flex-row lg:items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
             {/* Search — top on mobile/tablet (<1024px), left on desktop (>=1024px) */}
-            <div className="flex-1 relative w-full">
+            <div className="flex-1 relative w-full lg:min-w-[300px]">
               <input
                 type="text"
                 placeholder={viewMode === "catalog" ? "Search by name, SKU, brand or manufacturer" : "Search by name, SKU, brand or manufacturer"}
@@ -1800,7 +1800,7 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
               ]}
               activeKey={viewMode}
               onChange={(key) => setViewMode(key as typeof viewMode)}
-              className="no-scrollbar pb-0.5 flex-shrink-0"
+              className="no-scrollbar pb-0.5 flex-shrink-0 lg:w-auto"
             />
           </div>
 
