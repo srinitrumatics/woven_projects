@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
+import Tabs from "@/components/ui/Tabs";
 import { ShippingManifest, ShipmentStatus } from "./types";
 import { formatDate, formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
@@ -442,29 +443,11 @@ export default function ShipmentsPage() {
             </div>
 
             {/* Status Tabs/Pills */}
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                onClick={() => setActiveTab('All')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'All'
-                  ? 'bg-primary text-white shadow-sm'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                  }`}
-              >
-                All
-              </button>
-              {uniqueStatuses.map(status => (
-                <button
-                  key={status}
-                  onClick={() => setActiveTab(status as ShipmentStatus)}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${activeTab === status
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                    }`}
-                >
-                  {status}
-                </button>
-              ))}
-            </div>
+            <Tabs
+              tabs={[{ key: "All", label: "All" }, ...uniqueStatuses.map(status => ({ key: status, label: status }))]}
+              activeKey={activeTab}
+              onChange={(key) => setActiveTab(key as ShipmentStatus | "All")}
+            />
           </div>
         </div>
 

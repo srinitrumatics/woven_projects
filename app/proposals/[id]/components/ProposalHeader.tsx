@@ -1,23 +1,26 @@
 "use client";
 
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 
 interface ProposalHeaderProps {
+    id: string;
     proposalNumber: string;
     status: string;
     description: string;
 }
 
-export default function ProposalHeader({ proposalNumber, status, description }: ProposalHeaderProps) {
+export default function ProposalHeader({ id, proposalNumber, status, description }: ProposalHeaderProps) {
     return (
         <div className="mb-6">
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2 min-w-0">
-                <span>Proposals</span>
-                <span>&gt;</span>
-                <span className="hover:text-gray-700 dark:text-gray-300">Proposal Details</span>
-                <span>&gt;</span>
-                <span className="text-gray-900 dark:text-white">{proposalNumber}</span>
-            </div>
+            <Breadcrumb
+                items={[
+                    { label: "Proposals", href: "/proposals" },
+                    { label: "Proposal Details", href: `/proposals/${id}` },
+                    { label: proposalNumber },
+                ]}
+                className="mb-2"
+            />
 
             {/* Proposal header card (full width) */}
             <div className="w-full p-4">

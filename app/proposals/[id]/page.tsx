@@ -1398,6 +1398,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
       ) : (
         <>
           <ProposalHeader
+            id={id}
             proposalNumber={proposal.proposalNumber}
             status={proposal.status}
             description={proposal.description}

@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Pagination from "@/components/ui/Pagination";
+import Tabs from "@/components/ui/Tabs";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
@@ -571,20 +572,11 @@ export default function InventoryPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2">
-                            {(["All", "On Hold", "Put-Away", "Average Aged"] as TabFilter[]).map((tab) => (
-                                <button
-                                    key={tab}
-                                    onClick={() => handleCardClick(tab)}
-                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab
-                                        ? "bg-primary text-white shadow-sm"
-                                        : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                                        }`}
-                                >
-                                    {tab}
-                                </button>
-                            ))}
-                        </div>
+                        <Tabs
+                            tabs={(["All", "On Hold", "Put-Away", "Average Aged"] as TabFilter[]).map((tab) => ({ key: tab, label: tab }))}
+                            activeKey={activeTab}
+                            onChange={(key) => handleCardClick(key as TabFilter)}
+                        />
 
 
                     </div>

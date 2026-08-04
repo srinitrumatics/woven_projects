@@ -140,14 +140,14 @@ export default function OrderDetailsTable({
                                         <div className="flex items-center gap-2 min-w-0">
                                             <button
                                                 onClick={decrementQty}
-                                                className="w-6 h-6 flex items-center justify-center rounded border shadow-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600"
+                                                className="w-6 h-6 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-600 border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 text-gray-900 dark:text-white"
                                             >
                                                 -
                                             </button>
                                             <input type="text" value={editedQty} onChange={(e) => handleManualQtyChange(e.target.value)} className="w-16 px-1 py-0.5 border border-gray-300 dark:border-gray-600 rounded text-center bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" />
                                             <button
                                                 onClick={incrementQty}
-                                                className="w-6 h-6 flex items-center justify-center rounded border shadow-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600"
+                                                className="w-6 h-6 flex items-center justify-center rounded border shadow-sm transition-colors text-lg bg-white dark:bg-gray-600 border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-500 text-gray-900 dark:text-white"
                                             >
                                                 +
                                             </button>

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { formatTime } from "@/lib/utils/formatting";
 
 import Pagination from "@/components/ui/Pagination";
+import Tabs from "@/components/ui/Tabs";
 import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
@@ -276,19 +277,12 @@ export default function DeliveryWindowsPage() {
                         </div>
 
                         {/* Status Pills */}
-                        <div className="flex items-center gap-2 mr-auto min-w-0">
-                            {(['All', 'Active', 'Inactive'] as TabFilter[]).map((tab) => (
-                                <button
-                                    key={tab}
-                                    onClick={() => setActiveTab(tab)}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${activeTab === tab
-                                        ? "bg-primary/10 text-primary border border-primary/20"
-                                        : "bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border border-transparent hover:border-gray-300"
-                                        }`}
-                                >
-                                    {tab}
-                                </button>
-                            ))}
+                        <div className="mr-auto min-w-0">
+                            <Tabs
+                                tabs={(['All', 'Active', 'Inactive'] as TabFilter[]).map((tab) => ({ key: tab, label: tab }))}
+                                activeKey={activeTab}
+                                onChange={(key) => setActiveTab(key as TabFilter)}
+                            />
                         </div>
 
                         {/* Add Button */}

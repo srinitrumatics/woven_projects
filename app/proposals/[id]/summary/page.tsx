@@ -1,15 +1,14 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Link from "next/link";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 import { Proposal } from "../types";
 import { useUserSession } from "@/components/UserSessionContext";
 
 export default function ProposalSummaryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const router = useRouter();
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -53,22 +52,14 @@ export default function ProposalSummaryPage({ params }: { params: Promise<{ id: 
     <Sidebar>
       {/* Breadcrumb - Compact */}
       <div className="mb-4">
-        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1 min-w-0">
-          <button
-            onClick={() => router.push("/proposals")}
-            className="hover:text-gray-700 dark:hover:text-gray-300"
-          >
-            Proposals
-          </button>
-          <span>&gt;</span>
-          <button
-            onClick={() => router.push(`/proposals/${id}`)}
-            className="hover:text-gray-700 dark:hover:text-gray-300">
-            Proposal Details
-          </button>
-          <span>&gt;</span>
-          <span className="text-gray-900 dark:text-white truncate">Proposal Workspace</span>
-        </div>
+        <Breadcrumb
+          items={[
+            { label: "Proposals", href: "/proposals" },
+            { label: "Proposal Details", href: `/proposals/${id}` },
+            { label: "Proposal Workspace" },
+          ]}
+          className="mb-1"
+        />
         <div className="flex items-center justify-between min-w-0">
           <div className="flex items-center gap-4 min-w-0">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">
