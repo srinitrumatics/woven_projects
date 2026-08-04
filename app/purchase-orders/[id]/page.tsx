@@ -9,7 +9,7 @@ import { formatDate, formatCurrency, decodeHtmlEntities } from "@/lib/utils/form
 // Component Imports
 import POHeader from "./components/POHeader";
 import POKeyDates from "./components/POKeyDates";
-import POSupplierInfo from "./components/POSupplierInfo";
+import POBillingInfo from "./components/POBillingInfo";
 import POShipToInfo from "./components/POShipToInfo";
 import POSummary from "./components/POSummary";
 import POTabs from "./components/POTabs";
@@ -210,7 +210,7 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
                 <div className="w1025:col-span-7 flex flex-col gap-6">
                     <POKeyDates po={po} />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <POSupplierInfo po={po} />
+                        <POBillingInfo po={po} />
                         <POShipToInfo po={po} />
                     </div>
                 </div>

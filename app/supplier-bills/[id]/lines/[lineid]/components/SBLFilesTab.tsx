@@ -21,12 +21,11 @@ interface POFile {
 
 interface SBLFilesTabProps {
     files: POFile[];
-    poId: string;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
+export default function SBLFilesTab({ files }: SBLFilesTabProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set());
     const { error: toastError } = useToast();
@@ -95,7 +94,7 @@ export default function SBLFilesTab({ files, poId }: SBLFilesTabProps) {
 
         try {
             const res = await fetch(
-                `/api/salesforce/orders?action=${action}&contentVersionId=${encodeURIComponent(contentVersionId)}&accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&orderId=${poId}&objectName=Supplier_Bill_Line__c`
+                `/api/supplier-bills?action=${action}&contentVersionId=${encodeURIComponent(contentVersionId)}&accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}`
             );
 
             if (!res.ok) {

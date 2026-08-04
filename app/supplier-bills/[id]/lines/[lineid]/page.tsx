@@ -401,7 +401,7 @@ export default function SupplierBillLineDetailPage({
                                 )}
                                 {activeTab === "files" && (
                                     <div className="space-y-4">
-                                        <SBLFilesTab files={files} poId={lineid} />
+                                        <SBLFilesTab files={files} />
                                     </div>
                                 )}
                             </>

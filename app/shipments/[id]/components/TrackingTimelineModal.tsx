@@ -17,17 +17,6 @@ interface TrackingTimelineModalProps {
     trackingData?: any;
 }
 
-const mockTimelineData: timelineItem[] = [
-    {
-        status: "Delivered",
-        description: "Package delivered to recipient",
-        location: 'Oakland, CA " Oakland, CA 94612',
-        dateTime: "11/12/2024, 2:32:00 PM",
-        isCompleted: true
-    },
-    // ... rest of mock data can be assumed or kept simple for now
-];
-
 export default function TrackingTimelineModal({ isOpen, onClose, trackingData }: TrackingTimelineModalProps) {
     let displayData: timelineItem[] = [];
 
@@ -40,7 +29,7 @@ export default function TrackingTimelineModal({ isOpen, onClose, trackingData }:
             isCompleted: index === 0 // Assuming first one is latest/current
         }));
     } else {
-        displayData = mockTimelineData;
+        displayData = [];
     }
 
     return (

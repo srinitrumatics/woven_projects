@@ -96,9 +96,14 @@ export default function ManifestSummary({
                     Track Shipment
                 </button>
                 <button
-                    onClick={() => setIsTimelineOpen(true)}
-                    className="flex-1 py-3 bg-white dark:bg-transparent border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-white hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-primary dark:hover:border-primary transition-all shadow-sm"
+                    onClick={handleTrackClick}
+                    disabled={isLoadingTracking || !hasTracking}
+                    className={`flex-1 py-3 border rounded-lg text-sm font-medium transition-all shadow-sm flex items-center justify-center gap-2 ${hasTracking
+                        ? "bg-white dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white hover:bg-primary hover:text-white hover:border-primary dark:hover:bg-primary dark:hover:border-primary"
+                        : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-400 cursor-not-allowed"
+                        }`}
                 >
+                    {isLoadingTracking && <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />}
                     Track Timeline
                 </button>
             </div>
