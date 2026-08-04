@@ -15,9 +15,11 @@ import {
   ArrowTopRightOnSquareIcon,
   XCircleIcon
 } from '@heroicons/react/24/outline';
+import { useToast } from '@/components/ui/Toast';
 
 export default function CreateOrganizationPage() {
   const router = useRouter();
+  const { error: errorToast } = useToast();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -259,7 +261,7 @@ export default function CreateOrganizationPage() {
   const handleLaunchWebapp = () => {
     const url = formData.siteUrl;
     if (!url) {
-      alert('No site URL configured for this organization.');
+      errorToast('No site URL configured for this organization.');
       return;
     }
     const fullUrl = url.startsWith('http') ? url : `https://${url}`;
@@ -689,7 +691,7 @@ export default function CreateOrganizationPage() {
                 onClick={() => {
                   const hasIndexed = index.status === 'completed' || index.status === 'completed_with_errors';
                   if (!hasIndexed) {
-                    alert('Please complete "Load Products" then "Index Products" to initialize your catalog before completing! (You can also do this later from the Organizations list card)');
+                    errorToast('Please complete "Load Products" then "Index Products" to initialize your catalog before completing! (You can also do this later from the Organizations list card)');
                   }
                   router.push('/admin-portal/organizations');
                 }}

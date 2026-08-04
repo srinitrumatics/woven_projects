@@ -1,9 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { PlusIcon, BuildingOfficeIcon, GlobeAltIcon, CalendarIcon, TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, BuildingOfficeIcon, GlobeAltIcon, CalendarIcon, TrashIcon, PencilSquareIcon, ArrowTopRightOnSquareIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useToast } from '@/components/ui/Toast';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import Pagination from '@/components/ui/Pagination';
+import { useSortableData } from '@/hooks/useSortableData';
 
 type Organization = {
   id: string;
@@ -14,25 +17,57 @@ type Organization = {
   createdAt: string;
 };
 
+const ITEMS_PER_PAGE = 9;
+
 export default function AdminOrganizationsPage() {
   const [orgs, setOrgs] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const { confirm: confirmToast, success: successToast, error: errorToast } = useToast();
 
-  useEffect(() => {
+  const fetchOrganizations = useCallback(() => {
+    setLoading(true);
+    setError(false);
     fetch('/api/admin/organizations')
       .then(res => res.json())
       .then(data => {
         if (data.success) {
           setOrgs(data.organizations);
+        } else {
+          setError(true);
         }
         setLoading(false);
       })
       .catch(err => {
         console.error('Error fetching organizations:', err);
+        setError(true);
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    fetchOrganizations();
+  }, [fetchOrganizations]);
+
+  const filteredOrgs = useMemo(() => {
+    if (!searchQuery) return orgs;
+    const query = searchQuery.toLowerCase();
+    return orgs.filter(org => org.name.toLowerCase().includes(query));
+  }, [orgs, searchQuery]);
+
+  const { items: sortedOrgs, requestSort, sortConfig } = useSortableData<Organization>(filteredOrgs);
+
+  const totalPages = Math.ceil(sortedOrgs.length / ITEMS_PER_PAGE);
+  const paginatedOrgs = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return sortedOrgs.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [sortedOrgs, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, sortConfig]);
 
   const handleDelete = async (id: string, name: string) => {
     confirmToast(`Are you sure you want to delete ${name}? This will NOT delete the provisioned schema automatically.`, async () => {
@@ -69,12 +104,47 @@ export default function AdminOrganizationsPage() {
         </Link>
       </div>
 
+      {!loading && !error && orgs.length > 0 && (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative w-full sm:max-w-xs">
+            <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search organizations..."
+              className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-2 pl-9 pr-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+            />
+          </div>
+          <select
+            value={sortConfig ? `${String(sortConfig.key)}-${sortConfig.direction}` : ''}
+            onChange={(e) => {
+              const [key] = e.target.value.split('-');
+              requestSort(key as keyof Organization);
+            }}
+            className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-2 px-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+          >
+            <option value="">Sort by...</option>
+            <option value="name-asc">Name (A-Z)</option>
+            <option value="name-desc">Name (Z-A)</option>
+            <option value="createdAt-asc">Created (Oldest)</option>
+            <option value="createdAt-desc">Created (Newest)</option>
+          </select>
+        </div>
+      )}
+
       {loading ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-48 animate-pulse rounded-lg bg-gray-200 dark:bg-gray-800"></div>
           ))}
         </div>
+      ) : error ? (
+        <ErrorMessage
+          title="Failed to load organizations"
+          message="Something went wrong while loading organizations. Please try again."
+          onRetry={fetchOrganizations}
+        />
       ) : orgs.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 py-12 px-6 text-center">
           <BuildingOfficeIcon className="mx-auto h-12 w-12 text-gray-400" />
@@ -90,9 +160,15 @@ export default function AdminOrganizationsPage() {
             </Link>
           </div>
         </div>
+      ) : sortedOrgs.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 py-12 px-6 text-center">
+          <BuildingOfficeIcon className="mx-auto h-12 w-12 text-gray-400" />
+          <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No organizations match your search</h3>
+        </div>
       ) : (
+        <>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {orgs.map((org) => (
+          {paginatedOrgs.map((org) => (
             <div
               key={org.id}
               className="relative flex flex-col overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm transition-shadow hover:shadow-md"
@@ -135,7 +211,7 @@ export default function AdminOrganizationsPage() {
                   onClick={() => {
                     const url = org.siteUrl;
                     if (!url) {
-                      alert('No site URL configured for this organization.');
+                      errorToast('No site URL configured for this organization.');
                       return;
                     }
                     const fullUrl = url.startsWith('http') ? url : `https://${url}`;
@@ -150,6 +226,15 @@ export default function AdminOrganizationsPage() {
             </div>
           ))}
         </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={sortedOrgs.length}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={setCurrentPage}
+          itemName="organizations"
+        />
+        </>
       )}
     </div>
   );
