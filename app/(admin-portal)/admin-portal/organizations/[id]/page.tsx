@@ -642,6 +642,15 @@ export default function EditOrganizationPage() {
                   <div
                     className={`flex items-center justify-between px-4 py-3 text-sm ${run.type === 'index' && (run.failed || 0) > 0 ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/40' : ''}`}
                     onClick={() => { if (run.type === 'index' && (run.failed || 0) > 0) toggleFailures(run); }}
+                    role={run.type === 'index' && (run.failed || 0) > 0 ? 'button' : undefined}
+                    tabIndex={run.type === 'index' && (run.failed || 0) > 0 ? 0 : undefined}
+                    aria-expanded={run.type === 'index' && (run.failed || 0) > 0 ? expandedRunId === run.runId : undefined}
+                    onKeyDown={(e) => {
+                      if (run.type === 'index' && (run.failed || 0) > 0 && (e.key === 'Enter' || e.key === ' ')) {
+                        e.preventDefault();
+                        toggleFailures(run);
+                      }
+                    }}
                   >
                     <div className="flex items-center gap-3">
                       <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${run.type === 'load' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300' : 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'}`}>

@@ -58,7 +58,7 @@ export default function AdminLoginPage() {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl flex items-center">
+          <div role="alert" className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl flex items-center">
             <div className="w-2 h-2 bg-red-500 rounded-full mr-3 animate-pulse"></div>
             {error}
           </div>

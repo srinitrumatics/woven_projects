@@ -273,9 +273,10 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Job Title</label>
+                                            <label htmlFor="Title" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Job Title</label>
                                             {isEditing ? (
                                                 <select
+                                                    id="Title"
                                                     name="Title"
                                                     value={formData.Title || ''}
                                                     onChange={handleChange}
@@ -301,11 +302,12 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Mobile Phone</label>
+                                            <label htmlFor="MobilePhone" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Mobile Phone</label>
                                             {isEditing ? (
                                                 <>
                                                     <input
                                                         type="tel"
+                                                        id="MobilePhone"
                                                         name="MobilePhone"
                                                         placeholder="(555) 000-0000"
                                                         value={formData.MobilePhone || ''}
@@ -322,13 +324,14 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                            <label htmlFor="Phone" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                                 Work Phone <span className="text-red-500">*</span>
                                             </label>
                                             {isEditing ? (
                                                 <>
                                                     <input
                                                         type="tel"
+                                                        id="Phone"
                                                         name="Phone"
                                                         placeholder="(555) 000-0000"
                                                         value={formData.Phone || ''}
@@ -345,10 +348,11 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Birthdate</label>
+                                            <label htmlFor="Birthdate" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Birthdate</label>
                                             {isEditing ? (
                                                 <input
                                                     type="date"
+                                                    id="Birthdate"
                                                     name="Birthdate"
                                                     value={formData.Birthdate || ''}
                                                     onChange={handleChange}
@@ -373,10 +377,11 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div className="md:col-span-2 lg:col-span-4">
-                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Street Address</label>
+                                            <label htmlFor="MailingStreet" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Street Address</label>
                                             {isEditing ? (
                                                 <input
                                                     type="text"
+                                                    id="MailingStreet"
                                                     name="MailingStreet"
                                                     value={formData.MailingStreet || ''}
                                                     onChange={handleChange}
@@ -388,10 +393,11 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">City</label>
+                                            <label htmlFor="MailingCity" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">City</label>
                                             {isEditing ? (
                                                 <input
                                                     type="text"
+                                                    id="MailingCity"
                                                     name="MailingCity"
                                                     value={formData.MailingCity || ''}
                                                     onChange={handleChange}
@@ -403,10 +409,11 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">State / Province</label>
+                                            <label htmlFor="MailingState" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">State / Province</label>
                                             {isEditing ? (
                                                 <input
                                                     type="text"
+                                                    id="MailingState"
                                                     name="MailingState"
                                                     value={formData.MailingState || ''}
                                                     onChange={handleChange}
@@ -418,10 +425,11 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Postal Code</label>
+                                            <label htmlFor="MailingPostalCode" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Postal Code</label>
                                             {isEditing ? (
                                                 <input
                                                     type="text"
+                                                    id="MailingPostalCode"
                                                     name="MailingPostalCode"
                                                     value={formData.MailingPostalCode || ''}
                                                     onChange={handleChange}
@@ -433,10 +441,11 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Country</label>
+                                            <label htmlFor="MailingCountry" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Country</label>
                                             {isEditing ? (
                                                 <input
                                                     type="text"
+                                                    id="MailingCountry"
                                                     name="MailingCountry"
                                                     value={formData.MailingCountry || ''}
                                                     onChange={handleChange}

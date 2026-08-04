@@ -117,13 +117,13 @@ export default function ForgotPasswordForm() {
           </p>
 
           {error && (
-            <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm mb-4 border border-red-100 animate-in fade-in slide-in-from-top-1">
+            <div role="alert" className="bg-red-50 text-red-500 p-3 rounded-md text-sm mb-4 border border-red-100 animate-in fade-in slide-in-from-top-1">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="bg-green-50 text-green-600 p-3 rounded-md text-sm mb-4 border border-green-100 animate-in fade-in slide-in-from-top-1">
+            <div role="alert" className="bg-green-50 text-green-600 p-3 rounded-md text-sm mb-4 border border-green-100 animate-in fade-in slide-in-from-top-1">
               {success}
             </div>
           )}

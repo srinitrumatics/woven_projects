@@ -622,12 +622,12 @@ export default function QuoteLineDetailPage({
                         Prev
                     </Link>
                 ) : (
-                    <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
+                    <button type="button" disabled className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                         Prev
-                    </span>
+                    </button>
                 )}
 
                 {/* Line indicator */}
@@ -647,12 +647,12 @@ export default function QuoteLineDetailPage({
                         </svg>
                     </Link>
                 ) : (
-                    <span className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
+                    <button type="button" disabled className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-600 rounded-lg inline-flex items-center gap-1 cursor-not-allowed">
                         Next
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
-                    </span>
+                    </button>
                 )}
             </div>
         </Sidebar >

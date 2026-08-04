@@ -270,26 +270,31 @@ export default function CreateOrganizationPage() {
     <div className="w-full space-y-8">
       <div className="flex items-center justify-between">
         {/* Left: Step Indicators */}
-        <div className="flex items-center space-x-2 flex-1">
-          {/* Step 1 */}
-          <div className={`flex h-8 w-8 text-sm items-center justify-center rounded-full font-bold transition-all ${step >= 1 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
-            {step > 1 ? <CheckCircleIcon className="h-5 w-5" /> : '1'}
+        <nav aria-label="Progress" className="flex-1">
+          <div role="list" className="flex items-center space-x-2">
+            {/* Step 1 */}
+            <div role="listitem" aria-current={step === 1 ? 'step' : undefined} className={`flex h-8 w-8 text-sm items-center justify-center rounded-full font-bold transition-all ${step >= 1 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
+              {step > 1 ? <CheckCircleIcon className="h-5 w-5" /> : '1'}
+              <span className="sr-only">Step 1: Tenant Registry{step === 1 ? ', current step' : step > 1 ? ', completed' : ''}</span>
+            </div>
+            <div className="h-0.5 w-8 bg-gray-200">
+              <div className={`h-full bg-primary transition-all duration-500 ${step > 1 ? 'w-full' : 'w-0'}`}></div>
+            </div>
+            {/* Step 2 */}
+            <div role="listitem" aria-current={step === 2 ? 'step' : undefined} className={`flex h-8 w-8 text-sm items-center justify-center rounded-full font-bold transition-all ${step >= 2 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
+              {step > 2 ? <CheckCircleIcon className="h-5 w-5" /> : '2'}
+              <span className="sr-only">Step 2: Resource Provisioning{step === 2 ? ', current step' : step > 2 ? ', completed' : ''}</span>
+            </div>
+            <div className="h-0.5 w-8 bg-gray-200">
+              <div className={`h-full bg-primary transition-all duration-500 ${step > 2 ? 'w-full' : 'w-0'}`}></div>
+            </div>
+            {/* Step 3 */}
+            <div role="listitem" aria-current={step === 3 ? 'step' : undefined} className={`flex h-8 w-8 text-sm items-center justify-center rounded-full font-bold transition-all ${step >= 3 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
+              3
+              <span className="sr-only">Step 3: Initial Sync & Launch{step === 3 ? ', current step' : ''}</span>
+            </div>
           </div>
-          <div className="h-0.5 w-8 bg-gray-200">
-            <div className={`h-full bg-primary transition-all duration-500 ${step > 1 ? 'w-full' : 'w-0'}`}></div>
-          </div>
-          {/* Step 2 */}
-          <div className={`flex h-8 w-8 text-sm items-center justify-center rounded-full font-bold transition-all ${step >= 2 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
-            {step > 2 ? <CheckCircleIcon className="h-5 w-5" /> : '2'}
-          </div>
-          <div className="h-0.5 w-8 bg-gray-200">
-            <div className={`h-full bg-primary transition-all duration-500 ${step > 2 ? 'w-full' : 'w-0'}`}></div>
-          </div>
-          {/* Step 3 */}
-          <div className={`flex h-8 w-8 text-sm items-center justify-center rounded-full font-bold transition-all ${step >= 3 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>
-            3
-          </div>
-        </div>
+        </nav>
 
         {/* Center: Title and Subtitle */}
         <div className="text-center flex-1">
