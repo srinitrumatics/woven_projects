@@ -1,5 +1,5 @@
 import { formatDate } from "@/lib/utils/formatting";
-import DetailInput from "./DetailInput";
+import ReadOnlyField from "@/components/ui/ReadOnlyField";
 
 interface InvoiceShippingInfoProps {
     accountName: string;
@@ -40,11 +40,11 @@ export default function InvoiceShippingInfo({
             </div>
             <div className="text-sm">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
-                    <DetailInput label="Ship to Account" value={accountName} href={accountId ? `/accounts/${accountId}` : undefined} className="lg:col-span-3 p-1" />
-                    <DetailInput label="Ship to Location" value={shipToLocation} href={shipToLocationId ? `/locations/${shipToLocationId}` : undefined} className="lg:col-span-3 p-1" />
-                    <DetailInput label="Shipping Address" value={shippingAddress} className="lg:col-span-6 p-1" />
-                    <DetailInput label="Ship Confirmed Date" value={formatDate(shipConfirmedDate, 'numeric-dash')} className="lg:col-span-3 p-1" />
-                    <DetailInput label="Site" value={siteName} href={siteId ? `/accounts/${siteId}` : undefined} className="lg:col-span-3 p-1" />
+                    <ReadOnlyField label="Ship to Account" value={accountName} href={accountId ? `/accounts/${accountId}` : undefined} className="lg:col-span-3 p-1" />
+                    <ReadOnlyField label="Ship to Location" value={shipToLocation} href={shipToLocationId ? `/locations/${shipToLocationId}` : undefined} className="lg:col-span-3 p-1" />
+                    <ReadOnlyField label="Shipping Address" value={shippingAddress} className="lg:col-span-6 p-1" />
+                    <ReadOnlyField label="Ship Confirmed Date" value={formatDate(shipConfirmedDate, 'numeric-dash')} className="lg:col-span-3 p-1" />
+                    <ReadOnlyField label="Site" value={siteName} href={siteId ? `/accounts/${siteId}` : undefined} className="lg:col-span-3 p-1" />
                 </div>
             </div>
         </div>

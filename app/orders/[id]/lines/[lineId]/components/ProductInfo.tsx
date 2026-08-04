@@ -1,6 +1,7 @@
 "use client";
 
 import { formatNumber } from "@/lib/utils/formatting";
+import ReadOnlyField from "@/components/ui/ReadOnlyField";
 
 interface ProductInfoProps {
     product: {
@@ -33,131 +34,15 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-4">
-                {/* Product Name */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Product Name">
-                        Product Name
-                    </label>
-                    <input
-                        type="text"
-                        readOnly
-                        value={product.name || ''}
-                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={product.name}
-                    />
-                </div>
-
-                {/* Description */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Description">
-                        Description
-                    </label>
-                    <input
-                        type="text"
-                        readOnly
-                        value={product.description || 'No description available'}
-                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={product.description}
-                    />
-                </div>
-
-                {/* Product Family */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Product Family">
-                        Product Family
-                    </label>
-                    <input
-                        type="text"
-                        readOnly
-                        value={product.productFamily || ''}
-                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={product.productFamily}
-                    />
-                </div>
-
-                {/* Brand Name */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Brand Name">
-                        Brand Name
-                    </label>
-                    <input
-                        type="text"
-                        readOnly
-                        value={product.brand || '—'}
-                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={product.brand}
-                    />
-                </div>
-
-                {/* Grouping */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Grouping">
-                        Grouping
-                    </label>
-                    <input
-                        type="text"
-                        readOnly
-                        value={product.grouping || '—'}
-                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={product.grouping}
-                    />
-                </div>
-
-                {/* Taxable */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Taxable">
-                        Taxable
-                    </label>
-                    <input
-                        type="text"
-                        readOnly
-                        value={product.isTaxable || ''}
-                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={product.isTaxable}
-                    />
-                </div>
-
-                {/* MOQ */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="MOQ">
-                        MOQ
-                    </label>
-                    <input
-                        type="text"
-                        readOnly
-                        value={formatNumber(product.moq, 0)}
-                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={formatNumber(product.moq, 0)}
-                    />
-                </div>
-
-                {/* Lead-Time (Wks) */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Lead-Time (Wks)">
-                        Lead-Time (Wks)
-                    </label>
-                    <input
-                        type="text"
-                        readOnly
-                        value={product.leadTimeWks != null ? formatNumber(product.leadTimeWks, 0) : '—'}
-                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={product.leadTimeWks != null ? String(product.leadTimeWks) : '—'}
-                    />
-                </div>
-
-                {/* Shipping Dimensions */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 truncate" title="Shipping Dimensions">
-                        Shipping Dimensions
-                    </label>
-                    <input
-                        type="text"
-                        readOnly
-                        value={product.shippingDimensions || '—'}
-                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
-                        title={product.shippingDimensions}
-                    />
-                </div>
+                <ReadOnlyField label="Product Name" value={product.name || ''} />
+                <ReadOnlyField label="Description" value={product.description || 'No description available'} />
+                <ReadOnlyField label="Product Family" value={product.productFamily || ''} />
+                <ReadOnlyField label="Brand Name" value={product.brand || '—'} />
+                <ReadOnlyField label="Grouping" value={product.grouping || '—'} />
+                <ReadOnlyField label="Taxable" value={product.isTaxable || ''} />
+                <ReadOnlyField label="MOQ" value={formatNumber(product.moq, 0)} />
+                <ReadOnlyField label="Lead-Time (Wks)" value={product.leadTimeWks != null ? formatNumber(product.leadTimeWks, 0) : '—'} />
+                <ReadOnlyField label="Shipping Dimensions" value={product.shippingDimensions || '—'} />
             </div>
         </div>
     );

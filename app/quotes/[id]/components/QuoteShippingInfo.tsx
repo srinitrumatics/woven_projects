@@ -1,5 +1,6 @@
 import { formatDate } from"@/lib/utils/formatting";
 import { QuoteDetails } from"../../types";
+import ReadOnlyField from "@/components/ui/ReadOnlyField";
 
 interface QuoteShippingInfoProps {
     quote: QuoteDetails;
@@ -23,32 +24,14 @@ export default function QuoteShippingInfo({ quote }: QuoteShippingInfoProps) {
             <div className="text-sm">
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"title="Ship to Account">Ship to Account</label>
-                            <input type="text"readOnly value={quote.shipToAccount} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300"title={quote.shipToAccount} />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"title="Ship to Location">Ship to Location</label>
-                            <input type="text"readOnly value={quote.shipToLocation} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300"title={quote.shipToLocation} />
-                        </div>
+                        <ReadOnlyField label="Ship to Account" value={quote.shipToAccount} />
+                        <ReadOnlyField label="Ship to Location" value={quote.shipToLocation} />
                     </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2"title="Shipping Address">Shipping Address</label>
-                        <input type="text"readOnly value={quote.shippingAddress} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300"title={quote.shippingAddress} />
-                    </div>
+                    <ReadOnlyField label="Shipping Address" value={quote.shippingAddress} />
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate whitespace-nowrap"title="Request Date">Request Date</label>
-                            <input type="text"readOnly value={formatDate(quote.requestDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300"title={formatDate(quote.requestDate, 'numeric-dash')} />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate whitespace-nowrap"title="Drop-Ship">Drop-Ship</label>
-                            <input type="text"readOnly value={quote.dropShip ? 'Yes' : 'No'} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300"title={quote.dropShip ? 'Yes' : 'No'} />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate whitespace-nowrap"title="Site">Site</label>
-                            <input type="text"readOnly value={quote.site} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300"title={quote.site} />
-                        </div>
+                        <ReadOnlyField label="Request Date" value={formatDate(quote.requestDate, 'numeric-dash')} />
+                        <ReadOnlyField label="Drop-Ship" value={quote.dropShip ? 'Yes' : 'No'} />
+                        <ReadOnlyField label="Site" value={quote.site} />
                     </div>
                 </div>
             </div>

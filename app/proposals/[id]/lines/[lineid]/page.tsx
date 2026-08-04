@@ -14,6 +14,8 @@ import { FulfillmentTabType, FulfillmentData, ReturnsData, SalesOrder, CustomerQ
 import { useUserSession } from "@/components/UserSessionContext";
 import { Table, THead, TBody, Tr, Th, Td } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import ReadOnlyField from "@/components/ui/ReadOnlyField";
+import ReadOnlyTextArea from "@/components/ui/ReadOnlyTextArea";
 
 // Interface for proposal product item from Salesforce (matching what we saw in proposal list logic)
 interface ProposalProductItem {
@@ -720,9 +722,7 @@ export default function ProposalProductDetailPage({
                         </h2>
                     </div>
                     <div className="flex-1 flex flex-col min-w-0">
-                        <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-800 dark:text-white min-h-[200px]">
-                            <p className="text-gray-700 truncate">{product.ProductNotes}</p>
-                        </div>
+                        <ReadOnlyTextArea value={product.ProductNotes} className="min-h-[200px] flex-1" />
                     </div>
                 </div>
 
@@ -742,132 +742,15 @@ export default function ProposalProductDetailPage({
                         </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-x-4 gap-y-3">
-                        {/* Product Name */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Product Name">
-                                Product Name
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.name}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.name}
-                            />
-                        </div>
-
-                        {/* Description */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Description">
-                                Description
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.description || "No description available"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.description || "No description available"}
-                            />
-                        </div>
-
-                        {/* Product Family */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Product Family">
-                                Product Family
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.productFamily}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.productFamily}
-                            />
-                        </div>
-
-                        {/* Brand Name */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Brand Name">
-                                Brand Name
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.brand || "—"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.brand || "—"}
-                            />
-                        </div>
-
-                        {/* Grouping */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Grouping">
-                                Grouping
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.grouping || "—"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.grouping || "—"}
-                            />
-                        </div>
-
-                        {/* Taxable */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Taxable">
-                                Taxable
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.isTaxable || "No"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.isTaxable || "No"}
-                            />
-                        </div>
-
-                        {/* MOQ */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="MOQ">
-                                MOQ
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={formatNumber(product.moq, 0)}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={formatNumber(product.moq, 0)}
-                            />
-                        </div>
-
-                        {/* Lead-Time (Wks) */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Lead-Time (Wks)">
-                                Lead-Time (Wks)
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.leadTimeWks != null ? formatNumber(product.leadTimeWks, 0) : "—"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.leadTimeWks != null ? String(product.leadTimeWks) : "—"}
-                            />
-                        </div>
-
-                        {/* Shipping Dimensions */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Shipping Dimensions">
-                                Shipping Dimensions
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.shippingDimensions || "—"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.shippingDimensions || "—"}
-                            />
-                        </div>
-
+                        <ReadOnlyField label="Product Name" value={product.name} />
+                        <ReadOnlyField label="Description" value={product.description || "No description available"} />
+                        <ReadOnlyField label="Product Family" value={product.productFamily} />
+                        <ReadOnlyField label="Brand Name" value={product.brand || "—"} />
+                        <ReadOnlyField label="Grouping" value={product.grouping || "—"} />
+                        <ReadOnlyField label="Taxable" value={product.isTaxable || "No"} />
+                        <ReadOnlyField label="MOQ" value={formatNumber(product.moq, 0)} />
+                        <ReadOnlyField label="Lead-Time (Wks)" value={product.leadTimeWks != null ? formatNumber(product.leadTimeWks, 0) : "—"} />
+                        <ReadOnlyField label="Shipping Dimensions" value={product.shippingDimensions || "—"} />
                     </div>
                 </div>
             </div>

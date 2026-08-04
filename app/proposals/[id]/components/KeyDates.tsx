@@ -1,5 +1,6 @@
 import { Proposal } from "../types";
 import { formatCurrency, formatNumber, formatDate } from "@/lib/utils/formatting";
+import ReadOnlyField from "@/components/ui/ReadOnlyField";
 
 interface KeyDatesProps {
     proposal: Proposal;
@@ -22,26 +23,11 @@ export default function KeyDates({ proposal }: KeyDatesProps) {
 
             <div className="text-sm">
                 <div className="grid grid-cols-2 md:grid-cols-3 w1025:grid-cols-5 gap-4">
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Account Rep">Account Rep </label>
-                        <input type="text" readOnly value={proposal.accountExecutive} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={proposal.accountExecutive} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Proposal Type">Proposal Type</label>
-                        <input type="text" readOnly value={proposal.proposalType} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={proposal.proposalType} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Issued Date">Issued Date</label>
-                        <input type="text" readOnly value={formatDate(proposal.issuedDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={formatDate(proposal.issuedDate, 'numeric-dash')} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Expiration Date">Expiration Date</label>
-                        <input type="text" readOnly value={formatDate(proposal.expirationDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={formatDate(proposal.expirationDate, 'numeric-dash')} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Customer Order">Customer Order</label>
-                        <input type="text" readOnly value={proposal.orderNumber} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={proposal.orderNumber} />
-                    </div>
+                    <ReadOnlyField label="Account Rep" value={proposal.accountExecutive} />
+                    <ReadOnlyField label="Proposal Type" value={proposal.proposalType} />
+                    <ReadOnlyField label="Issued Date" value={formatDate(proposal.issuedDate, 'numeric-dash')} />
+                    <ReadOnlyField label="Expiration Date" value={formatDate(proposal.expirationDate, 'numeric-dash')} />
+                    <ReadOnlyField label="Customer Order" value={proposal.orderNumber} />
                 </div>
             </div>
         </div>

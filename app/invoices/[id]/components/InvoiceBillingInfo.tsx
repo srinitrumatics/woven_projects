@@ -1,5 +1,5 @@
 import { formatDate } from "@/lib/utils/formatting";
-import DetailInput from "./DetailInput";
+import ReadOnlyField from "@/components/ui/ReadOnlyField";
 
 interface InvoiceBillingInfoProps {
     accountName: string;
@@ -40,12 +40,12 @@ export default function InvoiceBillingInfo({
 
             <div className="text-sm">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
-                    <DetailInput label="Bill to Account" value={accountName} href={accountId ? `/accounts/${accountId}` : undefined} className="lg:col-span-3 p-1" />
-                    <DetailInput label="Bill to Location" value={billToLocation} href={billToLocationId ? `/locations/${billToLocationId}` : undefined} className="lg:col-span-3 p-1" />
-                    <DetailInput label="Billing Address" value={billingAddress} className="lg:col-span-6 p-1" />
-                    <DetailInput label="Payment Terms" value={paymentTerms} className="lg:col-span-2 p-1" />
-                    <DetailInput label="Customer PO" value={customerPO} className="lg:col-span-2 p-1" />
-                    <DetailInput label="Due Date" value={formatDate(dueDate, 'numeric-dash')} className="lg:col-span-2 p-1" />
+                    <ReadOnlyField label="Bill to Account" value={accountName} href={accountId ? `/accounts/${accountId}` : undefined} className="lg:col-span-3 p-1" />
+                    <ReadOnlyField label="Bill to Location" value={billToLocation} href={billToLocationId ? `/locations/${billToLocationId}` : undefined} className="lg:col-span-3 p-1" />
+                    <ReadOnlyField label="Billing Address" value={billingAddress} className="lg:col-span-6 p-1" />
+                    <ReadOnlyField label="Payment Terms" value={paymentTerms} className="lg:col-span-2 p-1" />
+                    <ReadOnlyField label="Customer PO" value={customerPO} className="lg:col-span-2 p-1" />
+                    <ReadOnlyField label="Due Date" value={formatDate(dueDate, 'numeric-dash')} className="lg:col-span-2 p-1" />
                 </div>
             </div>
         </div>

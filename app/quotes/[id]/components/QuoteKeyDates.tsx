@@ -1,5 +1,6 @@
 import { formatDate } from"@/lib/utils/formatting";
 import { QuoteDetails } from"../../types";
+import ReadOnlyField from "@/components/ui/ReadOnlyField";
 
 interface QuoteKeyDatesProps {
     quote: QuoteDetails;
@@ -23,27 +24,11 @@ export default function QuoteKeyDates({ quote, className =""}: QuoteKeyDatesProp
 
             <div className="text-sm">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w1025:grid-cols-5 gap-4">
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1"title="Account Rep">Account Rep</label>
-                        <input type="text"readOnly value={quote.accountExecutive || ''} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300"title={quote.accountExecutive || ''} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1"title="Proposal Name">Proposal Name</label>
-                        <input type="text"readOnly value={quote.proposalName || ''} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300"title={quote.proposalName || ''} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1"title="Customer Order">Customer Order</label>
-                        <input type="text"readOnly value={quote.customerOrder || ''} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300"title={quote.customerOrder || ''} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1"title="Issued Date">Issued Date</label>
-                        <input type="text"readOnly value={formatDate(quote.issuedDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300"title={formatDate(quote.issuedDate, 'numeric-dash')} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1"title="Expiration Date">Expiration Date</label>
-                        <input type="text"readOnly value={formatDate(quote.expirationDate, 'numeric-dash')} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300"title={formatDate(quote.expirationDate, 'numeric-dash')} />
-                    </div>
-
+                    <ReadOnlyField label="Account Rep" value={quote.accountExecutive || ''} />
+                    <ReadOnlyField label="Proposal Name" value={quote.proposalName || ''} />
+                    <ReadOnlyField label="Customer Order" value={quote.customerOrder || ''} />
+                    <ReadOnlyField label="Issued Date" value={formatDate(quote.issuedDate, 'numeric-dash')} />
+                    <ReadOnlyField label="Expiration Date" value={formatDate(quote.expirationDate, 'numeric-dash')} />
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ import ProposalSummary from "./ProposalSummary";
 import BillingInfo from "./BillingInfo";
 import ShippingInfo from "./ShippingInfo";
 import KeyDates from "./KeyDates";
+import ReadOnlyTextArea from "@/components/ui/ReadOnlyTextArea";
 
 interface ProposalDetailsProps {
     proposal: Proposal;
@@ -44,11 +45,7 @@ export default function ProposalDetails({
                     </div>
 
                     <div className="flex-1">
-                        <textarea
-                            readOnly
-                            className="w-full h-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white resize-none focus:ring-0 focus:border-gray-300"
-                            value={proposal.Proposal_Notes || "No special notes for this proposal."}
-                        />
+                        <ReadOnlyTextArea value={proposal.Proposal_Notes || "No special notes for this proposal."} className="h-full" />
                     </div>
                 </div>
             </div>
@@ -76,11 +73,7 @@ export default function ProposalDetails({
                     </div>
 
                     <div className="flex-1">
-                        <textarea
-                            readOnly
-                            className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white leading-relaxed resize-none focus:ring-0 focus:border-gray-300 min-h-[54px]"
-                            value={proposal.specialTerms || "No scope summary provided for this proposal."}
-                        />
+                        <ReadOnlyTextArea value={proposal.specialTerms || "No scope summary provided for this proposal."} className="min-h-[54px]" />
                     </div>
                 </div>
             </div>

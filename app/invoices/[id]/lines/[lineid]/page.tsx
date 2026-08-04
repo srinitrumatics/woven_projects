@@ -12,6 +12,8 @@ import { InvoiceStatus } from "@/app/invoices/types";
 import { useUserSession } from "@/components/UserSessionContext";
 import { Table, THead, TBody, Tr, Th, Td } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import ReadOnlyField from "@/components/ui/ReadOnlyField";
+import ReadOnlyTextArea from "@/components/ui/ReadOnlyTextArea";
 
 interface InvoiceLineData {
     id: string;
@@ -311,9 +313,7 @@ export default function InvoiceLineDetailPage({
                         </h2>
                     </div>
                     <div className="flex-1 flex flex-col min-w-0">
-                        <div className="flex-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-sm text-gray-800 dark:text-white min-h-[200px]">
-                            <p className="text-gray-700 truncate">{product.inventoryLineNotes || "No notes available."}</p>
-                        </div>
+                        <ReadOnlyTextArea value={product.inventoryLineNotes || "No notes available."} className="min-h-[200px] flex-1" />
                     </div>
                 </div>
 
@@ -334,131 +334,15 @@ export default function InvoiceLineDetailPage({
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-x-4 gap-y-3">
-                        {/* Product Name */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Product Name">
-                                Product Name
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.productName}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.productName}
-                            />
-                        </div>
-
-                        {/* Description */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Description">
-                                Description
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.description || "No description available"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.description || "No description available"}
-                            />
-                        </div>
-
-                        {/* Product Family */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Product Family">
-                                Product Family
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.productFamily || "—"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.productFamily || "—"}
-                            />
-                        </div>
-
-                        {/* Brand Name */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Brand Name">
-                                Brand Name
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.brand || "—"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.brand || "—"}
-                            />
-                        </div>
-
-                        {/* Taxable */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Taxable">
-                                Taxable
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.isTaxable || "No"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.isTaxable || "No"}
-                            />
-                        </div>
-
-                        {/* Sales Tax Rate */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Sales Tax Rate">
-                                Sales Tax Rate
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.salesTaxRate != null ? `${Number(product.salesTaxRate).toFixed(3)}%` : "0.000%"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.salesTaxRate != null ? `${Number(product.salesTaxRate).toFixed(3)}%` : "0.000%"}
-                            />
-                        </div>
-
-                        {/* Use Tax Rate */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Use Tax Rate">
-                                Use Tax Rate
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.useTaxRate != null ? `${Number(product.useTaxRate).toFixed(3)}%` : "0.000%"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.useTaxRate != null ? `${Number(product.useTaxRate).toFixed(3)}%` : "0.000%"}
-                            />
-                        </div>
-
-                        {/* Local Tax Rate */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Local Tax Rate">
-                                Local Tax Rate
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.localTaxRate != null ? `${Number(product.localTaxRate).toFixed(3)}%` : "0.000%"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.localTaxRate != null ? `${Number(product.localTaxRate).toFixed(3)}%` : "0.000%"}
-                            />
-                        </div>
-
-                        {/* Gross Receipts Tax Rate */}
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Gross Receipts Tax Rate">
-                                Gross Receipts Tax Rate
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={product.grtRate != null ? `${Number(product.grtRate).toFixed(3)}%` : "0.000%"}
-                                className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                                title={product.grtRate != null ? `${Number(product.grtRate).toFixed(3)}%` : "0.000%"}
-                            />
-                        </div>
+                        <ReadOnlyField label="Product Name" value={product.productName} />
+                        <ReadOnlyField label="Description" value={product.description || "No description available"} />
+                        <ReadOnlyField label="Product Family" value={product.productFamily || "—"} />
+                        <ReadOnlyField label="Brand Name" value={product.brand || "—"} />
+                        <ReadOnlyField label="Taxable" value={product.isTaxable || "No"} />
+                        <ReadOnlyField label="Sales Tax Rate" value={product.salesTaxRate != null ? `${Number(product.salesTaxRate).toFixed(3)}%` : "0.000%"} />
+                        <ReadOnlyField label="Use Tax Rate" value={product.useTaxRate != null ? `${Number(product.useTaxRate).toFixed(3)}%` : "0.000%"} />
+                        <ReadOnlyField label="Local Tax Rate" value={product.localTaxRate != null ? `${Number(product.localTaxRate).toFixed(3)}%` : "0.000%"} />
+                        <ReadOnlyField label="Gross Receipts Tax Rate" value={product.grtRate != null ? `${Number(product.grtRate).toFixed(3)}%` : "0.000%"} />
                     </div>
                 </div>
             </div>

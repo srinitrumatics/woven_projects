@@ -1,5 +1,5 @@
 import { formatDate } from "@/lib/utils/formatting";
-import DetailInput from "./DetailInput";
+import ReadOnlyField from "@/components/ui/ReadOnlyField";
 
 interface InvoiceKeyDatesProps {
     arRep?: string;
@@ -43,11 +43,11 @@ export default function InvoiceKeyDates({
             </div>
             <div className="text-sm">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w1025:grid-cols-5 gap-4">
-                    <DetailInput label="AR Rep" value={arRep} />
-                    <DetailInput label="Proposal Name" value={proposalName} href={proposalId ? `/proposals/${proposalId}` : undefined} />
-                    <DetailInput label="Customer Order" value={customerOrder} href={customerOrderId ? `/orders/${customerOrderId}` : undefined} />
-                    <DetailInput label="Sales Order" value={salesOrderNumber} href={salesOrderId ? `/orders/${salesOrderId}` : undefined} />
-                    <DetailInput label="Purchase Order" value={purchaseOrderNumber} href={purchaseOrderId ? `/purchase-orders/${purchaseOrderId}` : undefined} />
+                    <ReadOnlyField label="AR Rep" value={arRep} />
+                    <ReadOnlyField label="Proposal Name" value={proposalName} href={proposalId ? `/proposals/${proposalId}` : undefined} />
+                    <ReadOnlyField label="Customer Order" value={customerOrder} href={customerOrderId ? `/orders/${customerOrderId}` : undefined} />
+                    <ReadOnlyField label="Sales Order" value={salesOrderNumber} href={salesOrderId ? `/orders/${salesOrderId}` : undefined} />
+                    <ReadOnlyField label="Purchase Order" value={purchaseOrderNumber} href={purchaseOrderId ? `/purchase-orders/${purchaseOrderId}` : undefined} />
                 </div>
             </div>
         </div>

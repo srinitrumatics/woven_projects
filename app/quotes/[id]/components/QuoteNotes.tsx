@@ -1,4 +1,5 @@
 import { decodeHtmlEntities } from "@/lib/utils/formatting";
+import ReadOnlyTextArea from "@/components/ui/ReadOnlyTextArea";
 
 interface QuoteNotesProps {
     notes: string;
@@ -19,11 +20,7 @@ export default function QuoteNotes({ notes, className =""}: QuoteNotesProps) {
                     <p className="text-sm text-gray-500 dark:text-gray-400"title="For Your Review">For Your Review</p>
                 </div>
             </div>
-            <textarea
-                disabled
-                className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white resize-none h-full focus:ring-0 focus:border-gray-300"
-                value={decodeHtmlEntities(notes) ||"No special notes."}
-            />
+            <ReadOnlyTextArea value={decodeHtmlEntities(notes) || "No special notes."} className="h-full" />
         </div>
     );
 }

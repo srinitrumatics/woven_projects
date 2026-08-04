@@ -1,4 +1,5 @@
 import { Proposal } from "../types";
+import ReadOnlyField from "@/components/ui/ReadOnlyField";
 
 interface ShippingInfoProps {
     proposal: Proposal;
@@ -23,34 +24,20 @@ export default function ShippingInfo({ proposal }: ShippingInfoProps) {
             <div className="text-sm">
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Ship to Account">Ship to Account</label>
-                            <input type="text" readOnly value={proposal.shipToAccount} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={proposal.shipToAccount} />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Ship to Location">Ship to Location</label>
-                            <input type="text" readOnly value={proposal.shipTo} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={proposal.shipTo} />
-                        </div>
+                        <ReadOnlyField label="Ship to Account" value={proposal.shipToAccount} />
+                        <ReadOnlyField label="Ship to Location" value={proposal.shipTo} />
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Shipping Address">Shipping Address</label>
-                        <input type="text" readOnly value={proposal.shippingAddress} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={proposal.shippingAddress} />
-                    </div>
+                    <ReadOnlyField label="Shipping Address" value={proposal.shippingAddress} />
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Request Date">Request Date</label>
-                            <input type="text" readOnly value={proposal.requestedDeliveryDate} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={proposal.requestedDeliveryDate} />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Drop-Ship">Drop-Ship</label>
-                            <input type="text" readOnly value={proposal.dropShip ? 'Yes' : 'No'} className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 sm:text-sm focus:ring-0 focus:border-gray-300 truncate ${proposal.dropShip ? 'text-green-600 font-medium' : 'text-gray-900 dark:text-white'}`} title={proposal.dropShip ? 'Yes' : 'No'} />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Site">Site</label>
-                            <input type="text" readOnly value={proposal.site} className="w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white sm:text-sm focus:ring-0 focus:border-gray-300 truncate" title={proposal.site} />
-                        </div>
+                        <ReadOnlyField label="Request Date" value={proposal.requestedDeliveryDate} />
+                        <ReadOnlyField
+                            label="Drop-Ship"
+                            value={proposal.dropShip ? 'Yes' : 'No'}
+                            valueClassName={proposal.dropShip ? 'text-green-600 font-medium' : ''}
+                        />
+                        <ReadOnlyField label="Site" value={proposal.site} />
                     </div>
                 </div>
             </div>
