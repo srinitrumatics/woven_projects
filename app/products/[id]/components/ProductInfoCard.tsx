@@ -90,7 +90,7 @@ export default function ProductInfoCard({ product }: ProductInfoCardProps) {
               <button
                 onClick={() => setIsModalOpen(true)}
                 disabled={quantity === 0}
-                className="flex-1 py-2 px-4 font-bold rounded-xl shadow-md transform transition-all duration-200 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white text-sm active:scale-[0.98]"
+                className="flex-1 py-2 px-4 font-bold rounded-xl shadow-md transform transition-all duration-200 bg-primary hover:bg-primary-dark disabled:bg-gray-400 disabled:cursor-not-allowed text-white text-sm active:scale-[0.98]"
               >
                 Add to Order
               </button>

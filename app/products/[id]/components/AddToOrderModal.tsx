@@ -213,7 +213,7 @@ export default function AddToOrderModal({
             <button
               onClick={handleCreateOrder}
               disabled={creating}
-              className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]"
+              className="flex-1 py-3 px-4 bg-primary hover:bg-primary-dark disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl font-bold shadow-lg transition-all active:scale-[0.98]"
             >
               {creating ? "Creating..." : "Create Order"}
             </button>
@@ -222,7 +222,7 @@ export default function AddToOrderModal({
             <button
               onClick={handleAddToOrder}
               disabled={!selectedOrderId || adding}
-              className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]"
+              className="flex-1 py-3 px-4 bg-primary hover:bg-primary-dark disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl font-bold shadow-lg transition-all active:scale-[0.98]"
             >
               {adding ? "Adding..." : "Add to Order"}
             </button>
