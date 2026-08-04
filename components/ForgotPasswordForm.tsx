@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useToast } from "@/components/ui/Toast";
 
 export default function ForgotPasswordForm() {
   const [step, setStep] = useState(1); // 1: Email, 2: Reset Code & New Password
@@ -11,14 +12,11 @@ export default function ForgotPasswordForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const { success, error } = useToast();
   const router = useRouter();
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
 
     try {
       const response = await fetch('/api/auth/forgot-password', {
@@ -30,37 +28,30 @@ export default function ForgotPasswordForm() {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess(data.message || "Request processed. A reset code has been sent.");
-        setTimeout(() => setSuccess(""), 3000);
+        success(data.message || "Request processed. A reset code has been sent.", 3000);
         setTimeout(() => {
           setStep(2);
         }, 1500);
       } else {
-        setError(data.error || data.message || "Failed to send reset code. Please try again.");
-        setTimeout(() => setError(""), 5000);
+        error(data.error || data.message || "Failed to send reset code. Please try again.", 5000);
       }
     } catch (err) {
-      setError("Failed to connect to the server. Please try again.");
-      setTimeout(() => setError(""), 3000);
+      error("Failed to connect to the server. Please try again.", 3000);
     }
   };
 
   const handleResetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
 
     // 1. Validation for Reset Code (exactly 6 digits)
     if (!/^\d{6}$/.test(resetCode)) {
-      setError("Verification code must be exactly 6 digits.");
-      setTimeout(() => setError(""), 3000);
+      error("Verification code must be exactly 6 digits.", 3000);
       return;
     }
 
     // 2. Validation for Password Matching
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      setTimeout(() => setError(""), 3000);
+      error("Passwords do not match.", 3000);
       return;
     }
 
@@ -68,8 +59,7 @@ export default function ForgotPasswordForm() {
     // Minimum 8 characters, one uppercase, one number, one special character
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
     if (!passwordRegex.test(password)) {
-      setError("Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character.");
-      setTimeout(() => setError(""), 3000);
+      error("Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character.", 3000);
       return;
     }
 
@@ -87,18 +77,15 @@ export default function ForgotPasswordForm() {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess("Your password has been reset successfully. Redirecting to login...");
-        setTimeout(() => setSuccess(""), 3000);
+        success("Your password has been reset successfully. Redirecting to login...", 3000);
         setTimeout(() => {
           router.push("/signin");
         }, 2000);
       } else {
-        setError(data.error || "Invalid code or reset failed. Please try again.");
-        setTimeout(() => setError(""), 3000);
+        error(data.error || "Invalid code or reset failed. Please try again.", 3000);
       }
     } catch (err) {
-      setError("Failed to connect to the server. Please try again.");
-      setTimeout(() => setError(""), 3000);
+      error("Failed to connect to the server. Please try again.", 3000);
     }
   };
 
@@ -115,18 +102,6 @@ export default function ForgotPasswordForm() {
               ? "Enter your email address and we'll send you a code to reset your password."
               : "Enter the verification code sent to your email and your new password."}
           </p>
-
-          {error && (
-            <div role="alert" className="bg-red-50 text-red-500 p-3 rounded-md text-sm mb-4 border border-red-100 animate-in fade-in slide-in-from-top-1">
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div role="alert" className="bg-green-50 text-green-600 p-3 rounded-md text-sm mb-4 border border-green-100 animate-in fade-in slide-in-from-top-1">
-              {success}
-            </div>
-          )}
 
           {step === 1 ? (
             <form method="POST" onSubmit={handleEmailSubmit} className="space-y-6">

@@ -4,13 +4,14 @@ import React, { useState, useEffect } from "react";
 import { useUserSession } from "@/components/UserSessionContext";
 import Sidebar from "@/components/layouts/Sidebar";
 import { formatNumber } from "@/lib/utils/formatting";
+import { useToast } from "@/components/ui/Toast";
 
 export default function ProfilePage() {
     const { user, selectedAccount } = useUserSession();
+    const { success, error } = useToast();
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState<any>({});
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState({ type: "", text: "" });
     const [fieldErrors, setFieldErrors] = useState<any>({});
     const [picklists, setPicklists] = useState<any>(null);
 
@@ -37,16 +38,6 @@ export default function ProfilePage() {
             setFormData(user.user_details);
         }
     }, [user?.user_details, isEditing]);
-
-    // Auto-clear success/error messages after 5 seconds
-    useEffect(() => {
-        if (message.text) {
-            const timer = setTimeout(() => {
-                setMessage({ type: "", text: "" });
-            }, 5000);
-            return () => clearTimeout(timer);
-        }
-    }, [message.text]);
 
     if (!user) {
         return (
@@ -122,7 +113,6 @@ export default function ProfilePage() {
         if (loading) return;
 
         setFieldErrors({});
-        setMessage({ type: "", text: "" });
 
         // Calculate all errors fresh
         const errors: any = {};
@@ -144,10 +134,7 @@ export default function ProfilePage() {
         // If any errors exist, STOP here
         if (Object.keys(errors).length > 0) {
             setFieldErrors(errors);
-            setMessage({
-                type: "error",
-                text: "Please fix the validation errors below."
-            });
+            error("Please fix the validation errors below.", 5000);
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
@@ -169,7 +156,7 @@ export default function ProfilePage() {
             const result = await response.json();
 
             if (response.ok) {
-                setMessage({ type: "success", text: "Profile updated successfully!" });
+                success("Profile updated successfully!", 5000);
                 setIsEditing(false);
 
                 // Refresh session data globally
@@ -180,10 +167,10 @@ export default function ProfilePage() {
                     setTimeout(() => window.location.reload(), 5000);
                 }
             } else {
-                setMessage({ type: "error", text: result.error || "Failed to update profile." });
+                error(result.error || "Failed to update profile.", 5000);
             }
-        } catch (error) {
-            setMessage({ type: "error", text: "Failed to update profile. Please try again." });
+        } catch (err) {
+            error("Failed to update profile. Please try again.", 5000);
         } finally {
             setLoading(false);
         }
@@ -196,17 +183,6 @@ export default function ProfilePage() {
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">My Profile</h1>
                     <p className="text-gray-500 dark:text-gray-400">View and manage your personal information and contact details.</p>
                 </div>
-
-                {message.text && (
-                    <div className={`mb-6 p-4 rounded-lg flex items-center gap-3 ${message.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
-                        {message.type === 'success' ? (
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                        ) : (
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        )}
-                        <p className="font-medium">{message.text}</p>
-                    </div>
-                )}
 
                 <form onSubmit={handleSave} className="space-y-8">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -465,7 +441,6 @@ export default function ProfilePage() {
                                             onClick={() => {
                                                 setIsEditing(false);
                                                 setFormData(details);
-                                                setMessage({ type: "", text: "" });
                                             }}
                                             className="px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                                             disabled={loading}
