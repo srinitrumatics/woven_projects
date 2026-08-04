@@ -4,6 +4,7 @@ import { use, useEffect, useState } from "react";
 import Sidebar from "@/components/layouts/Sidebar";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/Breadcrumb";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { Proposal } from "../types";
 import { useUserSession } from "@/components/UserSessionContext";
 
@@ -93,10 +94,7 @@ export default function ProposalSummaryPage({ params }: { params: Promise<{ id: 
       {/* Iframe Section */}
       <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden h-[calc(100vh-200px)] ${loading || !proposal?.Project_Workspace__c ? 'flex items-center justify-center' : ''}`}>
         {loading ? (
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-gray-500 dark:text-gray-400">Loading workspace...</p>
-          </div>
+          <LoadingSpinner size="md" text="Loading workspace..." />
         ) : proposal?.Project_Workspace__c ? (
           <div
             className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full"
