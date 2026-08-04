@@ -23,7 +23,7 @@ export default function ProductInformationCard({ product }: { product: any }) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 min-[1000px]:grid-cols-3 gap-x-4 gap-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 w1025:grid-cols-3 gap-x-4 gap-y-3">
                 {/* Product Name */}
                 <div>
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-500 mb-1 truncate" title="Product Name">

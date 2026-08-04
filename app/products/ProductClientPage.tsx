@@ -458,18 +458,6 @@ function Content({ indexName }: { indexName: string }) {
           </div>
         )}
 
-        {/* Manual Load More Button — card view only */}
-        {!isLastPage && viewMode === 'card' && (
-          <div className="flex justify-center mt-6">
-            <button
-              onClick={showMore}
-              className="px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-colors shadow-sm truncate"
-            >
-              Load More Products
-            </button>
-          </div>
-        )}
-
         {/* End of Results Message — card view only */}
         {isLastPage && products.length > 0 && viewMode === 'card' && (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
