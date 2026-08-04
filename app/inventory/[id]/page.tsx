@@ -147,7 +147,7 @@ export default function InventoryDetailPage({ params }: { params: Promise<{ id: 
     const productName = product?.Name || "";
 
     return (
-        <div className="p-6">
+        <div>
             <div className="mb-6">
                 <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
                     <button onClick={() => router.push('/inventory')} className="hover:text-primary transition-colors">My Inventory</button>

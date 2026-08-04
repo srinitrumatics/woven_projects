@@ -208,8 +208,6 @@ export default function SearchClientPage({ indexName = "movies_index" }: { index
 
   return (
     <Sidebar>
-      <div className="bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-4">
           {seedMessage && (
             <div className="mb-6">
               <p className={`text-sm ${seedStatus === "success" ? "text-green-600" : "text-red-600"}`}>
@@ -329,8 +327,6 @@ export default function SearchClientPage({ indexName = "movies_index" }: { index
               </div>
             </div>
           </InstantSearch>
-        </div>
-      </div>
     </Sidebar>
   );
 }
