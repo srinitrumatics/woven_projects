@@ -16,7 +16,8 @@ import {
   RefinementList,
   CurrentRefinements,
   useInstantSearch,
-  usePagination
+  usePagination,
+  useHits
 } from "react-instantsearch";
 import { formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
 import { Product } from "../orders/types";
@@ -235,7 +236,7 @@ function Content({ indexName }: { indexName: string }) {
   return (
     <div className="flex flex-col lg:flex-row gap-6 min-w-0">
       <Configure
-        hitsPerPage={9}
+        hitsPerPage={viewMode === 'list' ? 10 : 9}
         maxValuesPerFacet={200}
         filters={filters}
         facets={['*']}
@@ -441,7 +442,6 @@ function Content({ indexName }: { indexName: string }) {
             />
           ) : (
             <ListView
-              products={products}
               canEditProduct={canEditProduct}
               onEdit={(p) => { setProductToEdit(p); setIsAddModalOpen(true); }}
             />
@@ -614,9 +614,11 @@ const CardView = ({ products, canEditProduct, onEdit }: ViewProps) => (
 /* List View Products Function Start */
 const LIST_ITEMS_PER_PAGE = 10;
 
-function ListView({ products, canEditProduct, onEdit }: ViewProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const { items: sortedProducts, requestSort, sortConfig } = useSortableData<any>(products, { key: 'name', direction: 'asc' });
+function ListView({ canEditProduct, onEdit }: Omit<ViewProps, 'products'>) {
+  const { hits } = useHits();
+  const { currentRefinement, nbHits, nbPages, refine } = usePagination();
+  
+  const { items: sortedProducts, requestSort, sortConfig } = useSortableData<any>(hits, { key: 'name', direction: 'asc' });
   const { widths, handleResize } = useResizableColumns({
     name: 250,
     category: 200,
@@ -625,22 +627,10 @@ function ListView({ products, canEditProduct, onEdit }: ViewProps) {
     sellingPrice: 120,
   });
 
-  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / LIST_ITEMS_PER_PAGE));
-
-  const paginatedProducts = useMemo(() => {
-    const start = (currentPage - 1) * LIST_ITEMS_PER_PAGE;
-    return sortedProducts.slice(start, start + LIST_ITEMS_PER_PAGE);
-  }, [sortedProducts, currentPage]);
-
-  // Reset to page 1 whenever the source product list changes (filter/search)
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [products]);
-
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
-        {paginatedProducts.length === 0 ? (
+        {sortedProducts.length === 0 ? (
           <TableEmptyState message="No products found." />
         ) : (
         <Table className="min-w-[640px]">
@@ -656,7 +646,7 @@ function ListView({ products, canEditProduct, onEdit }: ViewProps) {
             </tr>
           </THead>
           <TBody>
-            {paginatedProducts.map((product) => {
+            {sortedProducts.map((product) => {
                 const p = product as any;
                 const thumbnail = p.images?.[0]?.thumb || p.image_url;
                 const sellingPrice = typeof p.price === 'number' ? p.price : (product.unitPrice || 0);
@@ -714,11 +704,11 @@ function ListView({ products, canEditProduct, onEdit }: ViewProps) {
         )}
       </div>
       <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        totalItems={sortedProducts.length}
-        itemsPerPage={LIST_ITEMS_PER_PAGE}
-        onPageChange={setCurrentPage}
+        currentPage={currentRefinement + 1}
+        totalPages={nbPages}
+        totalItems={nbHits}
+        itemsPerPage={10}
+        onPageChange={(page) => refine(page - 1)}
         itemName="products"
       />
     </div>
