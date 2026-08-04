@@ -198,7 +198,7 @@ export default function QuoteFulfillmentTab({ quoteId, data, loading }: QuoteFul
             />
 
             {/* Tab Content */}
-            <div className="p-0 bg-gray-50 dark:bg-gray-900/50 py-2">
+            <div className="p-0 bg-gray-50 dark:bg-gray-900/50">
                 {activeSubTab === "salesOrders" && (
                     <QuoteSalesOrdersSubTab
                         salesOrders={sortedSalesOrders}

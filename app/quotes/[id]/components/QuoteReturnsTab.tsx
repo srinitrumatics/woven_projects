@@ -203,7 +203,7 @@ export default function QuoteReturnsTab({ quoteId, accountType, data, loading }:
                 onChange={(key) => setActiveSubTab(key as ReturnsSubTab)}
             />
 
-            <div className="p-0 bg-gray-50 dark:bg-gray-900/50 py-2">
+            <div className="p-0 bg-gray-50 dark:bg-gray-900/50 ">
                 {activeSubTab === "rmas" && (
                     <QuoteRMASubTab
                         rmas={sortedRMAs}

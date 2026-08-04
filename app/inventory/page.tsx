@@ -558,8 +558,8 @@ export default function InventoryPage() {
 
             {/* Filters & Table Section */}
             < div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden p-4" >
-                <div className="pb-4 border-b border-gray-100 dark:border-gray-700 mb-4">
-                    <div className="flex flex-wrap items-center gap-3 px-2 pb-4">
+                <div className="pb-4 border-b border-gray-100 dark:border-gray-700 mb-2">
+                    <div className="flex flex-wrap items-center gap-3 px-2">
                         <div className="relative min-w-[280px] max-w-xs flex-shrink-0">
                             <input
                                 type="text"
@@ -572,13 +572,14 @@ export default function InventoryPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </div>
-                        <Tabs
-                            tabs={(["All", "On Hold", "Put-Away", "Average Aged"] as TabFilter[]).map((tab) => ({ key: tab, label: tab }))}
-                            activeKey={activeTab}
-                            onChange={(key) => handleCardClick(key as TabFilter)}
-                        />
+                        <div className="relative ">
+                            <Tabs
+                                tabs={(["All", "On Hold", "Put-Away", "Average Aged"] as TabFilter[]).map((tab) => ({ key: tab, label: tab }))}
+                                activeKey={activeTab}
+                                onChange={(key) => handleCardClick(key as TabFilter)}
+                            />
 
-
+                        </div>
                     </div>
                 </div>
 

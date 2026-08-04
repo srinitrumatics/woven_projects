@@ -443,174 +443,176 @@ export default function ShipmentsPage() {
             </div>
 
             {/* Status Tabs/Pills */}
-            <Tabs
-              tabs={[{ key: "All", label: "All" }, ...uniqueStatuses.map(status => ({ key: status, label: status }))]}
-              activeKey={activeTab}
-              onChange={(key) => setActiveTab(key as ShipmentStatus | "All")}
-            />
+            <div className="relative max-w-sm">
+              <Tabs
+                tabs={[{ key: "All", label: "All" }, ...uniqueStatuses.map(status => ({ key: status, label: status }))]}
+                activeKey={activeTab}
+                onChange={(key) => setActiveTab(key as ShipmentStatus | "All")}
+              />
+            </div>
           </div>
         </div>
 
         {/* Table Area */}
         <div className="p-4 pb-0">
           <div className="rounded-lg shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            {loading ? (
-              <TableLoadingState message="Loading shipments..." />
-            ) : paginatedShipments.length === 0 ? (
-              <TableEmptyState
-                message="No shipments found"
-                description={searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No shipping manifests available"}
-              />
-            ) : (
-              <Table>
-                <THead>
-                  <tr>
-                    <SortableHeader label="Shipping Manifest #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                    <SortableHeader label="Sales Order #" field="salesOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
-                    <SortableHeader label="Customer Quote #" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={handleResize} />
-                    <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
-                    <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
-                    <SortableHeader label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
-                    <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
-                    <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} />
-                    <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} />
-                    <SortableHeader label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={handleResize} />
-                    <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={handleResize} />
-                    <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
-                    <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                    <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxCount} onResize={handleResize} />
-                    <SortableHeader label="Box Length" field="boxLength" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxLength} onResize={handleResize} />
-                    <SortableHeader label="Box Width" field="boxWidth" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxWidth} onResize={handleResize} />
-                    <SortableHeader label="Box Height" field="boxHeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxHeight} onResize={handleResize} />
-                    <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxNetWeight} onResize={handleResize} />
-                    <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxGrossWeight} onResize={handleResize} />
-                    <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={widths.logisticsPartner} onResize={handleResize} />
-                    <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipDate} onResize={handleResize} />
-                    <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveredDate} onResize={handleResize} />
-                    <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={handleResize} />
-                    <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={handleResize} />
-                    <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={handleResize} />
-                    <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={handleResize} />
-                    <Th
-                      className="border-b border-gray-200 dark:border-gray-700 truncate"
-                      style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
-                    >
-                      Action
-                    </Th>
-                  </tr>
-                </THead>
-                <TBody>
-                  {paginatedShipments.map((shipment) => (
-                    <Tr key={shipment.Id} className="transition-colors">
-                      <Td className="font-semibold text-primary sticky left-0 bg-white dark:bg-gray-800 z-10 truncate">
-                        <Link
-                          href={`/shipments/${shipment.Id}`}
-                          className="text-primary font-semibold hover:underline"
-                          onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                        >
-                          {displayCell(shipment.name)}
-                        </Link>
-                      </Td>
-                      <Td className="truncate">
-                        <StatusBadge status={shipment.status || "N/A"} variant="pill" />
-                      </Td>
-                      <Td className="text-gray-900 dark:text-gray-300 truncate">
-                        {displayCell(shipment.salesOrder)}
-                      </Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">
-                        {shipment.customerQuoteId ? (
-                          !isManufacturer ? (
-                            <Link
-                              href={`/quotes/${shipment.customerQuoteId}`}
-                              target="_blank"
-                              className="text-primary hover:underline font-medium"
-                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                            >
-                              {shipment.customerQuote || "View Quote"}
-                            </Link>
+            <div className="overflow-x-auto">
+              {loading ? (
+                <TableLoadingState message="Loading shipments..." />
+              ) : paginatedShipments.length === 0 ? (
+                <TableEmptyState
+                  message="No shipments found"
+                  description={searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No shipping manifests available"}
+                />
+              ) : (
+                <Table>
+                  <THead>
+                    <tr>
+                      <SortableHeader label="Shipping Manifest #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                      <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                      <SortableHeader label="Sales Order #" field="salesOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
+                      <SortableHeader label="Customer Quote #" field="customerQuote" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={handleResize} />
+                      <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
+                      <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                      <SortableHeader label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
+                      <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
+                      <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} />
+                      <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} />
+                      <SortableHeader label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={handleResize} />
+                      <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={handleResize} />
+                      <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
+                      <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
+                      <SortableHeader label="Box Count" field="boxCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxCount} onResize={handleResize} />
+                      <SortableHeader label="Box Length" field="boxLength" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxLength} onResize={handleResize} />
+                      <SortableHeader label="Box Width" field="boxWidth" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxWidth} onResize={handleResize} />
+                      <SortableHeader label="Box Height" field="boxHeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxHeight} onResize={handleResize} />
+                      <SortableHeader label="Box Net Weight" field="boxNetWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxNetWeight} onResize={handleResize} />
+                      <SortableHeader label="Box Gross Weight" field="boxGrossWeight" sortConfig={sortConfig} requestSort={requestSort} width={widths.boxGrossWeight} onResize={handleResize} />
+                      <SortableHeader label="Logistics Partner" field="logisticsPartner" sortConfig={sortConfig} requestSort={requestSort} width={widths.logisticsPartner} onResize={handleResize} />
+                      <SortableHeader label="Planned Ship Date" field="shipDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipDate} onResize={handleResize} />
+                      <SortableHeader label="Ship Confirmed Date" field="deliveredDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.deliveredDate} onResize={handleResize} />
+                      <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={handleResize} />
+                      <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={handleResize} />
+                      <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={handleResize} />
+                      <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={handleResize} />
+                      <Th
+                        className="border-b border-gray-200 dark:border-gray-700 truncate"
+                        style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                      >
+                        Action
+                      </Th>
+                    </tr>
+                  </THead>
+                  <TBody>
+                    {paginatedShipments.map((shipment) => (
+                      <Tr key={shipment.Id} className="transition-colors">
+                        <Td className="font-semibold text-primary sticky left-0 bg-white dark:bg-gray-800 z-10 truncate">
+                          <Link
+                            href={`/shipments/${shipment.Id}`}
+                            className="text-primary font-semibold hover:underline"
+                            onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                          >
+                            {displayCell(shipment.name)}
+                          </Link>
+                        </Td>
+                        <Td className="truncate">
+                          <StatusBadge status={shipment.status || "N/A"} variant="pill" />
+                        </Td>
+                        <Td className="text-gray-900 dark:text-gray-300 truncate">
+                          {displayCell(shipment.salesOrder)}
+                        </Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">
+                          {shipment.customerQuoteId ? (
+                            !isManufacturer ? (
+                              <Link
+                                href={`/quotes/${shipment.customerQuoteId}`}
+                                target="_blank"
+                                className="text-primary hover:underline font-medium"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {shipment.customerQuote || "View Quote"}
+                              </Link>
+                            ) : (
+                              <span className="font-medium">{displayCell(shipment.customerQuote)}</span>
+                            )
                           ) : (
-                            <span className="font-medium">{displayCell(shipment.customerQuote)}</span>
-                          )
-                        ) : (
-                          displayCell(shipment.customerQuote)
-                        )}
-                      </Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">
-                        {shipment.proposalId ? (
-                          !isManufacturer ? (
-                            <Link
-                              href={`/proposals/${shipment.proposalId}`}
-                              target="_blank"
-                              className="text-primary hover:underline font-medium"
-                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                            >
-                              {shipment.proposalNumber || "View Proposal"}
-                            </Link>
+                            displayCell(shipment.customerQuote)
+                          )}
+                        </Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">
+                          {shipment.proposalId ? (
+                            !isManufacturer ? (
+                              <Link
+                                href={`/proposals/${shipment.proposalId}`}
+                                target="_blank"
+                                className="text-primary hover:underline font-medium"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {shipment.proposalNumber || "View Proposal"}
+                              </Link>
+                            ) : (
+                              <span className="font-medium">{displayCell(shipment.proposalNumber)}</span>
+                            )
                           ) : (
-                            <span className="font-medium">{displayCell(shipment.proposalNumber)}</span>
-                          )
-                        ) : (
-                          displayCell(shipment.proposalNumber)
-                        )}
-                      </Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.proposalName)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">
-                        {shipment.customerOrderId ? (
-                          !isManufacturer ? (
-                            <Link
-                              href={`/orders/${shipment.customerOrderId}`}
-                              target="_blank"
-                              className="text-primary hover:underline font-medium"
-                              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                            >
-                              {shipment.customerOrder || "View Order"}
-                            </Link>
+                            displayCell(shipment.proposalNumber)
+                          )}
+                        </Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.proposalName)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">
+                          {shipment.customerOrderId ? (
+                            !isManufacturer ? (
+                              <Link
+                                href={`/orders/${shipment.customerOrderId}`}
+                                target="_blank"
+                                className="text-primary hover:underline font-medium"
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                              >
+                                {shipment.customerOrder || "View Order"}
+                              </Link>
+                            ) : (
+                              <span className="font-medium">{displayCell(shipment.customerOrder)}</span>
+                            )
                           ) : (
-                            <span className="font-medium">{displayCell(shipment.customerOrder)}</span>
-                          )
-                        ) : (
-                          displayCell(shipment.customerOrder)
-                        )}
-                      </Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.customerPO)}</Td>
-                      <Td className="text-gray-900 dark:text-gray-300 truncate">{displayCell(shipment.shipToAccount)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.shipToLocation)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.shipToContact)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{shipment.dropShip ? "Yes" : "No"}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 text-left truncate">{shipment.totalLines}</Td>
-                      <Td className="text-gray-900 dark:text-gray-300 font-semibold text-left truncate">{formatCurrency(shipment.totalPrice)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxCount, 0)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxLength)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxWidth)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxHeight)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxNetWeight)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxGrossWeight)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.logisticsPartner)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.shipDate, 'numeric-dash')}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.deliveredDate, 'numeric-dash')}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.trackingNumber)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.trackingStatus)}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.estimatedDeliveryDate, 'numeric-dash')}</Td>
-                      <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.actualDeliveryDate, 'numeric-dash')}</Td>
-                      <Td className="text-left truncate" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          onClick={() => router.push(`/shipments/${shipment.Id}`)}
-                          className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
-                          title="View shipment" >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                        </button>
-                      </Td>
-                    </Tr>
-                  ))}
-                </TBody>
-              </Table>
-            )}
-          </div>
+                            displayCell(shipment.customerOrder)
+                          )}
+                        </Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.customerPO)}</Td>
+                        <Td className="text-gray-900 dark:text-gray-300 truncate">{displayCell(shipment.shipToAccount)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.shipToLocation)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.shipToContact)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{shipment.dropShip ? "Yes" : "No"}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 text-left truncate">{shipment.totalLines}</Td>
+                        <Td className="text-gray-900 dark:text-gray-300 font-semibold text-left truncate">{formatCurrency(shipment.totalPrice)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxCount, 0)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxLength)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxWidth)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxHeight)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxNetWeight)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatNumber(shipment.boxGrossWeight)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.logisticsPartner)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.shipDate, 'numeric-dash')}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.deliveredDate, 'numeric-dash')}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.trackingNumber)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{displayCell(shipment.trackingStatus)}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.estimatedDeliveryDate, 'numeric-dash')}</Td>
+                        <Td className="text-gray-600 dark:text-gray-400 truncate">{formatDate(shipment.actualDeliveryDate, 'numeric-dash')}</Td>
+                        <Td className="text-left truncate" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            onClick={() => router.push(`/shipments/${shipment.Id}`)}
+                            className="p-1.5 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                            title="View shipment" >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                          </button>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </TBody>
+                </Table>
+              )}
+            </div>
           </div>
         </div>
         {/* Pagination Section */}
