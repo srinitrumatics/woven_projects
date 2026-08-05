@@ -165,7 +165,7 @@ function Content({ indexName }: { indexName: string }) {
     setAddToOrderProduct({
       id: p.objectID || p.id,
       name: p.name,
-      price: typeof p.price === 'number' ? p.price : (p.unitPrice || 0),
+      price: Number(p.price ?? p.unitPrice ?? 0),
     });
     setAddToOrderQuantity(parseInt(p.moq) || 1);
   };

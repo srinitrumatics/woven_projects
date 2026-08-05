@@ -100,8 +100,8 @@ export default function AddToOrderModal({
         orderLines: [{
           Status__c: 'Draft',
           Product_Name__c: product.id,
-          Order_Qty__c: quantity / (moq || 1),
-          Unit_Price__c: product.price,
+          Order_Qty__c: Number(quantity) / (Number(moq) || 1),
+          Unit_Price__c: Number(product.price),
           Inventory_Account__c: accountId,
           IsTaxable__c: false,
         }],
@@ -170,8 +170,8 @@ export default function AddToOrderModal({
           orderLines: [{
             Status__c: 'Draft',
             Product_Name__c: product.id,
-            Order_Qty__c: quantity,
-            Unit_Price__c: product.price,
+            Order_Qty__c: Number(quantity),
+            Unit_Price__c: Number(product.price),
             Inventory_Account__c: accountId,
             IsTaxable__c: false,
           }],
