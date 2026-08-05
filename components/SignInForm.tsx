@@ -80,9 +80,6 @@ export default function SignInForm() {
               </div>
             )}
             <div>
-              <label htmlFor="signin-email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
               <input
                 id="signin-email"
                 name="email"
@@ -97,9 +94,6 @@ export default function SignInForm() {
             </div>
 
             <div>
-              <label htmlFor="signin-password" className="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
               <div className="relative">
                 <input
                   id="signin-password"
