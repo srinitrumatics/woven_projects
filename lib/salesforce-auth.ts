@@ -1,4 +1,4 @@
-import { getSalesforceSession, fetchWithLogging } from './salesforce-service';
+import { getSalesforceSession, invalidateSalesforceSessionCache, fetchWithLogging } from './salesforce-service';
 
 export interface SalesforceAuthResponse {
   success: boolean;
@@ -106,6 +106,52 @@ export async function salesforceResetPassword(email: string, code: number, newPa
 import * as https from 'https';
 import { URL } from 'url';
 
+const SF_LOGIN_TIMEOUT_MS = 15000;
+
+interface RawSFResponse {
+  statusCode: number;
+  data: string;
+}
+
+function performLoginRequest(instanceUrl: string, accessToken: string, payloadString: string): Promise<RawSFResponse> {
+  const requestUrl = new URL(`${instanceUrl}/services/apexrest/gtherp/auth`);
+
+  return new Promise((resolve, reject) => {
+    const options = {
+      method: 'GET',
+      hostname: requestUrl.hostname,
+      path: requestUrl.pathname + requestUrl.search,
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payloadString)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      res.on('end', () => {
+        resolve({ statusCode: res.statusCode || 0, data });
+      });
+    });
+
+    req.setTimeout(SF_LOGIN_TIMEOUT_MS, () => {
+      req.destroy(new Error('Salesforce login request timed out'));
+    });
+
+    req.on('error', (error) => {
+      reject(new Error('Network error during Salesforce login'));
+    });
+
+    // Write the JSON body
+    req.write(payloadString);
+    req.end();
+  });
+}
+
 /**
  * Salesforce Login
  * Uses native Node https to support GET requests with JSON bodies
@@ -121,59 +167,34 @@ export async function salesforceLogin(email: string, password: string): Promise<
     password: password
   });
 
-  const requestUrl = new URL(`${session.instanceUrl}/services/apexrest/gtherp/auth`);
+  let response = await performLoginRequest(session.instanceUrl, session.accessToken, payloadString);
 
-  return new Promise((resolve, reject) => {
-    const options = {
-      method: 'GET',
-      hostname: requestUrl.hostname,
-      path: requestUrl.pathname + requestUrl.search,
-      headers: {
-        'Authorization': `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(payloadString)
-      }
+  // A 401 here means our cached app token was stale (revoked/rotated on the SF side
+  // before our TTL expired) — force a fresh token and retry once.
+  if (response.statusCode === 401) {
+    invalidateSalesforceSessionCache();
+    const freshSession = await getSalesforceSession();
+    if (!freshSession || !freshSession.accessToken) {
+      throw new Error('No Salesforce session available');
+    }
+    response = await performLoginRequest(freshSession.instanceUrl, freshSession.accessToken, payloadString);
+  }
+
+  if (response.statusCode < 200 || response.statusCode >= 300) {
+    console.error('[SF API Response Error]:', response.data);
+    throw new Error('Invalid email or password');
+  }
+
+  try {
+    const sfData = JSON.parse(response.data);
+    return {
+      success: sfData?.success === true,
+      message: sfData?.message || 'Logged in successfully',
+      data: sfData?.data
     };
-
-    const req = https.request(options, (res) => {
-      let data = '';
-      const correlationId = Math.random().toString(36).substring(7);
-      const start = Date.now();
-
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
-
-      res.on('end', () => {
-        const duration = Date.now() - start;
-
-        if (!res.statusCode || res.statusCode < 200 || res.statusCode >= 300) {
-          console.error(`[SF API Response Error][${correlationId}]:`, data);
-          reject(new Error('Invalid email or password'));
-          return;
-        }
-
-        try {
-          const sfData = JSON.parse(data);
-          resolve({
-            success: sfData?.success === true,
-            message: sfData?.message || 'Logged in successfully',
-            data: sfData?.data
-          });
-        } catch (e) {
-          reject(new Error('Failed to parse Salesforce response'));
-        }
-      });
-    });
-
-    req.on('error', (error) => {
-      reject(new Error('Network error during Salesforce login'));
-    });
-
-    // Write the JSON body
-    req.write(payloadString);
-    req.end();
-  });
+  } catch (e) {
+    throw new Error('Failed to parse Salesforce response');
+  }
 }
 
 /**

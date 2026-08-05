@@ -15,6 +15,32 @@ interface ShippingInfoProps {
 }
 
 export default function ShippingInfo({ formData, setFormData, shipLocations, locationsLoading, handleLocationSelect, isEditing = false, accountName = '', SF_ACCOUNT_ID = '' }: ShippingInfoProps) {
+    const shipToAccountDisplay = (() => {
+        const location = shipLocations.find(l => l.Id === formData.shipTo);
+
+        const relationshipName = location?.Account_Name__r?.Name || (location as any)?.['Account_Name__r.Name'] || (location as any)?.Account_Name_Name;
+        if (relationshipName) return relationshipName;
+
+        const isContextAccount = location?.Account_Name__c && SF_ACCOUNT_ID && location.Account_Name__c.substring(0, 15) === SF_ACCOUNT_ID.substring(0, 15);
+        if (isContextAccount && accountName && !accountName.startsWith('001')) return accountName;
+
+        if (formData.shipToAccountName && !formData.shipToAccountName.startsWith('001')) {
+            return formData.shipToAccountName;
+        }
+
+        if (location?.Account_Name__c) {
+            const otherLoc = shipLocations.find(l =>
+                l.Account_Name__c &&
+                l.Account_Name__c.substring(0, 15) === location.Account_Name__c.substring(0, 15) &&
+                (l.Account_Name__r?.Name || (l as any)['Account_Name__r.Name'] || (l as any).Account_Name_Name)
+            );
+            const otherName = otherLoc?.Account_Name__r?.Name || (otherLoc as any)?.['Account_Name__r.Name'] || (otherLoc as any)?.Account_Name_Name;
+            if (otherName) return otherName;
+        }
+
+        return formData.shipToAccountName || location?.Account_Name__c || '';
+    })() || '';
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 h-full">
             <div className="flex items-center gap-3 mb-6 min-w-0">
@@ -38,34 +64,10 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                         </label>
                         <input
                             type="text"
-                            value={(() => {
-                                const location = shipLocations.find(l => l.Id === formData.shipTo);
-
-                                const relationshipName = location?.Account_Name__r?.Name || (location as any)?.['Account_Name__r.Name'] || (location as any)?.Account_Name_Name;
-                                if (relationshipName) return relationshipName;
-
-                                const isContextAccount = location?.Account_Name__c && SF_ACCOUNT_ID && location.Account_Name__c.substring(0, 15) === SF_ACCOUNT_ID.substring(0, 15);
-                                if (isContextAccount && accountName && !accountName.startsWith('001')) return accountName;
-
-                                if (formData.shipToAccountName && !formData.shipToAccountName.startsWith('001')) {
-                                    return formData.shipToAccountName;
-                                }
-
-                                if (location?.Account_Name__c) {
-                                    const otherLoc = shipLocations.find(l =>
-                                        l.Account_Name__c &&
-                                        l.Account_Name__c.substring(0, 15) === location.Account_Name__c.substring(0, 15) &&
-                                        (l.Account_Name__r?.Name || (l as any)['Account_Name__r.Name'] || (l as any).Account_Name_Name)
-                                    );
-                                    const otherName = otherLoc?.Account_Name__r?.Name || (otherLoc as any)?.['Account_Name__r.Name'] || (otherLoc as any)?.Account_Name_Name;
-                                    if (otherName) return otherName;
-                                }
-
-                                const finalDisplay = formData.shipToAccountName || location?.Account_Name__c || '';
-                                return finalDisplay;
-                            })() || ''}
+                            value={shipToAccountDisplay}
                             readOnly
-                            className="w-full h-11 px-2 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed truncate"
+                            title={shipToAccountDisplay}
+                            className="w-full h-11 px-2 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg text-gray-500 dark:text-gray-400 cursor-text truncate"
                         />
                     </div>
 
@@ -84,7 +86,7 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                                 }
                             }}
                             disabled={!isEditing}
-                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${!isEditing ? 'bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 text-gray-500 dark:text-gray-400 cursor-not-allowed' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white'}`}
                         >
                             <option key="select-ship" value="">Select a location...</option>
                             {locationsLoading ? (
@@ -111,7 +113,7 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                             onChange={(e) => setFormData({ ...formData, shippingAddress: e.target.value })}
                             readOnly={true}
                             title={formData.shippingAddress || ''}
-                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all truncate cursor-text ${!isEditing ? 'bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 text-gray-500 dark:text-gray-400' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white'}`}
                         />
                     </div>
 
@@ -124,13 +126,13 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                             value={isEditing ? (formData.requestedDeliveryDate || '') : formatDate(formData.requestedDeliveryDate, 'numeric-dash')}
                             onChange={(e) => setFormData({ ...formData, requestedDeliveryDate: e.target.value })}
                             readOnly={!isEditing}
-                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all truncate cursor-text ${!isEditing ? 'bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 text-gray-500 dark:text-gray-400' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white'}`}
                         />
                     </div>
 
                     <div className="w1025:col-span-2">
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 truncate" title="Drop-Ship">Drop-Ship</label>
-                        <div className={`flex items-center h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}>
+                        <div className={`flex items-center h-11 px-2 border rounded-lg ${!isEditing ? 'bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 cursor-not-allowed' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600'}`}>
                             <input
                                 type="checkbox"
                                 checked={formData.dropShip}
@@ -152,7 +154,7 @@ export default function ShippingInfo({ formData, setFormData, shipLocations, loc
                             readOnly
                             title={formData.site || ''}
                             onChange={(e) => setFormData({ ...formData, site: e.target.value })}
-                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all truncate cursor-text ${!isEditing ? 'bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 text-gray-500 dark:text-gray-400' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white'}`}
                         />
                     </div>
                 </div>

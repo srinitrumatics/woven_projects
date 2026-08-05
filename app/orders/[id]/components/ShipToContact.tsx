@@ -47,7 +47,7 @@ export default function ShipToContact({
                             value={selectedContactId}
                             onChange={(e) => handleContactSelect(e.target.value)}
                             disabled={!isEditing}
-                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 text-gray-500 dark:text-gray-400 cursor-not-allowed' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white'}`}
                         >
                             <option value="">Select a contact...</option>
                             {contactsLoading ? (
@@ -75,7 +75,7 @@ export default function ShipToContact({
                             onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
                             readOnly={true}
                             title={formData.contactPhone || ''}
-                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 truncate cursor-text ${!isEditing ? 'bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 text-gray-500 dark:text-gray-400' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white'}`}
                         />
                     </div>
 
@@ -90,7 +90,7 @@ export default function ShipToContact({
                             onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
                             readOnly={true}
                             title={formData.contactEmail || ''}
-                            className={`w-full h-11 px-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 truncate ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                            className={`w-full h-11 px-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 truncate cursor-text ${!isEditing ? 'bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 text-gray-500 dark:text-gray-400' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white'}`}
                         />
                     </div>
                 </div>

@@ -469,7 +469,7 @@ export default function POLineDetailPage({
                                     type="text"
                                     readOnly
                                     value={line.productName || ""}
-                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-text focus:outline-none truncate"
                                     title={line.productName || ""}
                                 />
                             </div>
@@ -483,7 +483,7 @@ export default function POLineDetailPage({
                                     type="text"
                                     readOnly
                                     value={line.productDescription || "No description available"}
-                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-text focus:outline-none truncate"
                                     title={line.productDescription || "No description available"}
                                 />
                             </div>
@@ -497,7 +497,7 @@ export default function POLineDetailPage({
                                     type="text"
                                     readOnly
                                     value={line.brand || "—"}
-                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-text focus:outline-none truncate"
                                     title={line.brand || "—"}
                                 />
                             </div>
@@ -511,7 +511,7 @@ export default function POLineDetailPage({
                                     type="text"
                                     readOnly
                                     value={formatDate(line.needByDate, 'numeric-dash') || "—"}
-                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-text focus:outline-none truncate"
                                     title={formatDate(line.needByDate, 'numeric-dash') || "—"}
                                 />
                             </div>
@@ -525,7 +525,7 @@ export default function POLineDetailPage({
                                     type="text"
                                     readOnly
                                     value={formatDate(line.shipByDate, 'numeric-dash') || "—"}
-                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-text focus:outline-none truncate"
                                     title={formatDate(line.shipByDate, 'numeric-dash') || "—"}
                                 />
                             </div>
@@ -547,7 +547,7 @@ export default function POLineDetailPage({
                                         type="text"
                                         readOnly
                                         value={formatDate(line.promiseDate, 'numeric-dash') || "—"}
-                                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
+                                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-text focus:outline-none truncate"
                                         title={formatDate(line.promiseDate, 'numeric-dash') || "—"}
                                     />
                                 )}
@@ -572,7 +572,7 @@ export default function POLineDetailPage({
                                         type="text"
                                         readOnly
                                         value={line.trackingNumber || "—"}
-                                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
+                                        className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-text focus:outline-none truncate"
                                         title={line.trackingNumber || "—"}
                                     />
                                 )}
@@ -587,7 +587,7 @@ export default function POLineDetailPage({
                                     type="text"
                                     readOnly
                                     value={line.trackingStatus || "—"}
-                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-text focus:outline-none truncate"
                                     title={line.trackingStatus || "—"}
                                 />
                             </div>
@@ -601,7 +601,7 @@ export default function POLineDetailPage({
                                     type="text"
                                     readOnly
                                     value={formatDate(line.estimatedDeliveryDate, 'numeric-dash') || "—"}
-                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-not-allowed focus:outline-none truncate"
+                                    className="w-full h-11 px-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 cursor-text focus:outline-none truncate"
                                     title={formatDate(line.estimatedDeliveryDate, 'numeric-dash') || "—"}
                                 />
                             </div>

@@ -10,6 +10,7 @@ export default function SignInForm() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnUrl = searchParams?.get('return') || '/home';
@@ -18,6 +19,7 @@ export default function SignInForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       const response = await fetch('/api/auth/login', {
@@ -30,30 +32,24 @@ export default function SignInForm() {
 
       if (response.ok) {
         const data = await response.json();
+        const user = data.user;
 
-        // Verify the session by fetching complete user data from the session API
-        const sessionResponse = await fetch('/api/auth/session');
-        const sessionData = await sessionResponse.json();
+        // The login response already carries the full user/account payload, so
+        // redirect immediately instead of blocking on a second /api/auth/session
+        // round-trip. PermissionContext fetches permissions in the background
+        // once the user session updates.
+        login(user);
 
-        if (sessionData.authenticated && sessionData.user) {
-          // Update the user session context with the complete user data
-          login(sessionData.user);
+        // Determine landing page based on account type
+        const accounts = user.accounts || [];
+        const directAccount = accounts.find((a: any) => a.isdirect === true || a.isdirect === 'true');
+        const primaryAccount = directAccount || accounts[0];
+        const accType = primaryAccount?.Account_Record_Type__c || 'Customer';
+        const isCustomerType = accType === 'Customer' || accType === 'NSO' || accType === 'Hybrid';
+        const landPage = isCustomerType ? '/home' : '/products';
 
-          // Determine landing page based on account type
-          const user = sessionData.user;
-          const accounts = user.accounts || [];
-          const directAccount = accounts.find((a: any) => a.isdirect === true || a.isdirect === 'true');
-          const primaryAccount = directAccount || accounts[0];
-          const accType = primaryAccount?.Account_Record_Type__c || 'Customer';
-          const isCustomerType = accType === 'Customer' || accType === 'NSO' || accType === 'Hybrid';
-          const landPage = isCustomerType ? '/home' : '/products';
-
-          // Redirect to dashboard or return URL after successful verification
-          router.push(searchParams?.get('return') || landPage);
-          router.refresh(); // Refresh to update any UI that depends on auth state
-        } else {
-          setError("Session verification failed. Please try again.");
-        }
+        router.push(searchParams?.get('return') || landPage);
+        router.refresh(); // Refresh to update any UI that depends on auth state
       } else {
         const errorData = await response.json();
         setError(errorData.error || "Invalid email or password");
@@ -61,6 +57,8 @@ export default function SignInForm() {
     } catch (err) {
       setError("An error occurred during authentication");
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,9 +84,10 @@ export default function SignInForm() {
                 type="email"
                 autoComplete="email"
                 required
+                disabled={loading}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm transition-all bg-gray-50"
+                className="block w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm transition-all bg-gray-50 disabled:opacity-60"
                 placeholder="Email"
               />
             </div>
@@ -101,9 +100,10 @@ export default function SignInForm() {
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   required
+                  disabled={loading}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm transition-all bg-gray-50"
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-sm transition-all bg-gray-50 disabled:opacity-60"
                   placeholder="Password"
                 />
                 <button
@@ -144,9 +144,13 @@ export default function SignInForm() {
             <div className="flex flex-col space-y-4 pt-2">
               <button
                 type="submit"
-                className="w-full flex justify-center py-3 px-4 rounded-full text-sm font-semibold text-white bg-[var(--primary)] hover:bg-[var(--primary-dark)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)] transition-all"
+                disabled={loading}
+                className="w-full flex justify-center items-center gap-2 py-3 px-4 rounded-full text-sm font-semibold text-white bg-[var(--primary)] hover:bg-[var(--primary-dark)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Sign In
+                {loading && (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                )}
+                {loading ? "Signing in..." : "Sign In"}
               </button>
 
               <div className="flex justify-center">

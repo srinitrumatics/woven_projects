@@ -37,7 +37,7 @@ export default function OrderNotes({
                     value={decodeHtmlEntities(formData.orderNotes)}
                     onChange={(e) => setFormData({ ...formData, orderNotes: e.target.value })}
                     readOnly={!isEditing}
-                    className={`w-full flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 resize-none ${!isEditing ? 'bg-gray-100 dark:bg-gray-700 cursor-not-allowed' : 'bg-white dark:bg-gray-700'}`}
+                    className={`w-full flex-1 p-3 border rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder-gray-400 resize-none cursor-text ${!isEditing ? 'bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 text-gray-500 dark:text-gray-400' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white'}`}
                 />
             </div>
         </div>

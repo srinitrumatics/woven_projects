@@ -578,10 +578,18 @@ const CardView = ({ products, canEditProduct, onEdit, onAddToOrder }: ViewProps)
             </div>
 
             <div className="p-4 flex flex-col flex-grow">
-              <div className="mb-2">
-                <span className="text-xs font-medium text-primary  truncate">
+              <div className="mb-2 flex items-center gap-2 min-w-0">
+                <span className="text-xs font-medium text-primary truncate">
                   {category}
                 </span>
+                {p.brand && (
+                  <>
+                    <span className="text-xs text-gray-300 dark:text-gray-600">•</span>
+                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400 truncate" title={p.brand}>
+                      {p.brand}
+                    </span>
+                  </>
+                )}
               </div>
               <div className="flex justify-between items-start gap-2 mb-2">
                 <h3 className="text-base font-bold text-gray-900 dark:text-white min-w-[200px] truncate group-hover:text-primary transition-colors " title={product.name}>
@@ -641,6 +649,7 @@ function ListView({ canEditProduct, onEdit, onAddToOrder }: Omit<ViewProps, 'pro
   const { widths, handleResize } = useResizableColumns({
     name: 250,
     category: 200,
+    brand: 150,
     description: 250,
     listPrice: 120,
     sellingPrice: 120,
@@ -658,6 +667,7 @@ function ListView({ canEditProduct, onEdit, onAddToOrder }: Omit<ViewProps, 'pro
               <Th style={{ width: 80, minWidth: 80 }}>&nbsp;</Th>
               <SortableHeader label="Product Name" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} />
               <SortableHeader label="Category" field="category" sortConfig={sortConfig} requestSort={requestSort} width={widths.category} onResize={handleResize} />
+              <SortableHeader label="Brand" field="brand" sortConfig={sortConfig} requestSort={requestSort} width={widths.brand} onResize={handleResize} className="hidden sm:table-cell" />
               <SortableHeader label="Description" field="description" sortConfig={sortConfig} requestSort={requestSort} width={widths.description} onResize={handleResize} className="hidden md:table-cell" />
               <SortableHeader label="List Price" field="listPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.listPrice} onResize={handleResize} className="hidden sm:table-cell" />
               <SortableHeader label="Selling Price" field="price" sortConfig={sortConfig} requestSort={requestSort} width={widths.sellingPrice} onResize={handleResize} />
@@ -693,6 +703,9 @@ function ListView({ canEditProduct, onEdit, onAddToOrder }: Omit<ViewProps, 'pro
                     </Td>
                     <Td className="px-4 py-3 overflow-hidden" style={{ width: widths.category, minWidth: widths.category, maxWidth: widths.category }}>
                       <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary max-w-full truncate" title={category}>{category}</span>
+                    </Td>
+                    <Td className="px-4 py-3 overflow-hidden hidden sm:table-cell" style={{ width: widths.brand, minWidth: widths.brand, maxWidth: widths.brand }}>
+                      <div className="text-sm text-gray-600 dark:text-gray-400 truncate" title={displayCell(p.brand)}>{displayCell(p.brand)}</div>
                     </Td>
                     <Td className="px-4 py-3 overflow-hidden hidden md:table-cell" style={{ width: widths.description, minWidth: widths.description, maxWidth: widths.description }}>
                       <div className="text-sm text-gray-600 dark:text-gray-400 truncate" title={displayCell(product.description)}>{displayCell(product.description)}</div>

@@ -57,11 +57,34 @@ export async function fetchWithLogging(url: string | URL | Request, options: Req
   return response;
 }
 
+interface CachedSFSession {
+  accessToken: string;
+  instanceUrl: string;
+  expiresAt: number;
+}
+
+// client_credentials tokens aren't returned with an expiry we can trust across orgs,
+// so cache conservatively under the typical Salesforce session timeout.
+const SF_TOKEN_TTL_MS = 15 * 60 * 1000;
+const sfSessionCache = new Map<string, CachedSFSession>();
+
+// Lets callers force a re-authentication if a cached token turns out to be stale
+// (e.g. Salesforce revoked/rotated it before our TTL expired).
+export function invalidateSalesforceSessionCache() {
+  sfSessionCache.clear();
+}
+
 export async function getSalesforceSession() {
   const orgConfig = await getOrgConfig().catch(e => {
     console.warn("Could not load org config, falling back to env:", e.message);
     return null;
   });
+
+  const cacheKey = orgConfig?.id || 'env-fallback';
+  const cached = sfSessionCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    return { accessToken: cached.accessToken, instanceUrl: cached.instanceUrl };
+  }
 
   const tokenUrl = orgConfig?.salesforceAuthUrl || process.env.SF_AUTH_URL || "";
   const clientId = orgConfig?.clientId || process.env.SF_CLIENT_ID || "";
@@ -98,10 +121,17 @@ export async function getSalesforceSession() {
   if (!tokenData.access_token) {
     console.error("getSalesforceSession - FAILED to get access token:", tokenData);
   }
-  return {
+
+  const session = {
     accessToken: tokenData.access_token,
     instanceUrl: orgConfig?.salesforceUrl || tokenData.instance_url || process.env.SF_DATA_URL || "",
   };
+
+  if (session.accessToken) {
+    sfSessionCache.set(cacheKey, { ...session, expiresAt: Date.now() + SF_TOKEN_TTL_MS });
+  }
+
+  return session;
 }
 
 // Fetch orders from Salesforce
