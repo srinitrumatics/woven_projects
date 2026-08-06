@@ -58,7 +58,7 @@ export default function LineTaxesTab({ product, loading }: LineTaxesTabProps) {
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden p-4">
             <div className="flex items-center gap-2 mb-2 min-w-0">
-                <h2 className="text-base font-semibold text-gray-900 dark:text-white ">
+                <h2 className="px-4 py-2 rounded-lg transition-colors truncate flex-shrink-0 text-sm font-medium bg-primary text-white">
                     Taxes
                 </h2>
             </div>
