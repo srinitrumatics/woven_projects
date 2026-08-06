@@ -1053,11 +1053,11 @@ function BrowseCatalogPanel({ addingIds, onAdd, onDragStart, onClose }: {
       <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-2">
         <input type="search" placeholder="Search catalog..." value={query} onChange={e => setQuery(e.target.value)} className="w-full px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary" />
         <div className="flex gap-2">
-          <select value={fMfr} onChange={e => setFMfr(e.target.value)} className="flex-1 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-primary">
+          <select value={fMfr} onChange={e => setFMfr(e.target.value)} className="flex-1 min-w-0 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-primary truncate" title={fMfr || 'All Mfrs'}>
             <option value="">All Mfrs</option>
             {mfrs.map(m => <option key={m} value={m}>{m}</option>)}
           </select>
-          <select value={fFamily} onChange={e => setFFamily(e.target.value)} className="flex-1 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-primary">
+          <select value={fFamily} onChange={e => setFFamily(e.target.value)} className="flex-1 min-w-0 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-primary truncate" title={fFamily || 'All Families'}>
             <option value="">All Families</option>
             {fams.map(f => <option key={f} value={f}>{f}</option>)}
           </select>

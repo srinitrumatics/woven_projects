@@ -225,7 +225,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             {/* Top Section: Gallery and Info Card */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
               {/* Gallery - Left Side */}
-              <div className="lg:col-span-7 flex flex-col xl:flex-row gap-4">
+              <div className="lg:col-span-7 flex flex-col xl:flex-row gap-4 h-full">
                 <ProductGallery images={product.images} />
               </div>
 
