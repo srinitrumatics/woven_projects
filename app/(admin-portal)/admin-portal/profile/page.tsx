@@ -41,7 +41,7 @@ export default function AdminProfilePage() {
       const res = await fetch('/api/admin/profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: profile.name, email: profile.email }),
+        body: JSON.stringify({ name: profile.name }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -131,15 +131,11 @@ export default function AdminProfilePage() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-              <input
-                id="email"
-                type="email"
-                value={profile.email}
-                onChange={(e) => setProfile(p => ({ ...p, email: e.target.value }))}
-                className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-                required
-              />
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+              <p className="w-full px-3 py-2.5 text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900/50 rounded-md border border-transparent opacity-70">
+                {profile.email}
+              </p>
+              <p className="text-xs text-gray-400 mt-1 italic">* Admin email cannot be modified</p>
             </div>
 
             <div className="pt-2 flex justify-end">

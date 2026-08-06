@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { users } from '@/db/schema';
-import { eq, ne, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { compare, hash } from 'bcryptjs';
 import { requireAdminAuth } from '@/lib/api-auth';
 
@@ -28,7 +28,7 @@ export async function PATCH(request: Request) {
   if (auth instanceof NextResponse) return auth;
 
   try {
-    const { name, email, currentPassword, newPassword } = await request.json();
+    const { name, currentPassword, newPassword } = await request.json();
 
     const [row] = await db.select().from(users).where(eq(users.id, auth.user.id));
     if (!row) {
@@ -39,17 +39,6 @@ export async function PATCH(request: Request) {
 
     if (typeof name === 'string' && name.trim() && name.trim() !== row.name) {
       updates.name = name.trim();
-    }
-
-    if (typeof email === 'string' && email.trim() && email.trim() !== row.email) {
-      const [existing] = await db
-        .select()
-        .from(users)
-        .where(and(eq(users.email, email.trim()), ne(users.id, row.id)));
-      if (existing) {
-        return NextResponse.json({ error: 'Email is already in use' }, { status: 409 });
-      }
-      updates.email = email.trim();
     }
 
     if (newPassword) {
