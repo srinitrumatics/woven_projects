@@ -83,6 +83,7 @@ export interface QuoteLine {
   description: string;
   manufacturerDBA: string;
   brand?: string;
+  productRecordType?: string;
   grouping?: string;
   proposedProductName?: string;
   proposedProductId?: string;

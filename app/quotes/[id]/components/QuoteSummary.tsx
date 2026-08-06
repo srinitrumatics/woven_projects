@@ -21,7 +21,10 @@ export default function QuoteSummary({
     handleDownloadPDF,
     className =""
 }: QuoteSummaryProps) {
-    const productsSubtotal = lines.reduce((sum, line) => sum + line.totalPrice, 0);
+    const serviceLines = lines.filter(line => line.productRecordType === 'Services');
+    const productLines = lines.filter(line => line.productRecordType !== 'Services');
+    const productsSubtotal = productLines.reduce((sum, line) => sum + line.totalPrice, 0);
+    const servicesSubtotal = serviceLines.reduce((sum, line) => sum + line.totalPrice, 0);
 
     return (
         <div className={`bg-white dark:bg-gray-800 rounded-lg p-5 shadow-md border border-gray-200 dark:border-gray-700 w-full flex flex-col h-full ${className}`}>
@@ -41,13 +44,13 @@ export default function QuoteSummary({
                 {/* Content Area */}
                 <div className="flex-1 space-y-4">
                     <div className="flex justify-between text-sm gap-4">
-                        <span className="text-gray-700 dark:text-gray-300  flex-1"title={`(${lines.length}) Products - Subtotal`}>({lines.length}) Products - Subtotal</span>
+                        <span className="text-gray-700 dark:text-gray-300  flex-1"title={`(${productLines.length}) Products - Subtotal`}>({productLines.length}) Products - Subtotal</span>
                         <span className="text-gray-900 dark:text-white font-medium shrink-0">{formatCurrency(productsSubtotal)}</span>
                     </div>
 
                     <div className="flex justify-between text-sm gap-4">
-                        <span className="text-gray-700 dark:text-gray-300  flex-1"title={`(${quote.serviceLinesCount}) Service - Subtotal`}>({quote.serviceLinesCount}) Service - Subtotal</span>
-                        <span className="text-gray-900 dark:text-white font-medium shrink-0">{formatCurrency(quote.serviceTotal)}</span>
+                        <span className="text-gray-700 dark:text-gray-300  flex-1"title={`(${serviceLines.length}) Service - Subtotal`}>({serviceLines.length}) Service - Subtotal</span>
+                        <span className="text-gray-900 dark:text-white font-medium shrink-0">{formatCurrency(servicesSubtotal)}</span>
                     </div>
 
                     <div className="flex justify-between text-sm gap-4">

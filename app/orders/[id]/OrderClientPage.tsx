@@ -979,6 +979,7 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
                     moq: item.MOQ__c || 1,
                     orderQty: (item.Order_Qty__c || 0) * (item.MOQ__c || 1),
                     subtotal: item.Total_Price__c,
+                    productRecordType: item.Product_Record_Type__c || "",
                     // Store the original order line ID for updates
                     orderLineId: item.Id,
                     // Add unique lineItemKey for proper tracking and deletion
@@ -1143,7 +1144,10 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
 
   // Calculate dynamic order totals based on actual products in the order
   // Always calculate from orderProducts to ensure real-time updates when products are added/removed
+  const serviceItems = orderProducts.filter(product => product.productRecordType === 'Services');
+  const servicesSubtotal = serviceItems.reduce((sum, product) => sum + product.subtotal, 0);
   const productsSubtotal = orderProducts.reduce((sum, product) => sum + product.subtotal, 0);
+  const productsOnlySubtotal = productsSubtotal - servicesSubtotal;
   const totalExciseTax = orderData ? (orderData.Total_Taxes_Amount__c ?? 0) : (productsSubtotal > 0 ? productsSubtotal * 0.15 : 0);
   const orderProcessing = 0; // Not in API response example, assuming 0
   const shipping = productsSubtotal > 0 ? (orderData?.Total_Shipping_Charges__c ?? 0) : 0;
@@ -1735,7 +1739,7 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
         <div className="w1025:col-span-3 flex flex-col h-full">
           <OrderTotal
             className="flex-1"
-            productsSubtotal={productsSubtotal}
+            productsSubtotal={productsOnlySubtotal}
             totalExciseTax={totalExciseTax}
             grandTotal={grandTotal}
             shipping={shipping}
@@ -1749,7 +1753,9 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
             handleDownloadAll={handleDownloadAll}
             handleDownloadFile={handleDownloadFile}
             handleRemoveFile={handleRemoveFile}
-            productsCount={orderProducts.length}
+            productsCount={orderProducts.length - serviceItems.length}
+            serviceCount={serviceItems.length}
+            servicesSubtotal={servicesSubtotal}
             isEditing={isEditing}
           />
         </div>

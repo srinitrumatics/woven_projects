@@ -51,6 +51,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           description: line.Product_Description__c || '',
           manufacturerDBA: line.Manufacturer_DBA__c || 'N/A',
           brand: line.Brand_Name__c || line.gtherp__Brand_Name__c || '',
+          productRecordType: line.Product_Record_Type__c || '',
           quantity: line.Total_Order_Qty__c || line.gtherp__Total_Order_Qty__c || 0,
           unitPrice: line.Unit_Price__c || 0,
           discount: 0,
@@ -208,8 +209,8 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           shipToLocation: rawInvoice.Authorized_Ship_To_Location_Name || 'N/A',
           shipConfirmedDate: rawInvoice.Delivered_Date__c || 'N/A',
           siteName: rawInvoice.Site_Name || 'N/A',
-          productsSubtotal: lines.reduce((sum: number, l: any) => sum + (l.subtotal || 0), 0),
-          servicesSubtotal: 0,
+          productsSubtotal: lines.filter((l: any) => l.productRecordType !== 'Services').reduce((sum: number, l: any) => sum + (l.subtotal || 0), 0),
+          servicesSubtotal: lines.filter((l: any) => l.productRecordType === 'Services').reduce((sum: number, l: any) => sum + (l.subtotal || 0), 0),
           appliedCredits: rawInvoice.Applied_Credit_Amount__c || 0,
           salesTaxRate: rawInvoice.Sales_Tax_Rate__c || 0,
           salesTaxAmount: rawInvoice.Total_Sales_Tax_Amount__c || 0,
@@ -369,8 +370,8 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
         productsSubtotal={invoice.productsSubtotal}
         servicesSubtotal={invoice.servicesSubtotal}
         appliedCredits={invoice.appliedCredits}
-        productCount={invoice.lines.length}
-        serviceCount={0}
+        productCount={invoice.lines.filter(l => l.productRecordType !== 'Services').length}
+        serviceCount={invoice.lines.filter(l => l.productRecordType === 'Services').length}
         issuedDate={invoice.issuedDate}
         daysOutstanding={invoice.daysOutstanding}
         proposalId={invoice.proposalId}

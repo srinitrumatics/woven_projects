@@ -125,6 +125,7 @@ export default function SupplierBillDetailPage() {
                         productDescription: l.Product_Description__c || '',
                         brand: l.Brand_Name__c || '',
                         manufacturerDBA: l.Manufacturer_DBA__c || '',
+                        productRecordType: l.Product_Record_Type__c || '',
                         unitCost: l.Unit_Cost__c || 0,
                         billedQty: l.Billed_Qty__c || 0,
                         billAmount: l.BillAmount__c || 0,
@@ -133,6 +134,13 @@ export default function SupplierBillDetailPage() {
                         goodsReceiptDate: l.Goods_Receipt_Date__c || '',
                     }));
                     setLines(mappedLines);
+
+                    const serviceLines = mappedLines.filter((l: any) => l.productRecordType === 'Services');
+                    const serviceLineCount = serviceLines.length;
+                    const servicesSubtotal = serviceLines.reduce((sum: number, l: any) => sum + (l.billAmount || 0), 0);
+                    const productLineCount = mappedLines.length - serviceLineCount;
+                    const productsSubtotal = mappedLines.reduce((sum: number, l: any) => sum + (l.billAmount || 0), 0) - servicesSubtotal;
+                    setBill(prev => prev ? { ...prev, productLineCount, serviceLineCount, productsSubtotal, servicesSubtotal } : prev);
                 }
                 // 3. Fetch files
                 const filesRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&objectName=Supplier_Bill__c&action=files`);

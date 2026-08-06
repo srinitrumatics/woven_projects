@@ -16,6 +16,8 @@ interface OrderTotalProps {
     handleDownloadFile: (file: File) => void;
     handleRemoveFile: (index: number) => void;
     productsCount: number;
+    serviceCount: number;
+    servicesSubtotal: number;
     isEditing?: boolean;
     className?: string;
 }
@@ -36,6 +38,8 @@ export default function OrderTotal({
     handleDownloadFile,
     handleRemoveFile,
     productsCount,
+    serviceCount,
+    servicesSubtotal,
     isEditing = false,
     className = ""
 }: OrderTotalProps) {
@@ -58,6 +62,10 @@ export default function OrderTotal({
                 <div className="flex justify-between text-sm gap-4">
                     <span className="text-gray-700 dark:text-gray-300 truncate flex-1" title={`${productsCount} Product${productsCount !== 1 ? 's' : ''} - Subtotal`}>{productsCount} Product{productsCount !== 1 ? 's' : ''} - Subtotal</span>
                     <span className="text-gray-900 dark:text-white font-medium shrink-0 truncate">${productsSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                </div>
+                <div className="flex justify-between text-sm gap-4">
+                    <span className="text-gray-700 dark:text-gray-300 truncate flex-1" title={`${serviceCount} Service${serviceCount !== 1 ? 's' : ''} - Subtotal`}>{serviceCount} Service{serviceCount !== 1 ? 's' : ''} - Subtotal</span>
+                    <span className="text-gray-900 dark:text-white font-medium shrink-0 truncate">${servicesSubtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
                 <div className="flex justify-between text-sm gap-4">
                     <span className="text-gray-700 dark:text-gray-300 truncate flex-1" title="Shipping">Shipping</span>

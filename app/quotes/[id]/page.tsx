@@ -274,6 +274,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
           description: item.Product_Description__c || '-',
           manufacturerDBA: item.Manufacturer_DBA__c || '',
           brand: item.Brand_Name__c || '-',
+          productRecordType: item.Product_Record_Type__c || '',
           grouping: item.Product_Grouping__c || '-',
           proposedProductName: item.Proposed_Product_Name || '-',
           proposedProductId: item.Proposed_Product__c || '-',

@@ -15,6 +15,7 @@ export interface Product {
   unitPrice: number;
   orderQty: number;
   subtotal: number;
+  productRecordType?: string; // Product2 record type name (e.g. "Services")
   orderLineId?: string; // Salesforce order line ID for updates
   lineItemKey?: string; // Unique identifier for each line item in the order
 }
