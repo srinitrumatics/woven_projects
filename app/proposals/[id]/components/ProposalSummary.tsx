@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Proposal, ProposedProduct } from "../types";
+import { isServiceRecordType } from "@/lib/utils/product-record-type";
 
 interface ProposalSummaryProps {
     proposal: Proposal;
@@ -22,8 +23,8 @@ export default function ProposalSummary({
     className = ""
 }: ProposalSummaryProps) {
     // Financial Calculations
-    const productItems = proposedProducts.filter(p => p.product_record_type === 'Product');
-    const serviceItems = proposedProducts.filter(p => p.product_record_type === 'Services');
+    const productItems = proposedProducts.filter(p => !isServiceRecordType(p.product_record_type));
+    const serviceItems = proposedProducts.filter(p => isServiceRecordType(p.product_record_type));
 
     const productsSubtotal = productItems.reduce((sum, p) => sum + (p.subtotal || 0), 0);
     const servicesSubtotal = serviceItems.reduce((sum, p) => sum + (p.subtotal || 0), 0);

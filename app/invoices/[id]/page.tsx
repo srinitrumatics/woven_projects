@@ -15,6 +15,7 @@ import InvoiceTaxes from "@/app/invoices/[id]/components/InvoiceTaxes";
 import { getMockInvoiceDetails } from "@/app/invoices/mockData";
 import { InvoiceDetails as InvoiceDetailsType } from "@/app/invoices/types";
 import { useUserSession } from "@/components/UserSessionContext";
+import { isServiceRecordType } from "@/lib/utils/product-record-type";
 
 export default function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -209,8 +210,8 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
           shipToLocation: rawInvoice.Authorized_Ship_To_Location_Name || 'N/A',
           shipConfirmedDate: rawInvoice.Delivered_Date__c || 'N/A',
           siteName: rawInvoice.Site_Name || 'N/A',
-          productsSubtotal: lines.filter((l: any) => l.productRecordType !== 'Services').reduce((sum: number, l: any) => sum + (l.subtotal || 0), 0),
-          servicesSubtotal: lines.filter((l: any) => l.productRecordType === 'Services').reduce((sum: number, l: any) => sum + (l.subtotal || 0), 0),
+          productsSubtotal: lines.filter((l: any) => !isServiceRecordType(l.productRecordType)).reduce((sum: number, l: any) => sum + (l.subtotal || 0), 0),
+          servicesSubtotal: lines.filter((l: any) => isServiceRecordType(l.productRecordType)).reduce((sum: number, l: any) => sum + (l.subtotal || 0), 0),
           appliedCredits: rawInvoice.Applied_Credit_Amount__c || 0,
           salesTaxRate: rawInvoice.Sales_Tax_Rate__c || 0,
           salesTaxAmount: rawInvoice.Total_Sales_Tax_Amount__c || 0,
@@ -370,8 +371,8 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
         productsSubtotal={invoice.productsSubtotal}
         servicesSubtotal={invoice.servicesSubtotal}
         appliedCredits={invoice.appliedCredits}
-        productCount={invoice.lines.filter(l => l.productRecordType !== 'Services').length}
-        serviceCount={invoice.lines.filter(l => l.productRecordType === 'Services').length}
+        productCount={invoice.lines.filter(l => !isServiceRecordType(l.productRecordType)).length}
+        serviceCount={invoice.lines.filter(l => isServiceRecordType(l.productRecordType)).length}
         issuedDate={invoice.issuedDate}
         daysOutstanding={invoice.daysOutstanding}
         proposalId={invoice.proposalId}

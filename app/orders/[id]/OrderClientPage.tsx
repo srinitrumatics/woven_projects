@@ -8,6 +8,7 @@ import Pagination from "@/components/ui/Pagination";
 import { useSortableData } from "@/hooks/useSortableData";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { Product, ShippingMethodOption } from "@/app/orders/types";
+import { isServiceRecordType } from "@/lib/utils/product-record-type";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import OrderHeader from "./components/OrderHeader";
@@ -1144,7 +1145,7 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
 
   // Calculate dynamic order totals based on actual products in the order
   // Always calculate from orderProducts to ensure real-time updates when products are added/removed
-  const serviceItems = orderProducts.filter(product => product.productRecordType === 'Services');
+  const serviceItems = orderProducts.filter(product => isServiceRecordType(product.productRecordType));
   const servicesSubtotal = serviceItems.reduce((sum, product) => sum + product.subtotal, 0);
   const productsSubtotal = orderProducts.reduce((sum, product) => sum + product.subtotal, 0);
   const productsOnlySubtotal = productsSubtotal - servicesSubtotal;

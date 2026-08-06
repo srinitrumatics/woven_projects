@@ -1,6 +1,7 @@
 import React from 'react';
 import { QuoteDetails, QuoteLine } from"@/app/quotes/types";
 import { formatDate, formatCurrency } from"@/lib/utils/formatting";
+import { isServiceRecordType } from "@/lib/utils/product-record-type";
 
 interface QuoteSummaryProps {
     quote: QuoteDetails;
@@ -21,8 +22,8 @@ export default function QuoteSummary({
     handleDownloadPDF,
     className =""
 }: QuoteSummaryProps) {
-    const serviceLines = lines.filter(line => line.productRecordType === 'Services');
-    const productLines = lines.filter(line => line.productRecordType !== 'Services');
+    const serviceLines = lines.filter(line => isServiceRecordType(line.productRecordType));
+    const productLines = lines.filter(line => !isServiceRecordType(line.productRecordType));
     const productsSubtotal = productLines.reduce((sum, line) => sum + line.totalPrice, 0);
     const servicesSubtotal = serviceLines.reduce((sum, line) => sum + line.totalPrice, 0);
 

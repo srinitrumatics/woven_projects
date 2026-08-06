@@ -1,6 +1,7 @@
 import React from 'react';
 import { PurchaseOrder } from "../../types";
 import { formatCurrency } from "@/lib/utils/formatting";
+import { isServiceRecordType } from "@/lib/utils/product-record-type";
 
 interface POSummaryProps {
     po: PurchaseOrder;
@@ -17,7 +18,7 @@ export default function POSummary({
     handleFileUpload,
     className = ""
 }: POSummaryProps) {
-    const serviceLines = poLines.filter(l => l.Product_Record_Type__c === 'Services');
+    const serviceLines = poLines.filter(l => isServiceRecordType(l.Product_Record_Type__c));
     const serviceCost = serviceLines.reduce((sum, l) => sum + (l.Total_Product_Cost__c || 0), 0);
     const serviceCount = serviceLines.length;
     const productLinesCount = po.totalLines - serviceCount;

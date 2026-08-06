@@ -18,6 +18,7 @@ import SupplierBillDebitsTab from './components/SupplierBillDebitsTab';
 import { SupplierBill, SupplierBillLine, BillPayment, AppliedDebitMemo, DebitMemo } from '../types';
 import { StatusBadge, RemittanceBadge } from "@/components/ui/StatusBadge";
 import { useUserSession } from "@/components/UserSessionContext";
+import { isServiceRecordType } from "@/lib/utils/product-record-type";
 import { useToast } from "@/components/ui/Toast";
 
 export default function SupplierBillDetailPage() {
@@ -135,7 +136,7 @@ export default function SupplierBillDetailPage() {
                     }));
                     setLines(mappedLines);
 
-                    const serviceLines = mappedLines.filter((l: any) => l.productRecordType === 'Services');
+                    const serviceLines = mappedLines.filter((l: any) => isServiceRecordType(l.productRecordType));
                     const serviceLineCount = serviceLines.length;
                     const servicesSubtotal = serviceLines.reduce((sum: number, l: any) => sum + (l.billAmount || 0), 0);
                     const productLineCount = mappedLines.length - serviceLineCount;
