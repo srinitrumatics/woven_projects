@@ -125,9 +125,21 @@ const navigation: NavigationItem[] = [
 ];
 
 
+function NavSkeleton() {
+  return (
+    <>
+      {Array.from({ length: 4 }).map((_, i) => (
+        <li key={i}>
+          <div className="h-9 mx-0 rounded-lg bg-gray-100 dark:bg-gray-700 animate-pulse" />
+        </li>
+      ))}
+    </>
+  );
+}
+
 export default function Sidebar({ children }: SidebarProps) {
   const pathname = usePathname();
-  const { user, selectedAccount, logout } = useUserSession();
+  const { user, selectedAccount, logout, loading } = useUserSession();
   const { isSuperAdmin } = usePermissions();
   const [isCollapsed, setIsCollapsed] = useState(false); // desktop collapse
   const [mobileOpen, setMobileOpen] = useState(false); // mobile drawer
@@ -198,7 +210,9 @@ export default function Sidebar({ children }: SidebarProps) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-3">
-            {user?.role === 'Super Admin' || user?.role === 'Admin' ? (
+            {loading ? (
+              <NavSkeleton />
+            ) : user?.role === 'Super Admin' || user?.role === 'Admin' ? (
               <li>
                 <Link
                   href="/admin-portal/organizations"
@@ -269,7 +283,9 @@ export default function Sidebar({ children }: SidebarProps) {
 
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-3">
-            {user?.role === 'Super Admin' || user?.role === 'Admin' ? (
+            {loading ? (
+              <NavSkeleton />
+            ) : user?.role === 'Super Admin' || user?.role === 'Admin' ? (
               <li>
                 <Link
                   href="/admin-portal/organizations"
