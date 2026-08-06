@@ -18,7 +18,6 @@ interface SerialNumberLog {
     Product_Name__c?: string;
     Product_Description__c?: string;
     Brand_Name__c?: string;
-    Product_Brand_Name__c?: string;
     Purchase_Order_Name?: string;
     Purchase_Order__c?: string;
     RMA_Name?: string;
@@ -108,8 +107,8 @@ export default function POSerialNumberLogLinesTab({ serialNumbers }: POSerialNum
                                 <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Description__c || '-'}>
                                     {displayCell(s.Product_Description__c)}
                                 </Td>
-                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Product_Brand_Name__c || '-'}>
-                                    {displayCell(s.Product_Brand_Name__c)}
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Brand_Name__c || '-'}>
+                                    {displayCell(s.Brand_Name__c)}
                                 </Td>
                                 <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Name || '-'}>
                                     {s.Purchase_Order__c ? (

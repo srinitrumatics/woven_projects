@@ -95,7 +95,7 @@ function mapLine(raw: any): ShipmentLine {
         productId: raw.Product_Name__c || "",
         productDescription: raw.Product_Description__c || "",
         manufacturerDBA: raw.Manufacturer_DBA__c || "",
-        brand: raw.Product_Brand_Name__c || "",
+        brand: raw.Brand_Name__c || "",
         unitPrice: raw.Unit_Price__c ?? 0,
         totalOrderQty: raw.Total_Order_Qty__c ?? 0,
         totalPrice: raw.Total_Price__c ?? 0,

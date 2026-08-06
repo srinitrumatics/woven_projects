@@ -33,7 +33,6 @@ interface DebitMemoLine {
     Manufacturer_DBA__c: string;
     brand?: string;
     Brand_Name__c?: string;
-    Product_Brand_Name__c?: string;
     Unit_Cost__c: number;
     Debit_Qty__c: number;
     Total_Cost__c: number;
@@ -145,7 +144,7 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                                     ) : displayCell(line.Product_Name)}
                                 </Td>
                                 <Td className="truncate" title={line.Product_Description__c || '-'}>{displayCell(line.Product_Description__c)}</Td>
-                                <Td className="truncate" title={line.brand || line.Product_Brand_Name__c || '-'}>{displayCell(line.brand || line.Product_Brand_Name__c)}</Td>
+                                <Td className="truncate" title={line.brand || line.Brand_Name__c || '-'}>{displayCell(line.brand || line.Brand_Name__c)}</Td>
                                 <Td className="text-left truncate" title={formatCurrency(line.Unit_Cost__c || 0)}>{formatCurrency(line.Unit_Cost__c || 0)}</Td>
                                 <Td className="text-left truncate" title={String(line.Debit_Qty__c || 0)}>{line.Debit_Qty__c || 0}</Td>
                                 <Td className="font-semibold text-left truncate" title={formatCurrency(line.Total_Cost__c || 0)}>{formatCurrency(line.Total_Cost__c || 0)}</Td>

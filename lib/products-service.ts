@@ -45,7 +45,7 @@ export function mapSalesforceProductToLocal(sfProduct: any): Product {
     originalPrice: sfProduct.List_Price__c || 0,
     leadTime: sfProduct.Lead_Time_Wks__c ? `${sfProduct.Lead_Time_Wks__c} weeks` : "Varies",
     moq: sfProduct.MOQ__c ? `${sfProduct.MOQ__c} unit(s)` : "1 unit",
-    brand: sfProduct.gtherp__Brand_Name__r?.Name ?? sfProduct.gtherp__Brand_Name__c ?? sfProduct.Brand_Name__c ?? sfProduct.Product_Brand_Name__c ?? "—",
+    brand: sfProduct.gtherp__Brand_Name__r?.Name ?? sfProduct.gtherp__Brand_Name__c ?? sfProduct.Brand_Name__c ?? "—",
     warranty: sfProduct.Warranty_Period__c ? `${sfProduct.Warranty_Period__c} months` : "1 year",
     description: sfProduct.Description || "No description available.",
     subDescription: "",

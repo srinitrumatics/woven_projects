@@ -30,7 +30,7 @@ interface OrderLineItem {
   Total_Price__c: number;
   MOQ__c?: number;
   Manufacturer_Name__c?: string;
-  Product_Brand_Name__c?: string;
+  Brand_Name__c?: string;
   ProductFamily?: string;
   Product_Grouping__c?: string;
   Grouping__c?: string;
@@ -186,7 +186,7 @@ export default function OrderLineDetailPage({
               sku: item.Name || "",
               description: item.Product_Description__c || "",
               productFamily: item.ProductFamily || "General",
-              brand: item.Product_Brand_Name__c || "-",
+              brand: item.Brand_Name__c || "-",
               manufacturerDBA: item.Manufacturer_DBA__c || item.Manufacturer_Name__c || "",
               manufacturer: item.Manufacturer_Name__c || "",
               moq: item.MOQ__c || 1,

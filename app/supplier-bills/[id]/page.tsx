@@ -123,7 +123,7 @@ export default function SupplierBillDetailPage() {
                         productId: l.Product_Name__c || '',
                         productName: l.Product_Name || '',
                         productDescription: l.Product_Description__c || '',
-                        brand: l.Product_Brand_Name__c || '',
+                        brand: l.Brand_Name__c || '',
                         manufacturerDBA: l.Manufacturer_DBA__c || '',
                         unitCost: l.Unit_Cost__c || 0,
                         billedQty: l.Billed_Qty__c || 0,

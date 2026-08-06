@@ -51,7 +51,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             productId: item.Product_Name__c || item.Product__c || "",
                             productDescription: item.gtherp__Product_Description__c || item.Product_Description__c || "",
                             manufacturerDBA: item.gtherp__Manufacturer_DBA__c || item.Manufacturer_DBA__c || "",
-                            brand: item.Product_Brand_Name__c || "",
+                            brand: item.Brand_Name__c || "",
                             supplierName: item.gtherp__Supplier_Name__c || item.Supplier_Name__c || "",
                             purchaseOrderName: item.Purchase_Order_Name || item.gtherp__Purchase_Order__r?.Name || item.Purchase_Order__r?.Name || "",
                             purchaseOrderId: item.gtherp__Purchase_Order__c || item.Purchase_Order__c || "",

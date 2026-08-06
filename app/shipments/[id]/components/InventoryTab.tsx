@@ -57,7 +57,7 @@ function mapItem(raw: any): InventoryPosition {
         productId: raw.Product_Name__c || raw.Product__c || "",
         productDescription: raw.Product_Description__c || "",
         manufacturerDBA: raw.Manufacturer_DBA__c || "",
-        brand: raw.Product_Brand_Name__c || "",
+        brand: raw.Brand_Name__c || "",
         supplierName: raw.Supplier_Name__c || "",
         qtyOnHand: raw.Qty_On_Hand__c ?? 0,
         qtyAvailable: raw.Qty_Available__c ?? 0,

@@ -74,9 +74,9 @@ export default function ProductInformationCard({ product }: { product: any }) {
                     <input
                         type="text"
                         readOnly
-                        value={product.Product_Brand_Name__c || product.Brand_Name__c || product.Brand__c || "—"}
+                        value={product.Brand_Name__c || product.Brand__c || "—"}
                         className="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-900 dark:text-white focus:outline-none cursor-default truncate"
-                        title={product.Product_Brand_Name__c || product.Brand_Name__c || product.Brand__c || "—"}
+                        title={product.Brand_Name__c || product.Brand__c || "—"}
                     />
                 </div>
 

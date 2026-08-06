@@ -30,7 +30,7 @@ interface DebitMemoLine {
     Product_Description__c?: string;
     Manufacturer_DBA__c?: string;
     brand?: string;
-    Product_Brand_Name__c?: string;
+    Brand_Name__c?: string;
     Unit_Cost__c?: number;
     UnitCost__c?: number;
     Debit_Qty__c?: number;
@@ -61,7 +61,7 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
         Product_Name: 200,
         Product_Description__c: 250,
         Manufacturer_DBA__c: 180,
-        Product_Brand_Name__c: 180,
+        Brand_Name__c: 180,
         Unit_Cost__c: 120,
         Debit_Qty__c: 120,
         Total_Cost__c: 120,
@@ -101,7 +101,7 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
                                 <SortableHeader label="Proposed Product" field="Proposed_Product_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.Proposed_Product_Name} onResize={handleResize} />
                                 <SortableHeader label="Product Name" field="Product_Name" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.Product_Name} onResize={handleResize} />
                                 <SortableHeader label="Product Description" field="Product_Description__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.Product_Description__c} onResize={handleResize} />
-                                <SortableHeader label="Brand Name" field="Product_Brand_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.Product_Brand_Name__c} onResize={handleResize} />
+                                <SortableHeader label="Brand Name" field="Brand_Name__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.Brand_Name__c} onResize={handleResize} />
                                 <SortableHeader label="Unit Cost" field="Unit_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.Unit_Cost__c} onResize={handleResize} />
                                 <SortableHeader label="Debit Qty" field="Debit_Qty__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.Debit_Qty__c} onResize={handleResize} />
                                 <SortableHeader label="Total Cost" field="Total_Cost__c" sortConfig={sortConfig} requestSort={requestSort} width={columnWidths.Total_Cost__c} onResize={handleResize} />
@@ -151,7 +151,7 @@ export default function SBLDebitMemoLinesTab({ debitMemos, id }: { debitMemos: D
                                         ) : displayCell(line.Product_Name)}
                                     </Td>
                                     <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate" title={line.Product_Description__c}>{displayCell(line.Product_Description__c)}</Td>
-                                    <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{displayCell(line.Product_Brand_Name__c || '-')}</Td>
+                                    <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white truncate">{displayCell(line.Brand_Name__c || '-')}</Td>
                                     <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{formatCurrency(line.Unit_Cost__c || line.UnitCost__c || 0)}</Td>
                                     <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{line.Debit_Qty__c ?? line.DebitQty__c ?? 0}</Td>
                                     <Td className="px-3 py-2 text-sm text-gray-700 dark:text-white font-medium truncate">{formatCurrency(line.Total_Cost__c || line.TotalCost__c || 0)}</Td>

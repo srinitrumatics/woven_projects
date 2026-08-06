@@ -46,7 +46,7 @@ function mapLog(raw: any): SerialNumberLog {
         productName: raw.Product_Name || "",
         productId: raw.Product__c || "",
         productDescription: raw.Product_Description__c || "",
-        brand: raw.Product_Brand_Name__c || "",
+        brand: raw.Brand_Name__c || "",
         shippingManifest: raw.Shipping_Manifest_Name || raw.Shipping_Manifest__r?.Name || "",
         shippingManifestId: raw.Shipping_Manifest__c || "",
     };

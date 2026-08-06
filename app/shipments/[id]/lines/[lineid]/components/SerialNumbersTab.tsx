@@ -50,7 +50,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                             productName: item.gtherp__Product_Name__c || item.Product_Name || item.Product_Name__c || "",
                             productId: item.Product_Name__c || item.Product__c || "",
                             productDescription: item.gtherp__Product_Description__c || item.Product_Description__c || "",
-                            brand: item.Product_Brand_Name__c || "",
+                            brand: item.Brand_Name__c || "",
                             shippingManifestName: item.Shipping_Manifest_Name || item.gtherp__Shipping_Manifest__r?.Name || item.Shipping_Manifest__r?.Name || "",
                             shippingManifestId: item.gtherp__Shipping_Manifest__c || item.Shipping_Manifest__c || "",
                             shippingManifestLine: item.gtherp__Shipping_Manifest_Line__c || item.Shipping_Manifest_Line_Name || item.Shipping_Manifest_Line__c || "",

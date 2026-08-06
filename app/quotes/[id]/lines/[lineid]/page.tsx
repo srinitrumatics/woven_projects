@@ -28,7 +28,6 @@ interface QuoteLineItem {
     Status__c?: string;
     Product_Description__c?: string;
     Manufacturer_DBA__c?: string;
-    Product_Brand_Name__c?: string;
     Brand_Name__c?: string;
     Lead_Time_Wks__c?: number;
     ShippingDimensions__c?: string;
@@ -188,7 +187,7 @@ export default function QuoteLineDetailPage({
                         status: item.Status__c || "Draft",
                         description: item.Product_Description__c || "",
                         productFamily: item.Product_Family__c || "",
-                        brand: item.Product_Brand_Name__c || item.Brand_Name__c || item.Brand__c || "-",
+                        brand: item.Brand_Name__c || item.Brand__c || "-",
                         leadTimeWks: item.Lead_Time_Wks__c,
                         shippingDimensions: item.ShippingDimensions__c || "-",
                         productGrouping: item.Product_Grouping__c || "",

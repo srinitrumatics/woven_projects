@@ -105,7 +105,7 @@ export default function InvoiceLineDetailPage({
                         productName: item.Product_Name || "Unknown Product",
                         description: item.Product_Description__c || "",
                         manufacturerDBA: item.Manufacturer_DBA__c || "",
-                        brand: item.Product_Brand_Name__c,
+                        brand: item.Brand_Name__c,
                         productFamily: item.Product_Family__c || "",
                         site: item.Site_Name || item.Site__c || "",
                         siteId: item.Site__c || "",

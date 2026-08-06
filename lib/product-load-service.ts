@@ -50,7 +50,7 @@ async function getSalesforceToken(org: Org) {
 async function fetchAllProducts(accessToken: string, instanceUrl: string) {
   const query = `
     SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp,
-           gtherp__Product_Availability__c, gtherp__Manufacturer_Name__r.Name, gtherp__Product_Brand_Name__c,
+           gtherp__Product_Availability__c, gtherp__Manufacturer_Name__r.Name, gtherp__Brand_Name__c,
            gtherp__Available_To_Sell__c, gtherp__MOQ__c,
            (SELECT Id, Name, UnitPrice, gtherp__Selling_Unit_Price__c FROM PricebookEntries)
     FROM Product2
@@ -94,7 +94,7 @@ function toRow(p: any): any[] {
     0,
     p.Family || 'No Category', '',
     p.gtherp__Manufacturer_Name__r?.Name || '',
-    p.gtherp__Product_Brand_Name__c || p.gtherp__Brand_Name__r?.Name || null,
+    p.gtherp__Brand_Name__c || p.gtherp__Brand_Name__r?.Name || null,
     p.gtherp__Product_Availability__c || '',
     p.gtherp__MOQ__c ?? 0,
     p.gtherp__Available_To_Sell__c ?? 0,

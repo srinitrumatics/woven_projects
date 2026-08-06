@@ -36,7 +36,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
             productId: line.Product_Name__c || line.Product__c || '-',
             productDescription: line.Product_Description__c || '-',
             manufacturerDBA: line.Manufacturer_DBA__c || '-',
-            brand: line.Product_Brand_Name__c || '-',
+            brand: line.Brand_Name__c || '-',
             unitCost: line.Unit_Cost__c || 0,
             totalOrderQty: line.Total_Order_Qty__c || 0,
             productCost: line.Total_Product_Cost__c || line.gtherp__Total_Product_Cost__c || 0,

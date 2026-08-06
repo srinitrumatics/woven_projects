@@ -971,7 +971,7 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
                     description: item.Product_Description__c || "",
                     unitPrice: item.Unit_Price__c,
                     listPrice: item.Unit_Price__c, // Assuming list price same as unit price for now
-                    brand: item.gtherp__brand_name__c ?? item.gtherp__Brand_Name__c ?? item.Brand_Name__c ?? item.Product_Brand_Name__c ?? "",
+                    brand: item.gtherp__brand_name__c ?? item.gtherp__Brand_Name__c ?? item.Brand_Name__c ?? "",
                     manufacturer: item['Manufacturer_Name__r.Name'] || item.Manufacturer_Name__r?.Name || item.Manufacturer__c || item.ManufacturerName || item.Manufacturer_Name__c || "",
                     productFamily: item.Product_Family__c || "", // Not in API response
                     productGrouping: item.Product_Grouping__c || item.Grouping__c || "",

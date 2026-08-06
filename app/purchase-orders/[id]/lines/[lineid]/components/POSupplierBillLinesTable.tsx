@@ -25,7 +25,6 @@ interface SupplierBillLine {
     Manufacturer_DBA__c: string;
     brand?: string;
     Brand_Name__c?: string;
-    Product_Brand_Name__c?: string;
     Unit_Cost__c: number;
     Billed_Qty__c: number;
     BillAmount__c: number;
@@ -160,8 +159,8 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                 <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Description__c || '-'}>
                                     {displayCell(line.Product_Description__c)}
                                 </Td>
-                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.brand || line.Product_Brand_Name__c || '-'}>
-                                    {displayCell(line.brand || line.Product_Brand_Name__c)}
+                                <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.brand || line.Brand_Name__c || '-'}>
+                                    {displayCell(line.brand || line.Brand_Name__c)}
                                 </Td>
                                 <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={formatCurrency(line.Unit_Cost__c || 0)}>{formatCurrency(line.Unit_Cost__c || 0)}</Td>
                                 <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-left truncate" title={String(line.Billed_Qty__c || 0)}>{line.Billed_Qty__c || 0}</Td>

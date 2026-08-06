@@ -60,7 +60,7 @@ export default function SupplierBillLineDetailPage({
                         productName: item.Product_Name,
                         productDescription: item.Product_Description__c,
                         manufacturerDBA: item.Manufacturer_DBA__c,
-                        brand: item.Product_Brand_Name__c || item.Brand_Name__c || item.Brand__c,
+                        brand: item.Brand_Name__c || item.Brand__c,
                         productFamily: item.Product_Family__c || item.Product_Family || item.Family,
                         proposedProduct: item.Proposed_Product_Name,
                         proposedProductId: item.Proposed_Product__c,

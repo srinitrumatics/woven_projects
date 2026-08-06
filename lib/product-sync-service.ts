@@ -184,7 +184,7 @@ export async function syncNewProductToPostgresAndAlgolia(
       sub_category: productData.gtherp__sub_category__c ?? productData.Sub_Category__c ?? null,
       family: productData.Product_Family__c ?? productData.product_family__c ?? productData.Family ?? productData.family ?? '',
       manufacturer: resolveLookupName(productData, 'Manufacturer_Name') ?? productData.gtherp__Manufacturer_Name__c ?? productData.Manufacturer_Name__c ?? '',
-      brand: resolveLookupName(productData, 'Brand_Name') ?? productData.gtherp__Brand_Name__c ?? productData.Brand_Name__c ?? productData.Product_Brand_Name__c ?? '',
+      brand: resolveLookupName(productData, 'Brand_Name') ?? productData.gtherp__Brand_Name__c ?? productData.Brand_Name__c ?? '',
       status: productData.IsActive === false ? 'inactive' : 'active',
       is_active: productData.IsActive === false ? false : true,
       product_availability: productData.Product_Availability__c ?? productData.gtherp__Product_Availability__c ?? productData.product_availability__c ?? '',
