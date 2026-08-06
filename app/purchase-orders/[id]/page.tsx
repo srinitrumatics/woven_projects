@@ -45,6 +45,7 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
     const SF_CONTACT_ID = user?.contact?.Id || user?.contact?.id || "";
 
     const fetchPOData = useCallback(async () => {
+        if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
         try {
             setLoading(true);
             const res = await fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=view&tabName=Purchase_Order`);

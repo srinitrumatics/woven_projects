@@ -36,6 +36,7 @@ export default function SupplierBillLineDetailPage({
 
     useEffect(() => {
         async function fetchLines() {
+            if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
             try {
                 setLoading(true);
                 const res = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Products&objectName=Supplier_Bill__c`);
@@ -94,7 +95,7 @@ export default function SupplierBillLineDetailPage({
 
     useEffect(() => {
         async function fetchSubTabData() {
-            if (!lineid) return;
+            if (!lineid || !SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
             try {
                 setSubTabLoading(true);
                 const [filesRes, debitMemosRes] = await Promise.all([

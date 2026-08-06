@@ -64,6 +64,7 @@ export default function POLineDetailPage({
 
     useEffect(() => {
         async function fetchLines() {
+            if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
             try {
                 setLoading(true);
                 const res = await fetch(`/api/purchase-orders?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Products&objectName=Purchase_Order__c`);
@@ -128,7 +129,7 @@ export default function POLineDetailPage({
 
     useEffect(() => {
         async function fetchSubTabData() {
-            if (!lineid) return;
+            if (!lineid || !SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
             try {
                 setSubTabLoading(true);
                 const [billsRes, returnsRes, serialRes, filesRes] = await Promise.all([

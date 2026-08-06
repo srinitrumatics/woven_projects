@@ -20,6 +20,7 @@ export default function ProposalSummaryPage({ params }: { params: Promise<{ id: 
 
   useEffect(() => {
     async function fetchProposal() {
+      if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
       try {
         const res = await fetch(`/api/salesforce/proposals?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&proposalId=${id}&action=view`);
         if (!res.ok) throw new Error('Failed to fetch proposal');
@@ -47,7 +48,7 @@ export default function ProposalSummaryPage({ params }: { params: Promise<{ id: 
       }
     }
     fetchProposal();
-  }, [id]);
+  }, [id, SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
   return (
     <Sidebar>

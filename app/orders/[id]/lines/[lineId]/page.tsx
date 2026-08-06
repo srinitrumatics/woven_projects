@@ -143,6 +143,7 @@ export default function OrderLineDetailPage({
   // Fetch order data from Salesforce
   useEffect(() => {
     async function fetchOrderData() {
+      if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
       try {
         setLoading(true);
 

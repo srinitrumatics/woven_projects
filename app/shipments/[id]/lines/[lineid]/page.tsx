@@ -71,6 +71,7 @@ export default function ShipmentLineDetailPage({
 
     useEffect(() => {
         async function fetchLineData() {
+            if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
             try {
                 setLoading(true);
                 const [res, inventoryRes, serialRes, filesRes] = await Promise.allSettled([

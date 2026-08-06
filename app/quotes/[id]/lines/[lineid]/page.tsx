@@ -169,6 +169,7 @@ export default function QuoteLineDetailPage({
 
     useEffect(() => {
         async function fetchQuoteLineData() {
+            if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
             try {
                 setLoading(true);
                 const res = await fetch(`/api/salesforce/quotes?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&quoteId=${encodeURIComponent(id)}&action=quotelines`);

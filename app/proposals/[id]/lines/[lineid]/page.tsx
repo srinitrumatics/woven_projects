@@ -115,7 +115,7 @@ export default function ProposalProductDetailPage({
 
     // Fetch fulfillment, purchases, and returns data
     const fetchFulfillmentData = useCallback(async (currentLineId: string) => {
-        if (!currentLineId) return;
+        if (!currentLineId || !SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
         try {
             setFulfillmentLoading(true);
             const res = await fetch(`/api/salesforce/proposals?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&proposalId=${encodeURIComponent(currentLineId)}&action=fulfillments&objectName=Proposed_Product__c`);
@@ -226,7 +226,7 @@ export default function ProposalProductDetailPage({
     }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
     const fetchPurchasesData = useCallback(async (currentLineId: string) => {
-        if (!currentLineId) return;
+        if (!currentLineId || !SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
         try {
             setPurchasesLoading(true);
             const res = await fetch(`/api/salesforce/proposals?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&proposalId=${encodeURIComponent(currentLineId)}&action=purchases&objectName=Proposed_Product__c`);
@@ -295,7 +295,7 @@ export default function ProposalProductDetailPage({
     }, [SF_ACCOUNT_ID, SF_CONTACT_ID]);
 
     const fetchReturnsData = useCallback(async (currentLineId: string) => {
-        if (!currentLineId) return;
+        if (!currentLineId || !SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
         try {
             setReturnsLoading(true);
             const res = await fetch(`/api/salesforce/proposals?accountId=${encodeURIComponent(SF_ACCOUNT_ID)}&contactId=${encodeURIComponent(SF_CONTACT_ID)}&proposalId=${encodeURIComponent(currentLineId)}&action=returns&objectName=Proposed_Product__c`);
@@ -414,6 +414,7 @@ export default function ProposalProductDetailPage({
     // Fetch proposal data from Salesforce
     useEffect(() => {
         async function fetchData() {
+            if (!SF_ACCOUNT_ID || !SF_CONTACT_ID) return;
             try {
                 setLoading(true);
                 // 1. Fetch products
