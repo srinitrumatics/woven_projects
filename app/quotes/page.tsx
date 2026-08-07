@@ -461,6 +461,13 @@ export default function QuotesPage() {
         <div className="overflow-x-auto">
           {loading ? (
             <TableLoadingState message="Loading quotes..." />
+          ) : paginatedQuotes.length === 0 ? (
+            <TableEmptyState
+              message="No quotes found"
+              description={searchQuery || activeTab !== "All"
+                ? "Try adjusting your filters"
+                : "Get started by creating your first quote"}
+            />
           ) : (
             <Table className="table-fixed">
               <THead>
@@ -497,20 +504,8 @@ export default function QuotesPage() {
                 </tr>
               </THead>
               <TBody>
-                {paginatedQuotes.length === 0 ? (
-                  <tr>
-                    <td colSpan={24} className="px-6 py-12 text-center">
-                      <TableEmptyState
-                        message="No quotes found"
-                        description={searchQuery || activeTab !== "All"
-                          ? "Try adjusting your filters"
-                          : "Get started by creating your first quote"}
-                      />
-                    </td>
-                  </tr>
-                ) : (
-                  paginatedQuotes.map((quote) => (
-                    <Tr key={quote.id} className="transition-colors">
+                {paginatedQuotes.map((quote) => (
+                  <Tr key={quote.id} className="transition-colors">
                       <Td className="text-primary font-semibold sticky left-0 bg-white dark:bg-gray-800 text-left truncate">
                         <Link href={`/quotes/${quote.id}`} className="text-sm font-semibold text-primary hover:underline">
                           <div title={quote.quoteNumber}>{quote.quoteNumber}</div>
@@ -616,8 +611,7 @@ export default function QuotesPage() {
                         </div>
                       </Td>
                     </Tr>
-                  ))
-                )}
+                ))}
               </TBody>
             </Table>
           )}

@@ -510,6 +510,13 @@ export default function ProposalsPage() {
         <div className="overflow-x-auto">
           {loading ? (
             <TableLoadingState message="Loading proposals..." />
+          ) : paginatedProposals.length === 0 ? (
+            <TableEmptyState
+              message="No proposals found"
+              description={searchQuery || activeTab !== "All"
+                ? "Try adjusting your filters"
+                : "Get started by creating your first proposal"}
+            />
           ) : (
             <Table>
               <THead>
@@ -544,20 +551,8 @@ export default function ProposalsPage() {
                 </tr>
               </THead>
               <TBody>
-                {paginatedProposals.length === 0 ? (
-                  <Tr>
-                    <td colSpan={21} className="px-6 py-12 text-center truncate">
-                      <TableEmptyState
-                        message="No proposals found"
-                        description={searchQuery || activeTab !== "All"
-                          ? "Try adjusting your filters"
-                          : "Get started by creating your first proposal"}
-                      />
-                    </td>
-                  </Tr>
-                ) : (
-                  paginatedProposals.map((proposal, index) => (
-                    <Tr key={proposal.id || index}>
+                {paginatedProposals.map((proposal, index) => (
+                  <Tr key={proposal.id || index}>
                       <Td className="text-primary font-semibold py-3 sticky left-0 z-10 bg-white dark:bg-gray-800 text-left truncate">
                         <Link href={`/proposals/${proposal.id}`} className="text-primary hover:underline truncate">
                           <div title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
@@ -657,8 +652,7 @@ export default function ProposalsPage() {
                         </div>
                       </Td>
                     </Tr>
-                  ))
-                )}
+                ))}
               </TBody>
             </Table>
           )}
