@@ -184,7 +184,7 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
       <div className="mt-4">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
           {/* Tab bar */}
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <ShipmentTabs
               activeTab={activeTab}
               onTabChange={setActiveTab}
@@ -193,7 +193,7 @@ export default function ShipmentDetailPage({ params }: ShipmentDetailPageProps) 
           </div>
 
           {/* Tab content */}
-          <div className="p-2">
+          <div className="p-6">
             {activeTab === "lines" && <ShipmentLinesTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} />}
             {activeTab === "inventory" && <InventoryTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onCountLoaded={setInventoryCount} />}
             {activeTab === "serial" && <SerialNumbersTab shipmentId={id} accountId={SF_ACCOUNT_ID} contactId={SF_CONTACT_ID} onCountLoaded={setSerialCount} />}

@@ -426,7 +426,7 @@ export default function ShipmentsPage() {
       {/* Main Table Section */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
         {/* Header with Search and Filter Buttons */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <div className="flex flex-wrap items-center gap-3">
             {/* Search Input */}
             <div className="relative min-w-[240px] max-w-sm flex-shrink-0">
@@ -454,7 +454,7 @@ export default function ShipmentsPage() {
         </div>
 
         {/* Table Area */}
-        <div className="p-4 pb-0">
+        <div className="p-6 pb-0">
           <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               {loading ? (

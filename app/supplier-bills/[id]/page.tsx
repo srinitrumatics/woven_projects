@@ -328,7 +328,7 @@ export default function SupplierBillDetailPage() {
 
             {/* Third Row: Tabs and Content */}
             <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div className="p-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
+                <div className="p-6 border-b border-gray-200 dark:border-gray-700 min-w-0">
                     <SupplierBillTabs
                         activeTab={activeTab}
                         onTabChange={setActiveTab}
@@ -340,7 +340,7 @@ export default function SupplierBillDetailPage() {
                         }}
                     />
                 </div>
-                <div className="p-4">
+                <div className="p-6">
                     {activeTab === 'lines' && <SupplierBillLinesTable lines={lines} />}
                     {activeTab === 'payments' && <SupplierBillPaymentsTab billPayments={billPayments} appliedDebits={appliedDebits} />}
                     {activeTab === 'debits' && <SupplierBillDebitsTab debitMemos={debitMemos} />}

@@ -1812,7 +1812,7 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
           </div>
 
           {/* Tab Content area */}
-          <div className="p-3">
+          <div className="p-6">
             {/* Files Tab */}
             {viewMode === "files" && (
               <FilesTab

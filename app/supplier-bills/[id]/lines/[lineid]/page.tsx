@@ -367,7 +367,7 @@ export default function SupplierBillLineDetailPage({
                 </div>
 
                 {/* Row 3: Related Items Tabs (Debit Memo Lines, Files) */}
-                <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+                <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                     {/* Tabs Header */}
                     <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2  items-center min-w-0">
                         {[
@@ -389,7 +389,7 @@ export default function SupplierBillLineDetailPage({
                         ))}
                     </div>
 
-                    <div className="p-4">
+                    <div className="p-6">
                         {subTabLoading ? (
                             <div className="flex justify-center items-center py-20 min-w-0">
                                 <LoadingSpinner size="sm" />

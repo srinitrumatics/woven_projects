@@ -252,7 +252,7 @@ export default function AuthorizeLocationsPage() {
             </div>
 
             {/* Table Section */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                 {/* Header with Search and Filter */}
                 <div className="border-b border-gray-200 dark:border-gray-700">
                     <div className="flex flex-wrap items-center gap-3 px-2 pb-4">

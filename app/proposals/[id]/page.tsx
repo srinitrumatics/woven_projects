@@ -1415,7 +1415,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
           />
 
           <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div className="p-4 border-b border-gray-200 dark:border-gray-700 min-w-0">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 min-w-0">
               <ProposalTabs
                 activeTab={activeTab}
                 onTabChange={(tab) => {
@@ -1437,7 +1437,7 @@ export default function ProposalDetailPage({ params }: { params: Promise<{ id: s
               />
             </div>
 
-            <div className="p-2">
+            <div className="p-6">
               {activeTab === 'products' && (
                 <ProductsTab
                   products={sortData(proposedProducts, productSortField, productSortDirection)}
