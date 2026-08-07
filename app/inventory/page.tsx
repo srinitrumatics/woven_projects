@@ -596,7 +596,7 @@ export default function InventoryPage() {
                             <Table className="text-sm table-fixed">
                                 <THead>
                                     <tr>
-                                        <Th className="sticky left-0 z-30 text-center" style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
+                                        <Th className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
                                             <input
                                                 type="checkbox"
                                                 className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
@@ -626,7 +626,7 @@ export default function InventoryPage() {
                                 <TBody>
                                     {paginatedInventory.map((item) => (
                                         <Tr key={item.id} className={`group ${selectedItems.has(item.productId || item.id) ? 'bg-primary/5 dark:bg-primary/10' : ''}`}>
-                                            <Td className={`px-3 py-2 sticky left-0 z-30 text-center ${selectedItems.has(item.productId || item.id) ? 'bg-primary-light dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
+                                            <Td className={`px-3 py-2  sticky left-0 bg-white dark:bg-gray-800 text-left ${selectedItems.has(item.productId || item.id) ? 'bg-primary-light dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
                                                 <input
                                                     type="checkbox"
                                                     className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"

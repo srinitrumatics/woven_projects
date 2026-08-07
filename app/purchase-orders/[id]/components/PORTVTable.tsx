@@ -146,16 +146,16 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                         )
                                     ) : displayCell(r.Customer_Quote_Name)}
                                 </Td>
-                                <Td className="truncate" title={r.Proposal_Number__c || r.Proposal_Name || '-'}>
-                                    {r.Proposal__c ? (
+                                <Td className="truncate" title={r.Proposal_Number__c || '-'}>
+                                    {r.proposalNumber ? (
                                         !isManufacturer ? (
                                             <Link href={`/proposals/${r.Proposal__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                                                {r.Proposal_Number__c || r.Proposal_Name || 'View Proposal'}
+                                                {r.Proposal_Number__c || 'View Proposal'}
                                             </Link>
                                         ) : (
                                             <span className="font-medium">{displayCell(r.Proposal_Number__c || r.Proposal_Name)}</span>
                                         )
-                                    ) : displayCell(r.Proposal_Number__c || r.Proposal_Name)}
+                                    ) : displayCell(r.Proposal_Number__c || '')}
                                 </Td>
                                 <Td className="truncate" title={r.Proposal_Name || '-'}>{displayCell(r.Proposal_Name)}</Td>
                                 <Td className="truncate" title={r.Customer_Order_Name || '-'}>
