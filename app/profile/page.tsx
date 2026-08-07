@@ -420,14 +420,18 @@ export default function ProfilePage() {
                                         <div>
                                             <label htmlFor="MailingCountry" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Country</label>
                                             {isEditing ? (
-                                                <input
-                                                    type="text"
+                                                <select
                                                     id="MailingCountry"
                                                     name="MailingCountry"
                                                     value={formData.MailingCountry || ''}
                                                     onChange={handleChange}
                                                     className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                                                />
+                                                >
+                                                    <option value="">--Select--</option>
+                                                    {(picklists?.MailingCountry || []).map((opt: any) => (
+                                                        <option key={opt.value} value={opt.label}>{opt.label}</option>
+                                                    ))}
+                                                </select>
                                             ) : (
                                                 <p className="text-gray-900 dark:text-white font-medium px-4 py-2.5 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-transparent">{details.MailingCountry || 'N/A'}</p>
                                             )}
