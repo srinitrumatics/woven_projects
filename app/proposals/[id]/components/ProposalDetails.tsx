@@ -31,7 +31,7 @@ export default function ProposalDetails({
                 <KeyDates proposal={proposal} />
             </div>
             <div className="w1025:col-span-3">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 w-full flex flex-col min-h-[180px] h-full">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6 w-full flex flex-col h-full">
                     <div className="flex items-center gap-3 mb-6 min-w-0">
                         <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                             <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,9 +44,7 @@ export default function ProposalDetails({
                         </div>
                     </div>
 
-                    <div className="flex-1">
-                        <ReadOnlyTextArea value={proposal.Proposal_Notes || "No special notes for this proposal."} className="h-full" />
-                    </div>
+                    <ReadOnlyTextArea value={proposal.Proposal_Notes || "No special notes for this proposal."} className="max-h-[64px] overflow-y-auto" />
                 </div>
             </div>
 
@@ -73,7 +71,7 @@ export default function ProposalDetails({
                     </div>
 
                     <div className="flex-1">
-                        <ReadOnlyTextArea value={proposal.specialTerms || "No scope summary provided for this proposal."} className="min-h-[54px]" />
+                        <ReadOnlyTextArea value={proposal.specialTerms || "No scope summary provided for this proposal."} className="max-h-[100px] overflow-y-auto" />
                     </div>
                 </div>
             </div>
