@@ -259,7 +259,7 @@ export default function DeliveryWindowsPage() {
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden px-6 py-3">
                 {/* Header with Search and Filter */}
                 <div className="border-b border-gray-200 dark:border-gray-700 py-6">
                     <div className="flex flex-wrap items-center gap-3 px-2">

@@ -794,7 +794,7 @@ export default function ProposalProductDetailPage({
             </div >
 
             {/* Row 3: Related Items Tabs (Fulfillments, Purchases, Returns) */}
-            < div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6" >
+            < div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-3" >
                 {/* Tabs Header */}
                 <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 mb-4 items-center min-w-0">
                     {

@@ -261,7 +261,7 @@ export default function PurchaseOrdersPage() {
                         <div className="relative min-w-[220px] max-w-xs flex-shrink-0">
                             <input
                                 type="text"
-                                placeholder="Search purchase orders..."
+                                placeholder="Search Purchase Orders..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
@@ -289,119 +289,119 @@ export default function PurchaseOrdersPage() {
                 </div>
 
                 <div className="rounded-lg shadow-sm overflow-hidden">
-                  <div className="overflow-x-auto">
-                    {loading ? (
-                        <TableLoadingState message="Synchronizing data from Salesforce..." />
-                    ) : paginatedPOs.length === 0 ? (
-                        <TableEmptyState
-                            message="No Purchase Orders Found"
-                            description={searchQuery ? `We couldn't find any results matching "${searchQuery}". Try a different search term.` : "There are currently no purchase orders in the system."}
-                        />
-                    ) : (
-                        <Table>
-                            <THead>
-                                <tr>
-                                    <SortableHeader label="Purchase Order #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                    <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteName} onResize={handleResize} />
-                                    <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
-                                    <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
-                                    <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrderName} onResize={handleResize} />
-                                    <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
-                                    <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccountName} onResize={handleResize} />
-                                    <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocationName} onResize={handleResize} />
-                                    <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContactName} onResize={handleResize} />
-                                    <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={handleResize} />
-                                    <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
-                                    <SortableHeader label="Total Cost" field="productCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCost} onResize={handleResize} />
-                                    <SortableHeader label="Shipping" field="shippingCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingCost} onResize={handleResize} />
-                                    <SortableHeader label="Grand Total" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
-                                    <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
-                                    <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={handleResize} />
-                                    <SortableHeader label="Acknowledgement Date" field="acknowledgedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.acknowledgedDate} onResize={handleResize} />
-                                    <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestDate} onResize={handleResize} />
-                                    <SortableHeader label="Promise Date" field="promiseDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.promiseDate} onResize={handleResize} />
-                                    <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={handleResize} />
-                                    <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={handleResize} />
-                                    <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={handleResize} />
-                                    <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={handleResize} />
-                                    <SortableHeader label="Goods Receipt Date" field="goodsReceiptsDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.goodsReceiptDate} onResize={handleResize} />
-                                </tr>
-                            </THead>
-                            <TBody>
-                                {paginatedPOs.map(po => (
-                                    <Tr key={po.id} className="group">
-                                        <Td className="px-2 font-semibold text-primary group-hover:underline truncate max-w-[200px] sticky left-0 bg-white dark:bg-gray-800 z-10" title={po.name}>
-                                            <Link href={`/purchase-orders/${po.id}`} className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
-                                                {po.name}
-                                            </Link>
-                                        </Td>
-                                        <Td className="px-2 truncate" title={po.status}><StatusBadge status={po.status} /></Td>
-                                        <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerQuoteName || '-'}>
-                                            {po.customerQuoteId ? (
-                                                !isManufacturer ? (
-                                                    <Link href={`/quotes/${po.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                                        {po.customerQuoteName || 'View Quote'}
-                                                    </Link>
+                    <div className="overflow-x-auto">
+                        {loading ? (
+                            <TableLoadingState message="Synchronizing data from Salesforce..." />
+                        ) : paginatedPOs.length === 0 ? (
+                            <TableEmptyState
+                                message="No Purchase Orders Found"
+                                description={searchQuery ? `We couldn't find any results matching "${searchQuery}". Try a different search term.` : "There are currently no purchase orders in the system."}
+                            />
+                        ) : (
+                            <Table>
+                                <THead>
+                                    <tr>
+                                        <SortableHeader label="Purchase Order #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                                        <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteName} onResize={handleResize} />
+                                        <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
+                                        <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                                        <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrderName} onResize={handleResize} />
+                                        <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
+                                        <SortableHeader label="Ship to Account" field="shipToAccountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccountName} onResize={handleResize} />
+                                        <SortableHeader label="Ship to Location" field="shipToLocationName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocationName} onResize={handleResize} />
+                                        <SortableHeader label="Ship to Contact" field="shipToContactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContactName} onResize={handleResize} />
+                                        <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={handleResize} />
+                                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
+                                        <SortableHeader label="Total Cost" field="productCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCost} onResize={handleResize} />
+                                        <SortableHeader label="Shipping" field="shippingCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.shippingCost} onResize={handleResize} />
+                                        <SortableHeader label="Grand Total" field="totalCost" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
+                                        <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
+                                        <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={handleResize} />
+                                        <SortableHeader label="Acknowledgement Date" field="acknowledgedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.acknowledgedDate} onResize={handleResize} />
+                                        <SortableHeader label="Request Date" field="requestDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.requestDate} onResize={handleResize} />
+                                        <SortableHeader label="Promise Date" field="promiseDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.promiseDate} onResize={handleResize} />
+                                        <SortableHeader label="Tracking Number" field="trackingNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingNumber} onResize={handleResize} />
+                                        <SortableHeader label="Tracking Status" field="trackingStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.trackingStatus} onResize={handleResize} />
+                                        <SortableHeader label="Estimated Delivery Date" field="estimatedDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.estimatedDeliveryDate} onResize={handleResize} />
+                                        <SortableHeader label="Actual Delivery Date" field="actualDeliveryDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.actualDeliveryDate} onResize={handleResize} />
+                                        <SortableHeader label="Goods Receipt Date" field="goodsReceiptsDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.goodsReceiptDate} onResize={handleResize} />
+                                    </tr>
+                                </THead>
+                                <TBody>
+                                    {paginatedPOs.map(po => (
+                                        <Tr key={po.id} className="group">
+                                            <Td className="px-2 font-semibold text-primary group-hover:underline truncate max-w-[200px] sticky left-0 bg-white dark:bg-gray-800 z-10" title={po.name}>
+                                                <Link href={`/purchase-orders/${po.id}`} className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
+                                                    {po.name}
+                                                </Link>
+                                            </Td>
+                                            <Td className="px-2 truncate" title={po.status}><StatusBadge status={po.status} /></Td>
+                                            <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerQuoteName || '-'}>
+                                                {po.customerQuoteId ? (
+                                                    !isManufacturer ? (
+                                                        <Link href={`/quotes/${po.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                            {po.customerQuoteName || 'View Quote'}
+                                                        </Link>
+                                                    ) : (
+                                                        <span className="font-medium">{po.customerQuoteName || '-'}</span>
+                                                    )
                                                 ) : (
-                                                    <span className="font-medium">{po.customerQuoteName || '-'}</span>
-                                                )
-                                            ) : (
-                                                po.customerQuoteName || '-'
-                                            )}
-                                        </Td>
-                                        <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.proposalNumber || '-'}>
-                                            {po.proposalId ? (
-                                                !isManufacturer ? (
-                                                    <Link href={`/proposals/${po.proposalId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
-                                                        {po.proposalNumber || 'View Proposal'}
-                                                    </Link>
+                                                    po.customerQuoteName || '-'
+                                                )}
+                                            </Td>
+                                            <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.proposalNumber || '-'}>
+                                                {po.proposalId ? (
+                                                    !isManufacturer ? (
+                                                        <Link href={`/proposals/${po.proposalId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                                            {po.proposalNumber || 'View Proposal'}
+                                                        </Link>
+                                                    ) : (
+                                                        <span className="font-medium">{po.proposalNumber || '-'}</span>
+                                                    )
                                                 ) : (
-                                                    <span className="font-medium">{po.proposalNumber || '-'}</span>
-                                                )
-                                            ) : (
-                                                po.proposalNumber || '-'
-                                            )}
-                                        </Td>
-                                        <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={displayCell(po.proposalName)}>{displayCell(po.proposalName)}</Td>
-                                        <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerOrderName || '-'}>
-                                            {po.customerOrderId ? (
-                                                !isManufacturer ? (
-                                                    <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
-                                                        {po.customerOrderName || 'View Order'}
-                                                    </Link>
+                                                    po.proposalNumber || '-'
+                                                )}
+                                            </Td>
+                                            <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={displayCell(po.proposalName)}>{displayCell(po.proposalName)}</Td>
+                                            <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerOrderName || '-'}>
+                                                {po.customerOrderId ? (
+                                                    !isManufacturer ? (
+                                                        <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                            {po.customerOrderName || 'View Order'}
+                                                        </Link>
+                                                    ) : (
+                                                        <span className="font-medium">{po.customerOrderName || '-'}</span>
+                                                    )
                                                 ) : (
-                                                    <span className="font-medium">{po.customerOrderName || '-'}</span>
-                                                )
-                                            ) : (
-                                                po.customerOrderName || '-'
-                                            )}
-                                        </Td>
-                                        <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={displayCell(po.customerPO)}>{displayCell(po.customerPO)}</Td>
-                                        <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={displayCell(po.shipToAccountName)}>{displayCell(po.shipToAccountName)}</Td>
-                                        <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={displayCell(po.shipToLocationName)}>{displayCell(po.shipToLocationName)}</Td>
-                                        <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={displayCell(po.shipToContactName)}>{displayCell(po.shipToContactName)}</Td>
-                                        <Td className="px-2 text-gray-600 dark:text-gray-400 truncate">{po.dropShip ? "Yes" : "No"}</Td>
-                                        <Td className="px-2 font-medium truncate" title={String(po.totalLines || 0)}>{po.totalLines || 0}</Td>
-                                        <Td className="px-2 truncate" title={formatCurrency(po.productCost)}>{formatCurrency(po.productCost)}</Td>
-                                        <Td className="px-2 truncate" title={formatCurrency(po.shippingCost)}>{formatCurrency(po.shippingCost)}</Td>
-                                        <Td className="px-2 font-bold truncate" title={formatCurrency(po.totalCost)}>{formatCurrency(po.totalCost)}</Td>
-                                        <Td className="px-2 text-gray-600 dark:text-gray-400 truncate" title={displayCell(po.paymentTerms)}>{displayCell(po.paymentTerms)}</Td>
-                                        <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}>{po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}</Td>
-                                        <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.acknowledgedDate ? formatDate(po.acknowledgedDate, 'numeric-dash') : '-'}>{po.acknowledgedDate ? formatDate(po.acknowledgedDate, 'numeric-dash') : '-'}</Td>
-                                        <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : '-'}>{po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : '-'}</Td>
-                                        <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.promiseDate ? formatDate(po.promiseDate, 'numeric-dash') : '-'}>{po.promiseDate ? formatDate(po.promiseDate, 'numeric-dash') : '-'}</Td>
-                                        <Td className="px-2 text-gray-600 dark:text-gray-400 truncate" title={displayCell(po.trackingNumber)}>{displayCell(po.trackingNumber)}</Td>
-                                        <Td className="px-2 truncate" title={po.trackingStatus}>{po.trackingStatus ? <StatusBadge status={po.trackingStatus} /> : '-'}</Td>
-                                        <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.estimatedDeliveryDate ? formatDate(po.estimatedDeliveryDate, 'numeric-dash') : '-'}>{po.estimatedDeliveryDate ? formatDate(po.estimatedDeliveryDate, 'numeric-dash') : '-'}</Td>
-                                        <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.actualDeliveryDate ? formatDate(po.actualDeliveryDate, 'numeric-dash') : '-'}>{po.actualDeliveryDate ? formatDate(po.actualDeliveryDate, 'numeric-dash') : '-'}</Td>
-                                        <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.goodsReceiptsDate ? formatDate(po.goodsReceiptsDate, 'numeric-dash') : '-'}>{po.goodsReceiptsDate ? formatDate(po.goodsReceiptsDate, 'numeric-dash') : '-'}</Td>
-                                    </Tr>
-                                ))}
-                            </TBody>
-                        </Table>
-                    )}
-                  </div>
+                                                    po.customerOrderName || '-'
+                                                )}
+                                            </Td>
+                                            <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={displayCell(po.customerPO)}>{displayCell(po.customerPO)}</Td>
+                                            <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={displayCell(po.shipToAccountName)}>{displayCell(po.shipToAccountName)}</Td>
+                                            <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={displayCell(po.shipToLocationName)}>{displayCell(po.shipToLocationName)}</Td>
+                                            <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={displayCell(po.shipToContactName)}>{displayCell(po.shipToContactName)}</Td>
+                                            <Td className="px-2 text-gray-600 dark:text-gray-400 truncate">{po.dropShip ? "Yes" : "No"}</Td>
+                                            <Td className="px-2 font-medium truncate" title={String(po.totalLines || 0)}>{po.totalLines || 0}</Td>
+                                            <Td className="px-2 truncate" title={formatCurrency(po.productCost)}>{formatCurrency(po.productCost)}</Td>
+                                            <Td className="px-2 truncate" title={formatCurrency(po.shippingCost)}>{formatCurrency(po.shippingCost)}</Td>
+                                            <Td className="px-2 font-bold truncate" title={formatCurrency(po.totalCost)}>{formatCurrency(po.totalCost)}</Td>
+                                            <Td className="px-2 text-gray-600 dark:text-gray-400 truncate" title={displayCell(po.paymentTerms)}>{displayCell(po.paymentTerms)}</Td>
+                                            <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}>{po.issuedDate ? formatDate(po.issuedDate, 'numeric-dash') : '-'}</Td>
+                                            <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.acknowledgedDate ? formatDate(po.acknowledgedDate, 'numeric-dash') : '-'}>{po.acknowledgedDate ? formatDate(po.acknowledgedDate, 'numeric-dash') : '-'}</Td>
+                                            <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : '-'}>{po.requestDate ? formatDate(po.requestDate, 'numeric-dash') : '-'}</Td>
+                                            <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.promiseDate ? formatDate(po.promiseDate, 'numeric-dash') : '-'}>{po.promiseDate ? formatDate(po.promiseDate, 'numeric-dash') : '-'}</Td>
+                                            <Td className="px-2 text-gray-600 dark:text-gray-400 truncate" title={displayCell(po.trackingNumber)}>{displayCell(po.trackingNumber)}</Td>
+                                            <Td className="px-2 truncate" title={po.trackingStatus}>{po.trackingStatus ? <StatusBadge status={po.trackingStatus} /> : '-'}</Td>
+                                            <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.estimatedDeliveryDate ? formatDate(po.estimatedDeliveryDate, 'numeric-dash') : '-'}>{po.estimatedDeliveryDate ? formatDate(po.estimatedDeliveryDate, 'numeric-dash') : '-'}</Td>
+                                            <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.actualDeliveryDate ? formatDate(po.actualDeliveryDate, 'numeric-dash') : '-'}>{po.actualDeliveryDate ? formatDate(po.actualDeliveryDate, 'numeric-dash') : '-'}</Td>
+                                            <Td className="px-2 text-gray-500 dark:text-gray-400 truncate" title={po.goodsReceiptsDate ? formatDate(po.goodsReceiptsDate, 'numeric-dash') : '-'}>{po.goodsReceiptsDate ? formatDate(po.goodsReceiptsDate, 'numeric-dash') : '-'}</Td>
+                                        </Tr>
+                                    ))}
+                                </TBody>
+                            </Table>
+                        )}
+                    </div>
                 </div>
 
                 <Pagination

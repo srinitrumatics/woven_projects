@@ -253,7 +253,7 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
 
             {/* Tab section Matched to Proposal */}
             <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div className="p-6 border-b border-gray-200 dark:border-gray-700 min-w-0">
+                <div className="px-6 py-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
                     <POTabs
                         activeTab={activeTab}
                         onTabChange={setActiveTab}
@@ -268,7 +268,7 @@ export default function PurchaseOrderDetailPage({ params }: { params: Promise<{ 
                     />
                 </div>
 
-                <div className="p-6">
+                <div className="px-6 py-3">
                     {activeTab === "lines"&& <POLinesTable lines={poLines} poId={id} />}
                     {activeTab === "bills"&& <POSupplierBillsTable bills={bills} />}
                     {activeTab === "serialNumbers"&& <POSerialNumbersTable serialNumbers={serialNumbers} />}

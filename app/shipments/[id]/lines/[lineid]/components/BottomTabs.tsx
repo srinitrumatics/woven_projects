@@ -84,7 +84,7 @@ export default function BottomTabs({ activeTab, setActiveTab, accountId, contact
     }, [accountId, contactId, lineId, initialCounts]);
     return (
         <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700 min-w-0">
+            <div className="px-6 py-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
                 <Tabs
                     tabs={[
                         { key: "inventory", label: "Inventory Positions", count: counts.inventory },
@@ -95,7 +95,7 @@ export default function BottomTabs({ activeTab, setActiveTab, accountId, contact
                     onChange={(key) => setActiveTab(key as "inventory" | "serial" | "files")}
                 />
             </div>
-            <div className="p-6">
+            <div className="px-6 py-3">
                 {activeTab === 'inventory' && (
                     <InventoryTab accountId={accountId} contactId={contactId} lineId={lineId} />
                 )}

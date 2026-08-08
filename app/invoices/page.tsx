@@ -437,7 +437,7 @@ export default function InvoicesPage() {
             <div className="relative min-w-[220px] max-w-xs flex-shrink-0">
               <input
                 type="text"
-                placeholder="Search invoices..."
+                placeholder="Search Invoices..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
@@ -480,49 +480,49 @@ export default function InvoicesPage() {
 
         {/* Table Following Proposal Style */}
         <div className="rounded-lg shadow-sm overflow-hidden">
-        <div className="overflow-x-auto" >
-          {
-            loading ? (
-              <TableLoadingState message="Loading invoices..." />
-            ) : paginatedInvoices.length === 0 ? (
-              <TableEmptyState
-                message="No invoices found"
-                description={searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No invoices available"}
-              />
-            ) : (
-              <Table className="text-sm">
-                <THead>
-                  <tr>
-                    <SortableHeader label="Invoice #" field="invoiceNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                    <SortableHeader label="Sales Order #" field="salesOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
-                    <SortableHeader label="Purchase Order #" field="purchaseOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={handleResize} />
-                    <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={handleResize} />
-                    <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
-                    <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
-                    <SortableHeader label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
-                    <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
-                    <SortableHeader label="Bill to Account" field="accountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.accountName} onResize={handleResize} />
-                    <SortableHeader label="Bill to Location" field="billToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToLocation} onResize={handleResize} />
-                    <SortableHeader label="Bill to Contact" field="contactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToContact} onResize={handleResize} />
-                    <SortableHeader label="Total Lines" field="lineItemCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
-                    <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
-                    <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
-                    <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} />
-                    <SortableHeader label="Grand Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
-                    <SortableHeader label="Issued Date" field="invoiceDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceDate} onResize={handleResize} />
-                    <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
-                    <SortableHeader label="Due Date" field="dueDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.dueDate} onResize={handleResize} />
-                    <SortableHeader label="Collection Status" field="collectionStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.collectionStatus} onResize={handleResize} />
-                    <SortableHeader label="Open Balance" field="amountDue" sortConfig={sortConfig} requestSort={requestSort} width={widths.amountDue} onResize={handleResize} />
-                    <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={handleResize} />
-                    <Th className="whitespace-nowrap" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
-                      Action
-                    </Th>
-                  </tr>
-                </THead>
-                <TBody>
-                  {paginatedInvoices.map((invoice) => (
+          <div className="overflow-x-auto" >
+            {
+              loading ? (
+                <TableLoadingState message="Loading invoices..." />
+              ) : paginatedInvoices.length === 0 ? (
+                <TableEmptyState
+                  message="No invoices found"
+                  description={searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No invoices available"}
+                />
+              ) : (
+                <Table className="text-sm">
+                  <THead>
+                    <tr>
+                      <SortableHeader label="Invoice #" field="invoiceNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                      <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                      <SortableHeader label="Sales Order #" field="salesOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.salesOrder} onResize={handleResize} />
+                      <SortableHeader label="Purchase Order #" field="purchaseOrderNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrder} onResize={handleResize} />
+                      <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuote} onResize={handleResize} />
+                      <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
+                      <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                      <SortableHeader label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
+                      <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
+                      <SortableHeader label="Bill to Account" field="accountName" sortConfig={sortConfig} requestSort={requestSort} width={widths.accountName} onResize={handleResize} />
+                      <SortableHeader label="Bill to Location" field="billToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToLocation} onResize={handleResize} />
+                      <SortableHeader label="Bill to Contact" field="contactName" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToContact} onResize={handleResize} />
+                      <SortableHeader label="Total Lines" field="lineItemCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
+                      <SortableHeader label="Total Price" field="totalPrice" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalPrice} onResize={handleResize} />
+                      <SortableHeader label="Shipping" field="shipping" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
+                      <SortableHeader label="Taxes" field="taxes" sortConfig={sortConfig} requestSort={requestSort} width={widths.taxes} onResize={handleResize} />
+                      <SortableHeader label="Grand Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
+                      <SortableHeader label="Issued Date" field="invoiceDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.invoiceDate} onResize={handleResize} />
+                      <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
+                      <SortableHeader label="Due Date" field="dueDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.dueDate} onResize={handleResize} />
+                      <SortableHeader label="Collection Status" field="collectionStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.collectionStatus} onResize={handleResize} />
+                      <SortableHeader label="Open Balance" field="amountDue" sortConfig={sortConfig} requestSort={requestSort} width={widths.amountDue} onResize={handleResize} />
+                      <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={handleResize} />
+                      <Th className="whitespace-nowrap" style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}>
+                        Action
+                      </Th>
+                    </tr>
+                  </THead>
+                  <TBody>
+                    {paginatedInvoices.map((invoice) => (
                       <Tr
                         key={invoice.id}
                         className="cursor-pointer">
@@ -637,12 +637,12 @@ export default function InvoicesPage() {
                           </div>
                         </Td>
                       </Tr>
-                  ))}
-                </TBody>
-              </Table>
-            )
-          }
-        </div >
+                    ))}
+                  </TBody>
+                </Table>
+              )
+            }
+          </div >
         </div>
 
         {/* Pagination */}

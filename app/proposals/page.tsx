@@ -463,7 +463,7 @@ export default function ProposalsPage() {
             <div className="relative min-w-[220px] max-w-xs flex-shrink-0">
               <input
                 type="text"
-                placeholder="Search proposals..."
+                placeholder="Search Proposals..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
@@ -507,52 +507,52 @@ export default function ProposalsPage() {
 
         {/* Table */}
         <div className="rounded-lg shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          {loading ? (
-            <TableLoadingState message="Loading proposals..." />
-          ) : paginatedProposals.length === 0 ? (
-            <TableEmptyState
-              message="No proposals found"
-              description={searchQuery || activeTab !== "All"
-                ? "Try adjusting your filters"
-                : "Get started by creating your first proposal"}
-            />
-          ) : (
-            <Table>
-              <THead>
-                <tr>
-                  <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                  <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                  <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
-                  <SortableHeader label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
-                  <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
-                  <SortableHeader label="Bill to Account" field="billToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToAccount} onResize={handleResize} />
-                  <SortableHeader label="Bill to Location" field="billToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToLocation} onResize={handleResize} />
-                  <SortableHeader label="Bill to Contact" field="billToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToContact} onResize={handleResize} />
-                  <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} />
-                  <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} />
-                  <SortableHeader label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={handleResize} />
-                  <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={handleResize} />
-                  <SortableHeader label="Total Lines" field="productCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCount} onResize={handleResize} />
-                  <SortableHeader label="Total Price" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
-                  <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalShippingCharges} onResize={handleResize} />
-                  <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalTaxesAmount} onResize={handleResize} />
-                  <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
-                  <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={handleResize} />
-                  <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={handleResize} />
-                  <SortableHeader label="Request Date" field="proposalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalDate} onResize={handleResize} />
+          <div className="overflow-x-auto">
+            {loading ? (
+              <TableLoadingState message="Loading proposals..." />
+            ) : paginatedProposals.length === 0 ? (
+              <TableEmptyState
+                message="No proposals found"
+                description={searchQuery || activeTab !== "All"
+                  ? "Try adjusting your filters"
+                  : "Get started by creating your first proposal"}
+              />
+            ) : (
+              <Table>
+                <THead>
+                  <tr>
+                    <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                    <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                    <SortableHeader label="Customer Order #" field="customerOrder" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrder} onResize={handleResize} />
+                    <SortableHeader label="Customer PO" field="customerPO" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerPO} onResize={handleResize} />
+                    <SortableHeader label="Bill to Account" field="billToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToAccount} onResize={handleResize} />
+                    <SortableHeader label="Bill to Location" field="billToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToLocation} onResize={handleResize} />
+                    <SortableHeader label="Bill to Contact" field="billToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.billToContact} onResize={handleResize} />
+                    <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} />
+                    <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} />
+                    <SortableHeader label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={handleResize} />
+                    <SortableHeader label="Drop Ship" field="dropShip" sortConfig={sortConfig} requestSort={requestSort} width={widths.dropShip} onResize={handleResize} />
+                    <SortableHeader label="Total Lines" field="productCount" sortConfig={sortConfig} requestSort={requestSort} width={widths.productCount} onResize={handleResize} />
+                    <SortableHeader label="Total Price" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
+                    <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalShippingCharges} onResize={handleResize} />
+                    <SortableHeader label="Taxes" field="totalTaxesAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalTaxesAmount} onResize={handleResize} />
+                    <SortableHeader label="Grand Total" field="grandTotal" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
+                    <SortableHeader label="Issued Date" field="issuedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.issuedDate} onResize={handleResize} />
+                    <SortableHeader label="Expiration Date" field="expirationDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.expirationDate} onResize={handleResize} />
+                    <SortableHeader label="Request Date" field="proposalDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalDate} onResize={handleResize} />
 
-                  <th
-                    className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white"
-                    style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
-                  >
-                    Action
-                  </th>
-                </tr>
-              </THead>
-              <TBody>
-                {paginatedProposals.map((proposal, index) => (
-                  <Tr key={proposal.id || index}>
+                    <th
+                      className="px-3 py-2 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                      style={{ width: widths.actions, minWidth: widths.actions, maxWidth: widths.actions }}
+                    >
+                      Action
+                    </th>
+                  </tr>
+                </THead>
+                <TBody>
+                  {paginatedProposals.map((proposal, index) => (
+                    <Tr key={proposal.id || index}>
                       <Td className="text-primary font-semibold py-3 sticky left-0 z-10 bg-white dark:bg-gray-800 text-left truncate">
                         <Link href={`/proposals/${proposal.id}`} className="text-primary hover:underline truncate">
                           <div title={proposal.proposalNumber}>{proposal.proposalNumber}</div>
@@ -652,11 +652,11 @@ export default function ProposalsPage() {
                         </div>
                       </Td>
                     </Tr>
-                ))}
-              </TBody>
-            </Table>
-          )}
-        </div>
+                  ))}
+                </TBody>
+              </Table>
+            )}
+          </div>
         </div>
 
         {/* Pagination */}

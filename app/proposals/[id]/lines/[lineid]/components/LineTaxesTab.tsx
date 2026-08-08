@@ -29,7 +29,7 @@ export default function LineTaxesTab({ taxData, loading }: LineTaxesTabProps) {
 
     if (loading) {
         return (
-            <div className="p-6">
+            <div>
                 <TableLoadingState />
             </div>
         );

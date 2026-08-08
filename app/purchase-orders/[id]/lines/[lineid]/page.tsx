@@ -648,7 +648,7 @@ export default function POLineDetailPage({
 
 
                 {/* Row 3: Related Items Tabs (Supplier Bills, Serial Numbers, Returns, Files) */}
-                <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-3">
                     {/* Tabs Header */}
                     <Tabs
                         tabs={[

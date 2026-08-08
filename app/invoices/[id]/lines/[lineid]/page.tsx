@@ -387,7 +387,7 @@ export default function InvoiceLineDetailPage({
             </div>
 
             {/* Bottom Tabs */}
-            <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="mt-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-3">
                 {/* Tab Header */}
                 <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 mb-6 items-center min-w-0">
                     {[

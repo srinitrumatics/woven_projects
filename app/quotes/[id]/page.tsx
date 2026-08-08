@@ -711,7 +711,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
 
       <div className="mt-8">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700 min-w-0">
+          <div className="px-6 py-3 border-b border-gray-200 dark:border-gray-700 min-w-0">
             <QuoteTabs
               activeTab={activeTab}
               accountType={selectedAccount?.Account_Record_Type__c || selectedAccount?.Account_Type__c || user?.role}
@@ -731,7 +731,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
               }}
             />
           </div>
-          <div className="p-6">
+          <div className="px-6 py-3">
             {activeTab === 'quotelines' && (
               <QuoteLinesTab
                 products={sortedLines}

@@ -241,7 +241,7 @@ export default function SupplierBillsPage() {
                     <div className="relative min-w-[220px] max-w-xs transition-all duration-200">
                         <input
                             type="text"
-                            placeholder="Search supplier bills..."
+                            placeholder="Search Supplier Bills..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
@@ -268,44 +268,44 @@ export default function SupplierBillsPage() {
                 </div>
 
                 <div className="rounded-lg shadow-sm overflow-hidden">
-                <div className="overflow-x-auto ">
-                    {loading ? (
-                        <TableLoadingState message="Synchronizing data from Salesforce..." />
-                    ) : paginatedBills.length === 0 ? (
-                        <TableEmptyState
-                            message="No Supplier Bills Found"
-                            description={searchQuery ? `We couldn't find any results matching "${searchQuery}". Try a different search term.` : "There are currently no supplier bills in the system."}
-                        />
-                    ) : (
-                        <Table className="border-collapse">
-                            <THead>
-                                <tr>
-                                    <SortableHeader label="Supplier Bill #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
-                                    <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
-                                    <SortableHeader label="Supplier" field="supplierName" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierName} onResize={handleResize} />
-                                    <SortableHeader label="Purchase Order #" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderName} onResize={handleResize} />
-                                    <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteName} onResize={handleResize} />
-                                    <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
-                                    <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
-                                    <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrderName} onResize={handleResize} />
-                                    <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} />
-                                    <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} />
-                                    <SortableHeader label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={handleResize} />
-                                    <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
-                                    <SortableHeader label="Total Amount" field="totalProductAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
-                                    <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
-                                    <SortableHeader label="Grand Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
-                                    <SortableHeader label="Billed Date" field="billedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.billedDate} onResize={handleResize} />
-                                    <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
-                                    <SortableHeader label="Due Date" field="dueDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.dueDate} onResize={handleResize} />
-                                    <SortableHeader label="Remittance Status" field="remittanceStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.remittanceStatus} onResize={handleResize} />
-                                    <SortableHeader label="Open Balance" field="openBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.openBalance} onResize={handleResize} />
-                                    <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={handleResize} />
-                                    <SortableHeader label="Action" field="actions" sortConfig={sortConfig} requestSort={requestSort} width={widths.actions} onResize={handleResize} />
-                                </tr>
-                            </THead>
-                            <TBody>
-                                {paginatedBills.map(bill => (
+                    <div className="overflow-x-auto ">
+                        {loading ? (
+                            <TableLoadingState message="Synchronizing data from Salesforce..." />
+                        ) : paginatedBills.length === 0 ? (
+                            <TableEmptyState
+                                message="No Supplier Bills Found"
+                                description={searchQuery ? `We couldn't find any results matching "${searchQuery}". Try a different search term.` : "There are currently no supplier bills in the system."}
+                            />
+                        ) : (
+                            <Table className="border-collapse">
+                                <THead>
+                                    <tr>
+                                        <SortableHeader label="Supplier Bill #" field="name" sortConfig={sortConfig} requestSort={requestSort} width={widths.name} onResize={handleResize} className="sticky left-0 bg-primary-light dark:bg-gray-900 z-10" />
+                                        <SortableHeader label="Status" field="status" sortConfig={sortConfig} requestSort={requestSort} width={widths.status} onResize={handleResize} />
+                                        <SortableHeader label="Supplier" field="supplierName" sortConfig={sortConfig} requestSort={requestSort} width={widths.supplierName} onResize={handleResize} />
+                                        <SortableHeader label="Purchase Order #" field="purchaseOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.purchaseOrderName} onResize={handleResize} />
+                                        <SortableHeader label="Customer Quote #" field="customerQuoteName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerQuoteName} onResize={handleResize} />
+                                        <SortableHeader label="Proposal #" field="proposalNumber" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalNumber} onResize={handleResize} />
+                                        <SortableHeader label="Proposal Name" field="proposalName" sortConfig={sortConfig} requestSort={requestSort} width={widths.proposalName} onResize={handleResize} />
+                                        <SortableHeader label="Customer Order #" field="customerOrderName" sortConfig={sortConfig} requestSort={requestSort} width={widths.customerOrderName} onResize={handleResize} />
+                                        <SortableHeader label="Ship to Account" field="shipToAccount" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToAccount} onResize={handleResize} />
+                                        <SortableHeader label="Ship to Location" field="shipToLocation" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToLocation} onResize={handleResize} />
+                                        <SortableHeader label="Ship to Contact" field="shipToContact" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipToContact} onResize={handleResize} />
+                                        <SortableHeader label="Total Lines" field="totalLines" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalLines} onResize={handleResize} />
+                                        <SortableHeader label="Total Amount" field="totalProductAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.totalAmount} onResize={handleResize} />
+                                        <SortableHeader label="Shipping" field="totalShippingCharges" sortConfig={sortConfig} requestSort={requestSort} width={widths.shipping} onResize={handleResize} />
+                                        <SortableHeader label="Grand Total" field="totalAmount" sortConfig={sortConfig} requestSort={requestSort} width={widths.grandTotal} onResize={handleResize} />
+                                        <SortableHeader label="Billed Date" field="billedDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.billedDate} onResize={handleResize} />
+                                        <SortableHeader label="Payment Terms" field="paymentTerms" sortConfig={sortConfig} requestSort={requestSort} width={widths.paymentTerms} onResize={handleResize} />
+                                        <SortableHeader label="Due Date" field="dueDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.dueDate} onResize={handleResize} />
+                                        <SortableHeader label="Remittance Status" field="remittanceStatus" sortConfig={sortConfig} requestSort={requestSort} width={widths.remittanceStatus} onResize={handleResize} />
+                                        <SortableHeader label="Open Balance" field="openBalance" sortConfig={sortConfig} requestSort={requestSort} width={widths.openBalance} onResize={handleResize} />
+                                        <SortableHeader label="Settled Date" field="settledDate" sortConfig={sortConfig} requestSort={requestSort} width={widths.settledDate} onResize={handleResize} />
+                                        <SortableHeader label="Action" field="actions" sortConfig={sortConfig} requestSort={requestSort} width={widths.actions} onResize={handleResize} />
+                                    </tr>
+                                </THead>
+                                <TBody>
+                                    {paginatedBills.map(bill => (
                                         <Tr key={bill.id} className="group cursor-pointer" onClick={() => router.push(`/supplier-bills/${bill.id}`)}>
                                             <Td className="px-2 py-2 text-sm font-semibold text-primary group-hover:underline truncate sticky left-0 bg-white dark:bg-gray-800 z-10" title={bill.name}>
                                                 <Link href={`/supplier-bills/${bill.id}`} onClick={(e) => e.stopPropagation()}>
@@ -384,11 +384,11 @@ export default function SupplierBillsPage() {
                                                 </div>
                                             </Td>
                                         </Tr>
-                                ))}
-                            </TBody>
-                        </Table>
-                    )}
-                </div>
+                                    ))}
+                                </TBody>
+                            </Table>
+                        )}
+                    </div>
                 </div>
 
                 <Pagination

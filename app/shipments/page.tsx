@@ -426,13 +426,13 @@ export default function ShipmentsPage() {
       {/* Main Table Section */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
         {/* Header with Search and Filter Buttons */}
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <div className="px-6 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <div className="flex flex-wrap items-center gap-3">
             {/* Search Input */}
             <div className="relative min-w-[240px] max-w-sm flex-shrink-0">
               <input
                 type="text"
-                placeholder="Search manifests, orders, quotes..."
+                placeholder="Search Manifests"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
@@ -454,7 +454,7 @@ export default function ShipmentsPage() {
         </div>
 
         {/* Table Area */}
-        <div className="p-6 pb-0">
+        <div className="px-6 py-3 pb-0">
           <div className="rounded-lg shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               {loading ? (
