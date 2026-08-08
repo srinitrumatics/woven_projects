@@ -130,7 +130,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                 </Td>
                                 <Td className="truncate" title={r.Purchase_Order_Name || '-'}>
                                     {r.Purchase_Order__c ? (
-                                        <Link href={`/purchase-orders/${r.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/purchase-orders/${r.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {r.Purchase_Order_Name || 'View PO'}
                                         </Link>
                                     ) : displayCell(r.Purchase_Order_Name)}
@@ -138,7 +138,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                 <Td className="truncate" title={r.Customer_Quote_Name || '-'}>
                                     {r.Customer_Quote__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/quotes/${r.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/quotes/${r.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {r.Customer_Quote_Name || 'View Quote'}
                                             </Link>
                                         ) : (
@@ -149,7 +149,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                 <Td className="truncate" title={r.Proposal_Number__c || '-'}>
                                     {r.proposalNumber ? (
                                         !isManufacturer ? (
-                                            <Link href={`/proposals/${r.Proposal__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/proposals/${r.Proposal__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {r.Proposal_Number__c || 'View Proposal'}
                                             </Link>
                                         ) : (
@@ -161,7 +161,7 @@ export default function PORTVTable({ rtv }: PORTVTableProps) {
                                 <Td className="truncate" title={r.Customer_Order_Name || '-'}>
                                     {r.Customer_Order__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/orders/${r.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/orders/${r.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {r.Customer_Order_Name || 'View Order'}
                                             </Link>
                                         ) : (

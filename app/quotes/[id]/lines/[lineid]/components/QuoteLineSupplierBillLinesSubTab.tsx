@@ -100,7 +100,7 @@ export default function QuoteLineSupplierBillLinesSubTab({
                                     </Td>
                                     <Td className="truncate" style={{ width: widths.supplierBill }}>
                                         {item.supplierBillId ? (
-                                            <Link href={`/supplier-bills/${item.supplierBillId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/supplier-bills/${item.supplierBillId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                 {item.supplierBill}
                                             </Link>
                                         ) : displayCell(item.supplierBill)}

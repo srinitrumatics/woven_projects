@@ -127,7 +127,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                 </Td>
                                 <Td className="truncate" title={d.Purchase_Order_Name || '-'}>
                                     {d.Purchase_Order__c ? (
-                                        <Link href={`/purchase-orders/${d.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/purchase-orders/${d.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {d.Purchase_Order_Name || 'View PO'}
                                         </Link>
                                     ) : displayCell(d.Purchase_Order_Name)}
@@ -135,7 +135,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                 <Td className="truncate" title={d.Customer_Quote_Name || '-'}>
                                     {d.Customer_Quote__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/quotes/${d.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/quotes/${d.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {d.Customer_Quote_Name || 'View Quote'}
                                             </Link>
                                         ) : (
@@ -146,7 +146,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                 <Td className="truncate" title={d.Proposal_Number__c || d.Proposal_Name || '-'}>
                                     {d.Proposal__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/proposals/${d.Proposal__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/proposals/${d.Proposal__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {d.Proposal_Number__c || d.Proposal_Name || 'View Proposal'}
                                             </Link>
                                         ) : (
@@ -158,7 +158,7 @@ export default function PODebitMemoTable({ debitMemos }: PODebitMemoTableProps) 
                                 <Td className="truncate" title={d.Customer_Order_Name || '-'}>
                                     {d.Customer_Order__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/orders/${d.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/orders/${d.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {d.Customer_Order_Name || 'View Order'}
                                             </Link>
                                         ) : (

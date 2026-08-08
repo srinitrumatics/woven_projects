@@ -340,7 +340,7 @@ export default function PurchaseOrdersPage() {
                                             <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerQuoteName || '-'}>
                                                 {po.customerQuoteId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/quotes/${po.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/quotes/${po.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                                             {po.customerQuoteName || 'View Quote'}
                                                         </Link>
                                                     ) : (
@@ -353,7 +353,7 @@ export default function PurchaseOrdersPage() {
                                             <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.proposalNumber || '-'}>
                                                 {po.proposalId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/proposals/${po.proposalId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/proposals/${po.proposalId}`} className="text-primary hover:underline font-semibold" target="_blank" onClick={(e) => e.stopPropagation()}>
                                                             {po.proposalNumber || 'View Proposal'}
                                                         </Link>
                                                     ) : (
@@ -367,7 +367,7 @@ export default function PurchaseOrdersPage() {
                                             <Td className="px-2 text-gray-600 dark:text-gray-400 truncate max-w-[150px]" title={po.customerOrderName || '-'}>
                                                 {po.customerOrderId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                                             {po.customerOrderName || 'View Order'}
                                                         </Link>
                                                     ) : (

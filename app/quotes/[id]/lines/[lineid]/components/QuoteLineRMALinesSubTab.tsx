@@ -116,14 +116,14 @@ export default function QuoteLineRMALinesSubTab({
                                     </Td>
                                     <Td className="truncate" style={{ width: widths.customerQuoteLine }}>
                                         {item.customerQuoteLineId ? (
-                                            <Link href={`/quotes/${quoteId}/lines/${item.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/quotes/${quoteId}/lines/${item.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                 {item.customerQuoteLine}
                                             </Link>
                                         ) : displayCell(item.customerQuoteLine)}
                                     </Td>
                                     <Td className="truncate" style={{ width: widths.proposedProductName }}>
                                         {item.proposedProductId ? (
-                                            <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                 {item.proposedProductName}
                                             </Link>
                                         ) : displayCell(item.proposedProductName)}

@@ -185,7 +185,7 @@ export default function InventoryTab({ shipmentId, accountId, contactId, onCount
                                 <TC v={`${formatNumber(item.daysInInventory, 0)} Days`} w={widths.daysInInventory} />
                                 <TC
                                     v={item.productId ? (
-                                        <Link href={`/inventory/${item.productId}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/inventory/${item.productId}`} className="text-primary hover:underline font-semibold">
                                             {item.productName}
                                         </Link>
                                     ) : (

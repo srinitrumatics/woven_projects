@@ -145,7 +145,7 @@ export default function InventoryTab({ accountId, contactId, lineId }: Inventory
                             <Td className="truncate" title={`${formatNumber(pos.daysInInventory, 0)} Days`}>{formatNumber(pos.daysInInventory, 0)} Days</Td>
                             <Td className="truncate" title={pos.productName}>
                                 {pos.productId ? (
-                                    <Link href={`/inventory/${pos.productId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                    <Link href={`/inventory/${pos.productId}`} className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                         {pos.productName}
                                     </Link>
                                 ) : (

@@ -99,7 +99,7 @@ export default function POSerialNumberLogLinesTab({ serialNumbers }: POSerialNum
                                 </Td>
                                 <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium truncate" title={s.Product_Name || '-'}>
                                     {s.Product_Name__c ? (
-                                        <Link href={`/products/${s.Product_Name__c}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/products/${s.Product_Name__c}`} className="text-primary hover:underline font-semibold">
                                             {s.Product_Name}
                                         </Link>
                                     ) : displayCell(s.Product_Name)}
@@ -112,7 +112,7 @@ export default function POSerialNumberLogLinesTab({ serialNumbers }: POSerialNum
                                 </Td>
                                 <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={s.Purchase_Order_Name || '-'}>
                                     {s.Purchase_Order__c ? (
-                                        <Link href={`/purchase-orders/${s.Purchase_Order__c}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/purchase-orders/${s.Purchase_Order__c}`} className="text-primary hover:underline font-semibold">
                                             {s.Purchase_Order_Name}
                                         </Link>
                                     ) : displayCell(s.Purchase_Order_Name)}

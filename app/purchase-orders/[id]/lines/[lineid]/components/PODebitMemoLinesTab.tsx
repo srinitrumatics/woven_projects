@@ -117,7 +117,7 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                                 <Td className="truncate" title={line.Customer_Quote_Line_Name || '-'}>
                                     {line.Customer_Quote_Line__c && line.Customer_Quote__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                 {line.Customer_Quote_Line_Name || 'View Quote Line'}
                                             </Link>
                                         ) : (
@@ -128,7 +128,7 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                                 <Td className="truncate" title={line.Proposed_Product_Name || '-'}>
                                     {line.Proposed_Product__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/proposals/${line.Proposal__c}/lines/${line.Proposed_Product__c}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/proposals/${line.Proposal__c}/lines/${line.Proposed_Product__c}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                 {line.Proposed_Product_Name || 'View Product'}
                                             </Link>
                                         ) : (
@@ -138,7 +138,7 @@ export default function PODebitMemoLinesTab({ lines }: PODebitMemoLinesTabProps)
                                 </Td>
                                 <Td className="truncate" title={line.Product_Name || '-'}>
                                     {line.Product_Name__c ? (
-                                        <Link href={`/products/${line.Product_Name__c}`} target="_blank" className="text-primary hover:underline font-medium">
+                                        <Link href={`/products/${line.Product_Name__c}`} target="_blank" className="text-primary hover:underline font-semibold">
                                             {line.Product_Name}
                                         </Link>
                                     ) : displayCell(line.Product_Name)}

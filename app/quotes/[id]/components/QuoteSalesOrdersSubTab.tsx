@@ -97,7 +97,7 @@ export default function QuoteSalesOrdersSubTab({
                                             <Td className="truncate" style={{ width: widths.customerQuote }}>
                                                 {order.customerQuoteId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/quotes/${order.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/quotes/${order.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {order.customerQuote}
                                                         </Link>
                                                     ) : displayCell(order.customerQuote)
@@ -106,7 +106,7 @@ export default function QuoteSalesOrdersSubTab({
                                             <Td className="truncate" style={{ width: widths.proposalNumber }}>
                                                 {order.proposalId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/proposals/${order.proposalId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/proposals/${order.proposalId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {order.proposalNumber}
                                                         </Link>
                                                     ) : displayCell(order.proposalNumber)
@@ -118,7 +118,7 @@ export default function QuoteSalesOrdersSubTab({
                                             <Td className="truncate" style={{ width: widths.customerOrder }}>
                                                 {order.customerOrderId ? (
                                                     !isManufacturer && !isRestricted ? (
-                                                        <Link href={`/orders/${order.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/orders/${order.customerOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {order.customerOrder}
                                                         </Link>
                                                     ) : displayCell(order.customerOrder)

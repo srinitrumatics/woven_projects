@@ -527,7 +527,7 @@ export default function ShipmentsPage() {
                               <Link
                                 href={`/quotes/${shipment.customerQuoteId}`}
                                 target="_blank"
-                                className="text-primary hover:underline font-medium"
+                                className="text-primary hover:underline font-semibold"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >
                                 {shipment.customerQuote || "View Quote"}
@@ -545,7 +545,7 @@ export default function ShipmentsPage() {
                               <Link
                                 href={`/proposals/${shipment.proposalId}`}
                                 target="_blank"
-                                className="text-primary hover:underline font-medium"
+                                className="text-primary hover:underline font-semibold"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >
                                 {shipment.proposalNumber || "View Proposal"}
@@ -564,7 +564,7 @@ export default function ShipmentsPage() {
                               <Link
                                 href={`/orders/${shipment.customerOrderId}`}
                                 target="_blank"
-                                className="text-primary hover:underline font-medium"
+                                className="text-primary hover:underline font-semibold"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >
                                 {shipment.customerOrder || "View Order"}

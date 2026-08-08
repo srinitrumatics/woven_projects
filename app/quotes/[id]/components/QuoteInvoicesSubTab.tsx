@@ -90,7 +90,7 @@ export default function QuoteInvoicesSubTab({
                                     {paginatedInvoices.map((invoice) => (
                                         <Tr key={invoice.id}>
                                             <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.invoiceNumber }}>
-                                                <Link href={`/invoices/${invoice.id}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                <Link href={`/invoices/${invoice.id}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                     {invoice.invoiceNumber}
                                                 </Link>
                                             </Td>
@@ -106,7 +106,7 @@ export default function QuoteInvoicesSubTab({
                                             <Td className="truncate" style={{ width: widths.customerQuote }}>
                                                 {invoice.customerQuoteId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/quotes/${invoice.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/quotes/${invoice.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {invoice.customerQuote}
                                                         </Link>
                                                     ) : displayCell(invoice.customerQuote)
@@ -115,7 +115,7 @@ export default function QuoteInvoicesSubTab({
                                             <Td className="truncate" style={{ width: widths.proposalNumber }}>
                                                 {invoice.proposalId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/proposals/${invoice.proposalId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/proposals/${invoice.proposalId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {invoice.proposalNumber}
                                                         </Link>
                                                     ) : displayCell(invoice.proposalNumber)
@@ -127,7 +127,7 @@ export default function QuoteInvoicesSubTab({
                                             <Td className="truncate" style={{ width: widths.customerOrder }}>
                                                 {invoice.customerOrderId ? (
                                                     !isManufacturer && !isRestricted ? (
-                                                        <Link href={`/orders/${invoice.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/orders/${invoice.customerOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {invoice.customerOrder}
                                                         </Link>
                                                     ) : displayCell(invoice.customerOrder)

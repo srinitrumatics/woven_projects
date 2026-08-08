@@ -112,7 +112,7 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                             <Tr key={line.Id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
                                 <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={line.Name}>
                                     {line.Supplier_Bill__c ? (
-                                        <Link href={`/supplier-bills/${line.Supplier_Bill__c}/lines/${line.Id}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/supplier-bills/${line.Supplier_Bill__c}/lines/${line.Id}`} className="text-primary hover:underline font-semibold">
                                             {line.Name}
                                         </Link>
                                     ) : (
@@ -122,7 +122,7 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                 <Td className="px-4 py-3 truncate"><StatusBadge status={line.Status__c} variant="bordered" /></Td>
                                 <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Supplier_Bill_Name || '-'}>
                                     {line.Supplier_Bill__c ? (
-                                        <Link href={`/supplier-bills/${line.Supplier_Bill__c}`} target="_blank" className="text-primary hover:underline font-medium">
+                                        <Link href={`/supplier-bills/${line.Supplier_Bill__c}`} target="_blank" className="text-primary hover:underline font-semibold">
                                             {line.Supplier_Bill_Name || ''}
                                         </Link>
                                     ) : displayCell(line.Supplier_Bill_Name)}
@@ -130,7 +130,7 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                 <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Customer_Quote_Line_Name || '-'}>
                                     {line.Customer_Quote_Line__c && line.Customer_Quote__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                 {line.Customer_Quote_Line_Name || 'View Quote Line'}
                                             </Link>
                                         ) : (
@@ -141,7 +141,7 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                 <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Proposed_Product_Name || '-'}>
                                     {line.Proposed_Product__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/products/${line.Proposed_Product__c}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/products/${line.Proposed_Product__c}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                 {line.Proposed_Product_Name || 'View Product'}
                                             </Link>
                                         ) : (
@@ -151,7 +151,7 @@ export default function POSupplierBillLinesTable({ lines }: POSupplierBillLinesT
                                 </Td>
                                 <Td className="px-4 py-3 text-sm text-gray-900 dark:text-white truncate" title={line.Product_Name || '-'}>
                                     {line.Product_Name__c ? (
-                                        <Link href={`/products/${line.Product_Name__c}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/products/${line.Product_Name__c}`} className="text-primary hover:underline font-semibold">
                                             {line.Product_Name}
                                         </Link>
                                     ) : displayCell(line.Product_Name)}

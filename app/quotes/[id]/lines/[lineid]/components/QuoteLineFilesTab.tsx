@@ -191,7 +191,7 @@ export default function QuoteLineFilesTab({ lineId, accountId, contactId, files,
                                         <div className="flex items-center gap-3 min-w-0">
                                             {getFileIcon(file.fileType)}
                                             <span
-                                                className="font-medium text-gray-900 dark:text-white  cursor-pointer hover:text-primary hover:underline"
+                                                className="font-semibold text-gray-900 dark:text-white  cursor-pointer hover:text-primary hover:underline"
                                                 title={file.fileName}
                                                 onClick={() => handlePreview(file)}
                                             >

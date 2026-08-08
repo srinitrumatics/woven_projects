@@ -138,7 +138,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                 <Td className="truncate" title={line.customerQuoteLine}>
                                     {line.customerQuoteLineId && line.customerQuoteId ? (
                                         !isManufacturer ? (
-                                            <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {line.customerQuoteLine || 'View Quote Line'}
                                             </Link>
                                         ) : (
@@ -151,7 +151,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                 <Td className="truncate" title={line.proposedProduct}>
                                     {line.proposedProductId ? (
                                         !isManufacturer ? (
-                                            <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {line.proposedProduct || 'View Product'}
                                             </Link>
                                         ) : (
@@ -163,7 +163,7 @@ export default function POLinesTable({ lines, poId }: POLinesTableProps) {
                                 </Td>
                                 <Td className="truncate" title={line.productName}>
                                     {line.productId ? (
-                                        <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {line.productName}
                                         </Link>
                                     ) : (

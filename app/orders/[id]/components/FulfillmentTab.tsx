@@ -334,7 +334,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                         <Tr key={prop.Id} className="group transition-colors">
                                             <Td className={`${tdBoldClass} ${stickyTdClass}`}>
                                                 {canLinkProposals && prop.Id ? (
-                                                    <Link href={`/proposals/${prop.Id}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/proposals/${prop.Id}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {prop.Proposal_Number__c || "—"}
                                                     </Link>
                                                 ) : (prop.Proposal_Number__c || "—")}
@@ -409,7 +409,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                         <Tr key={cq.Id} className="group transition-colors">
                                             <Td className={`${tdBoldClass} ${stickyTdClass}`}>
                                                 {canLinkQuotes && cq.Id ? (
-                                                    <Link href={`/quotes/${cq.Id}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/quotes/${cq.Id}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {cq.Name || "—"}
                                                     </Link>
                                                 ) : (cq.Name || "—")}
@@ -417,7 +417,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                             <Td><StatusBadge status={cq.Status__c || "—"} variant="compact" /></Td>
                                             <Td title={displayCell(cq.Proposal_Number__c)} className={tdClass}>
                                                 {canLinkProposals && cq.Proposal__c ? (
-                                                    <Link href={`/proposals/${cq.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/proposals/${cq.Proposal__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {cq.Proposal_Number__c || "—"}
                                                     </Link>
                                                 ) : (cq.Proposal_Number__c || "—")}
@@ -494,14 +494,14 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                             <Td><StatusBadge status={so.Status__c || "—"} variant="compact" /></Td>
                                             <Td className={tdClass}>
                                                 {canLinkQuotes && so.Customer_Quote__c ? (
-                                                    <Link href={`/quotes/${so.Customer_Quote__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/quotes/${so.Customer_Quote__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {so.Customer_Quote_Name || "—"}
                                                     </Link>
                                                 ) : (so.Customer_Quote_Name || "—")}
                                             </Td>
                                             <Td title={displayCell(so.Proposal_Number__c)} className={tdClass}>
                                                 {canLinkProposals && so.Proposal__c ? (
-                                                    <Link href={`/proposals/${so.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/proposals/${so.Proposal__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {so.Proposal_Number__c || "—"}
                                                     </Link>
                                                 ) : (so.Proposal_Number__c || "—")}
@@ -582,7 +582,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                                 <Td className={`${tdBoldClass} ${stickyTdClass}`}>
 
                                                     {canLinkShipments && sm.Id ? (
-                                                        <Link href={`/shipments/${sm.Id}`} className="text-primary hover:underline" onClick={(e) => e.stopPropagation()} target="_blank">
+                                                        <Link href={`/shipments/${sm.Id}`} className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()} target="_blank">
                                                             {sm.Name || "—"}
                                                         </Link>
                                                     ) : (sm.Name || "—")}
@@ -591,14 +591,14 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                                 <Td className={tdClass}>{displayCell(sm.Sales_Order_Name)}</Td>
                                                 <Td className={tdClass}>
                                                     {canLinkQuotes && sm.Customer_Quote__c ? (
-                                                        <Link href={`/quotes/${sm.Customer_Quote__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/quotes/${sm.Customer_Quote__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                             {sm.Customer_Quote_Name || "—"}
                                                         </Link>
                                                     ) : (sm.Customer_Quote_Name || "—")}
                                                 </Td>
                                                 <Td title={displayCell(sm.Proposal_Number__c)} className={tdClass}>
                                                     {canLinkProposals && sm.Proposal__c ? (
-                                                        <Link href={`/proposals/${sm.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/proposals/${sm.Proposal__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                             {sm.Proposal_Number__c || "—"}
                                                         </Link>
                                                     ) : (sm.Proposal_Number__c || "—")}
@@ -678,7 +678,7 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                             <Tr key={inv.Id} className="group transition-colors">
                                                 <Td className={`${tdBoldClass} ${stickyTdClass}`}>
                                                     {canLinkInvoices && inv.Id ? (
-                                                        <Link href={`/invoices/${inv.Id}`} target="_blank" className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/invoices/${inv.Id}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                                             {inv.Name || "—"}
                                                         </Link>
                                                     ) : (inv.Name || "—")}
@@ -688,14 +688,14 @@ export default function FulfillmentTab({ orderId, accountId, contactId, onCountC
                                                 <Td className={tdClass}>{displayCell(inv.Purchase_Order_Name)}</Td>
                                                 <Td className={tdClass}>
                                                     {canLinkQuotes && inv.Customer_Quote__c ? (
-                                                        <Link href={`/quotes/${inv.Customer_Quote__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/quotes/${inv.Customer_Quote__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                             {inv.Customer_Quote_Name || "—"}
                                                         </Link>
                                                     ) : (inv.Customer_Quote_Name || "—")}
                                                 </Td>
                                                 <Td title={displayCell(inv.Proposal_Number__c)} className={tdClass}>
                                                     {canLinkProposals && inv.Proposal__c ? (
-                                                        <Link href={`/proposals/${inv.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/proposals/${inv.Proposal__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                             {inv.Proposal_Number__c || "—"}
                                                         </Link>
                                                     ) : (inv.Proposal_Number__c || "—")}

@@ -167,11 +167,11 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                                     <Td className="truncate">{displayCell(item.salesOrderLine)}</Td>
                                     <Td className="truncate">
                                         {item.customerQuoteId && item.customerQuoteLineId ? (
-                                            <Link href={`/quotes/${item.customerQuoteId}/lines/${item.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                            <Link href={`/quotes/${item.customerQuoteId}/lines/${item.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                                 {displayCell(item.customerQuoteLine)}
                                             </Link>
                                         ) : item.customerQuoteId ? (
-                                            <Link href={`/quotes/${item.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                            <Link href={`/quotes/${item.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                                 {displayCell(item.customerQuoteLine)}
                                             </Link>
                                         ) : (
@@ -180,7 +180,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                                     </Td>
                                     <Td className="truncate">
                                         {item.proposedProductId ? (
-                                            <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                            <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                                 {displayCell(item.proposedProduct)}
                                             </Link>
                                         ) : (
@@ -189,7 +189,7 @@ export default function InvoiceLineCreditMemoTab({ lineId, accountId, contactId 
                                     </Td>
                                     <Td className="truncate" title={item.productName}>
                                         {item.productId ? (
-                                            <Link href={`/products/${item.productId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                            <Link href={`/products/${item.productId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                                 {displayCell(item.productName)}
                                             </Link>
                                         ) : (

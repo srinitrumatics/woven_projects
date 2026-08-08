@@ -114,7 +114,7 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
                                 </Td>
                                 <Td className="truncate" title={s.Product_Name || '-'}>
                                     {(s.Product_Name__c || s.Product__c) ? (
-                                        <Link href={`/products/${s.Product_Name__c || s.Product__c}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                        <Link href={`/products/${s.Product_Name__c || s.Product__c}`} className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                             {s.Product_Name}
                                         </Link>
                                     ) : (
@@ -129,7 +129,7 @@ export default function POSerialNumbersTable({ serialNumbers }: POSerialNumbersT
                                 </Td>
                                 <Td className="truncate" title={s.Purchase_Order_Name || '-'}>
                                     {s.Purchase_Order__c ? (
-                                        <Link href={`/purchase-orders/${s.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                        <Link href={`/purchase-orders/${s.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                             {s.Purchase_Order_Name || 'View PO'}
                                         </Link>
                                     ) : (

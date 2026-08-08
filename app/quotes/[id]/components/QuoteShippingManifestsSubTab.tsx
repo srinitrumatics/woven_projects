@@ -94,7 +94,7 @@ export default function QuoteShippingManifestsSubTab({
                                     {paginatedManifests.map((manifest) => (
                                         <Tr key={manifest.id}>
                                             <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.manifestNumber }} title={manifest.manifestNumber}>
-                                                <Link href={`/shipments/${manifest.id}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                <Link href={`/shipments/${manifest.id}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                     {manifest.manifestNumber}
                                                 </Link>
                                             </Td>
@@ -107,7 +107,7 @@ export default function QuoteShippingManifestsSubTab({
                                             <Td className="truncate" style={{ width: widths.customerQuote }}>
                                                 {manifest.customerQuoteId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/quotes/${manifest.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/quotes/${manifest.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {manifest.customerQuote}
                                                         </Link>
                                                     ) : displayCell(manifest.customerQuote)
@@ -116,7 +116,7 @@ export default function QuoteShippingManifestsSubTab({
                                             <Td className="truncate" style={{ width: widths.proposalNumber }}>
                                                 {manifest.proposalId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/proposals/${manifest.proposalId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/proposals/${manifest.proposalId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {manifest.proposalNumber}
                                                         </Link>
                                                     ) : displayCell(manifest.proposalNumber)
@@ -128,7 +128,7 @@ export default function QuoteShippingManifestsSubTab({
                                             <Td className="truncate" style={{ width: widths.customerOrder }}>
                                                 {manifest.customerOrderId ? (
                                                     !isManufacturer && !isRestricted ? (
-                                                        <Link href={`/orders/${manifest.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/orders/${manifest.customerOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {manifest.customerOrder}
                                                         </Link>
                                                     ) : displayCell(manifest.customerOrder)

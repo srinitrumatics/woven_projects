@@ -93,7 +93,7 @@ export default function QuoteCreditMemoSubTab({
                                             <Td className="truncate" style={{ width: widths.invoice }}>
                                                 {memo.invoiceId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/invoices/${memo.invoiceId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/invoices/${memo.invoiceId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {memo.invoice}
                                                         </Link>
                                                     ) : displayCell(memo.invoice)
@@ -105,7 +105,7 @@ export default function QuoteCreditMemoSubTab({
                                             <Td className="truncate" style={{ width: widths.customerQuote }}>
                                                 {memo.customerQuoteId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/quotes/${memo.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/quotes/${memo.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {memo.customerQuote}
                                                         </Link>
                                                     ) : displayCell(memo.customerQuote)
@@ -114,7 +114,7 @@ export default function QuoteCreditMemoSubTab({
                                             <Td className="truncate" style={{ width: widths.proposalNumber }}>
                                                 {memo.proposalId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/proposals/${memo.proposalId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/proposals/${memo.proposalId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {memo.proposalNumber}
                                                         </Link>
                                                     ) : displayCell(memo.proposalNumber)
@@ -126,7 +126,7 @@ export default function QuoteCreditMemoSubTab({
                                             <Td className="truncate" style={{ width: widths.customerOrder }}>
                                                 {memo.customerOrderId ? (
                                                     !isManufacturer && !isRestricted ? (
-                                                        <Link href={`/orders/${memo.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/orders/${memo.customerOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {memo.customerOrder}
                                                         </Link>
                                                     ) : displayCell(memo.customerOrder)

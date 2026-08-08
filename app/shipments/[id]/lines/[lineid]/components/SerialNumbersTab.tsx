@@ -127,7 +127,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                             <Td className="truncate" title={log.productSerialNumber}>{displayCell(log.productSerialNumber)}</Td>
                             <Td className="truncate" title={log.productName}>
                                 {log.productId ? (
-                                    <Link href={`/products/${log.productId}`} className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                    <Link href={`/products/${log.productId}`} className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                         {log.productName}
                                     </Link>
                                 ) : (
@@ -138,7 +138,7 @@ export default function SerialNumbersTab({ accountId, contactId, lineId }: Seria
                             <Td className="truncate" title={log.brand}>{displayCell(log.brand)}</Td>
                             <Td className="dark:text-gray-400 truncate" title={log.shippingManifestName}>
                                 {log.shippingManifestId ? (
-                                    <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                    <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-semibold" target="_blank" onClick={(e) => e.stopPropagation()}>
                                         {log.shippingManifestName || "View Manifest"}
                                     </Link>
                                 ) : (

@@ -85,7 +85,7 @@ export default function QuoteSupplierBillsSubTab({
                             {paginatedBills.map((bill) => (
                                 <Tr key={bill.id}>
                                     <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.billNumber }}>
-                                        <Link href={`/supplier-bills/${bill.id}`} target="_blank" className="text-primary hover:underline font-medium">
+                                        <Link href={`/supplier-bills/${bill.id}`} target="_blank" className="text-primary hover:underline font-semibold">
                                             {bill.billNumber}
                                         </Link>
                                     </Td>
@@ -95,7 +95,7 @@ export default function QuoteSupplierBillsSubTab({
                                     <Td className="truncate" style={{ width: widths.purchaseOrder }}>
                                         {bill.purchaseOrderId ? (
                                             !isManufacturer && !isRestricted ? (
-                                                <Link href={`/purchase-orders/${bill.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                <Link href={`/purchase-orders/${bill.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                     {bill.purchaseOrder}
                                                 </Link>
                                             ) : displayCell(bill.purchaseOrder)
@@ -103,14 +103,14 @@ export default function QuoteSupplierBillsSubTab({
                                     </Td>
                                     <Td className="truncate" style={{ width: widths.customerQuote }}>
                                         {bill.customerQuoteId ? (
-                                            <Link href={`/quotes/${bill.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/quotes/${bill.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                 {bill.customerQuote}
                                             </Link>
                                         ) : displayCell(bill.customerQuote)}
                                     </Td>
                                     <Td className="truncate" style={{ width: widths.customerOrder }}>
                                         {bill.customerOrderId ? (
-                                            <Link href={`/orders/${bill.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/orders/${bill.customerOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                 {bill.customerOrder}
                                             </Link>
                                         ) : displayCell(bill.customerOrder)}

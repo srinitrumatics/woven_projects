@@ -294,14 +294,14 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                             <Td className={tdClass}>{displayCell(rma.Sales_Order_Name)}</Td>
                                             <Td className={tdClass}>
                                                 {canLinkQuotes && rma.Customer_Quote__c ? (
-                                                    <Link href={`/quotes/${rma.Customer_Quote__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/quotes/${rma.Customer_Quote__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {rma.Customer_Quote_Name || "—"}
                                                     </Link>
                                                 ) : (rma.Customer_Quote_Name || "—")}
                                             </Td>
                                             <Td className={tdClass}>
                                                 {canLinkProposals && rma.Proposal__c ? (
-                                                    <Link href={`/proposals/${rma.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} title={displayCell(rma.Proposal_Name)}>
+                                                    <Link href={`/proposals/${rma.Proposal__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} title={displayCell(rma.Proposal_Name)}>
                                                         {rma.Proposal_Number__c || "—"}
                                                     </Link>
                                                 ) : (rma.Proposal_Number__c || "—")}
@@ -375,14 +375,14 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                             <Td className={tdClass}>{displayCell(cm.Sales_Order_Name)}</Td>
                                             <Td className={tdClass}>
                                                 {canLinkQuotes && cm.Customer_Quote__c ? (
-                                                    <Link href={`/quotes/${cm.Customer_Quote__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/quotes/${cm.Customer_Quote__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {cm.Customer_Quote_Name || "—"}
                                                     </Link>
                                                 ) : (cm.Customer_Quote_Name || "—")}
                                             </Td>
                                             <Td className={tdClass}>
                                                 {canLinkProposals && cm.Proposal__c ? (
-                                                    <Link href={`/proposals/${cm.Proposal__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/proposals/${cm.Proposal__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {cm.Proposal_Number__c || "—"}
                                                     </Link>
                                                 ) : (cm.Proposal_Number__c || "—")}
@@ -444,7 +444,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                             <Td className={tdClass}>{displayCell(dm.Debit_to_Account_Name)}</Td>
                                             <Td className={tdClass}>
                                                 {canLinkOrders && dm.Customer_Order_Id__c ? (
-                                                    <Link href={`/orders/${dm.Customer_Order_Id__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/orders/${dm.Customer_Order_Id__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {dm.Customer_Order_Name || "—"}
                                                     </Link>
                                                 ) : (dm.Customer_Order_Name || "—")}
@@ -502,7 +502,7 @@ export default function ReturnsTab({ orderId, accountId, contactId, onCountChang
                                             <Td className={tdClass}>{displayCell(rtv.Supplier_RMA_Number__c)}</Td>
                                             <Td className={tdClass}>
                                                 {canLinkOrders && rtv.Customer_Order_Id__c ? (
-                                                    <Link href={`/orders/${rtv.Customer_Order_Id__c}`} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/orders/${rtv.Customer_Order_Id__c}`} className="text-primary hover:underline font-semibold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                         {rtv.Customer_Order_Name || "—"}
                                                     </Link>
                                                 ) : (rtv.Customer_Order_Name || "—")}

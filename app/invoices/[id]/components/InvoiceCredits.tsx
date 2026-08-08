@@ -96,7 +96,7 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                 </Td>
                                 <Td className="text-gray-900 dark:text-gray-400 truncate">
                                     {cm.customerQuoteId && cm.customerQuoteId !== 'N/A' && cm.customerQuoteId !== '' ? (
-                                        <Link href={`/quotes/${cm.customerQuoteId}`} target='_blank' className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                        <Link href={`/quotes/${cm.customerQuoteId}`} target='_blank' className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                             {cm.customerQuoteName && cm.customerQuoteName !== 'N/A' ? cm.customerQuoteName : cm.customerQuoteId}
                                         </Link>
                                     ) : (
@@ -105,7 +105,7 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                 </Td>
                                 <Td className="text-gray-900 dark:text-gray-400 truncate">
                                     {cm.proposalId ? (
-                                        <Link href={`/proposals/${cm.proposalId}`} target='_blank' className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                        <Link href={`/proposals/${cm.proposalId}`} target='_blank' className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                             {displayCell(cm.proposalNumber)}
                                         </Link>
                                     ) : (
@@ -117,7 +117,7 @@ export default function InvoiceCredits({ credits }: InvoiceCreditsProps) {
                                 </Td>
                                 <Td className="text-gray-900 dark:text-gray-400 truncate">
                                     {cm.customerOrderId && cm.customerOrderId !== 'N/A' && cm.customerOrderId !== '' ? (
-                                        <Link href={`/orders/${cm.customerOrderId}`} target='_blank' className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                        <Link href={`/orders/${cm.customerOrderId}`} target='_blank' className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                             {cm.customerOrderName && cm.customerOrderName !== 'N/A' ? cm.customerOrderName : cm.customerOrderId}
                                         </Link>
                                     ) : (

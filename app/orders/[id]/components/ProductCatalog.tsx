@@ -174,7 +174,7 @@ export default function ProductCatalog({
                                         <Td className="px-3 py-2 text-left truncate">
                                             <div className="text-sm font-medium text-gray-900 dark:text-white truncate" title={product.name}>
                                                 <Link href={`/products/${product.id}`}
-                                                    className="text-gray-900 hover:text-primary dark:text-gray-600 dark:hover:text-primary transition-colors p-1"
+                                                    className="text-gray-900 hover:text-primary dark:text-gray-600 dark:hover:text-primary transition-colors p-1 font-semibold"
                                                     title="Product Details" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                                                     {truncateText(product.name, 50)}
                                                 </Link>

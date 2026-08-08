@@ -81,7 +81,7 @@ export default function QuoteLinesTab({
                                 <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 text-left truncate" style={{ width: widths.Name }}>
                                     <Link
                                         href={`/quotes/${quoteId}/lines/${line.id}`}
-                                        className="text-primary font-medium hover:underline"
+                                        className="text-primary font-semibold hover:underline"
                                         title={line.Name}
                                     >
                                         {line.Name}
@@ -92,14 +92,14 @@ export default function QuoteLinesTab({
                                 </Td>
                                 <Td className="min-w-[160px] truncate" style={{ width: widths.proposedProductName }} title={line.proposedProductName}>
                                     {line.proposedProductId ? (
-                                        <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                        <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                             {line.proposedProductName}
                                         </Link>
                                     ) : displayCell(line.proposedProductName)}
                                 </Td>
                                 <Td className="min-w-[160px] truncate" style={{ width: widths.productName }} title={line.productName}>
                                     {line.productId ? (
-                                        <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                        <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                             {line.productName}
                                         </Link>
                                     ) : displayCell(line.productName)}

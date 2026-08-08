@@ -227,7 +227,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 <Td className="font-bold text-primary dark:text-primary-light sticky left-0 bg-white dark:bg-gray-800 z-10 truncate" style={{ width: widths.name }}>
                                     <Link
                                         href={`/shipments/${shipmentId}/lines/${line.id}`}
-                                        className="text-primary font-medium hover:underline truncate"
+                                        className="text-primary font-semibold hover:underline truncate"
                                         title={line.name}>{line.name}</Link>
                                 </Td>
                                 <TextCell v={<StatusBadge status={line.status || "N/A"} variant="pill" />} w={widths.status} title={line.status} />
@@ -237,7 +237,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 />
                                 <TextCell
                                     v={line.customerQuoteId && line.customerQuoteLineId ? (
-                                        <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                        <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                             {line.customerQuoteLineName}
                                         </Link>
                                     ) : (
@@ -247,7 +247,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 />
                                 <TextCell
                                     v={line.proposedProductId ? (
-                                        <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                        <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                             {line.proposedProduct}
                                         </Link>
                                     ) : (
@@ -257,7 +257,7 @@ export default function ShipmentLinesTab({ shipmentId, accountId, contactId }: S
                                 />
                                 <TextCell
                                     v={line.productId ? (
-                                        <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                        <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                             {line.productName}
                                         </Link>
                                     ) : (

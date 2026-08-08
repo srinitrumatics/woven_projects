@@ -106,7 +106,7 @@ export default function QuoteRMASubTab({
                                             <Td className="truncate" style={{ width: widths.customerQuote }} title={rma.customerQuote}>
                                                 {rma.customerQuoteId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/quotes/${rma.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/quotes/${rma.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {rma.customerQuote}
                                                         </Link>
                                                     ) : displayCell(rma.customerQuote)
@@ -115,7 +115,7 @@ export default function QuoteRMASubTab({
                                             <Td className="truncate" style={{ width: widths.proposalNumber }} title={rma.proposalNumber}>
                                                 {rma.proposalId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/proposals/${rma.proposalId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/proposals/${rma.proposalId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {rma.proposalNumber}
                                                         </Link>
                                                     ) : displayCell(rma.proposalNumber)
@@ -127,7 +127,7 @@ export default function QuoteRMASubTab({
                                             <Td className="truncate" style={{ width: widths.customerOrder }} title={rma.customerOrder}>
                                                 {rma.customerOrderId ? (
                                                     !isManufacturer && !isRestricted ? (
-                                                        <Link href={`/orders/${rma.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/orders/${rma.customerOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {rma.customerOrder}
                                                         </Link>
                                                     ) : displayCell(rma.customerOrder)

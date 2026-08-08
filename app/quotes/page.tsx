@@ -521,7 +521,7 @@ export default function QuotesPage() {
                               href={`/proposals/${quote.proposalId}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-sm font-medium text-primary hover:underline"
+                              className="text-sm font-semibold text-primary hover:underline"
                               title={quote.proposalNumber}
                               onClick={(e) => e.stopPropagation()}
                             >
@@ -544,7 +544,7 @@ export default function QuotesPage() {
                               href={`/orders/${quote.customerOrderId}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-sm font-medium text-primary hover:underline"
+                              className="text-sm font-semibold text-primary hover:underline"
                               title={quote.customerOrder}
                               onClick={(e) => e.stopPropagation()}
                             >

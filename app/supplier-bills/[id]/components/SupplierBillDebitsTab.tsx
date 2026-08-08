@@ -96,7 +96,7 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
                                 </Td>
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.purchaseOrderName || '-'}>
                                     {debit.purchaseOrderId ? (
-                                        <Link href={`/purchase-orders/${debit.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/purchase-orders/${debit.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {displayCell(debit.purchaseOrderName)}
                                         </Link>
                                     ) : displayCell(debit.purchaseOrderName)}
@@ -104,7 +104,7 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.customerQuoteName || '-'}>
                                     {debit.customerQuoteId ? (
                                         !isManufacturer ? (
-                                            <Link href={`/quotes/${debit.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/quotes/${debit.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {displayCell(debit.customerQuoteName)}
                                             </Link>
                                         ) : (
@@ -115,7 +115,7 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.proposalNumber || debit.proposalName || '-'}>
                                     {debit.proposalId ? (
                                         !isManufacturer ? (
-                                            <Link href={`/proposals/${debit.proposalId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/proposals/${debit.proposalId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {displayCell(debit.proposalNumber || debit.proposalName)}
                                             </Link>
                                         ) : (
@@ -127,7 +127,7 @@ export default function SupplierBillDebitsTab({ debitMemos }: SupplierBillDebits
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={debit.customerOrderName || '-'}>
                                     {debit.customerOrderId ? (
                                         !isManufacturer ? (
-                                            <Link href={`/orders/${debit.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/orders/${debit.customerOrderId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {displayCell(debit.customerOrderName)}
                                             </Link>
                                         ) : (

@@ -107,7 +107,7 @@ export default function QuoteLineShippingManifestLinesSubTab({
                                     <Tr key={item.id} className="border-b border-gray-200 dark:border-gray-700">
                                         <Td className="sticky left-0 bg-white dark:bg-gray-800 font-bold truncate" style={{ width: widths.lineName }}>
                                             {item.manifestId ? (
-                                                <Link href={`/shipments/${item.manifestId}/lines/${item.id}`} target="_blank" className="text-primary hover:underline font-bold">
+                                                <Link href={`/shipments/${item.manifestId}/lines/${item.id}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                     {item.lineName}
                                                 </Link>
                                             ) : displayCell(item.lineName)}
@@ -117,7 +117,7 @@ export default function QuoteLineShippingManifestLinesSubTab({
                                         </Td>
                                         <Td className="truncate" style={{ width: widths.manifestName }}>
                                             {item.manifestId ? (
-                                                <Link href={`/shipments/${item.manifestId}`} target="_blank" className="text-primary hover:underline font-bold">
+                                                <Link href={`/shipments/${item.manifestId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                     {item.manifestName}
                                                 </Link>
                                             ) : displayCell(item.manifestName)}
@@ -128,14 +128,14 @@ export default function QuoteLineShippingManifestLinesSubTab({
                                         </Td>
                                         <Td className="truncate" style={{ width: widths.customerQuoteLine }}>
                                             {item.customerQuoteLineId ? (
-                                                <Link href={`/quotes/${quoteId}/lines/${item.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                <Link href={`/quotes/${quoteId}/lines/${item.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                     {item.customerQuoteLine}
                                                 </Link>
                                             ) : displayCell(item.customerQuoteLine)}
                                         </Td>
                                         <Td className="truncate" style={{ width: widths.proposedProductName }}>
                                             {item.proposedProductId ? (
-                                                <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                <Link href={`/proposals/${item.proposalId}/lines/${item.proposedProductId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                     {item.proposedProductName}
                                                 </Link>
                                             ) : displayCell(item.proposedProductName)}

@@ -104,7 +104,7 @@ export default function QuoteLinePurchaseOrderLinesSubTab({
                                     </Td>
                                     <Td className="truncate" style={{ width: widths.purchaseOrder }}>
                                         {item.purchaseOrderId ? (
-                                            <Link href={`/purchase-orders/${item.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/purchase-orders/${item.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                 {item.purchaseOrder}
                                             </Link>
                                         ) : displayCell(item.purchaseOrder)}

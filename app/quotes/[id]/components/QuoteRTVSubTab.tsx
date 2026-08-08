@@ -92,7 +92,7 @@ export default function QuoteRTVSubTab({
                                             <Td className="text-left truncate" style={{ width: widths.purchaseOrder }}>
                                                 {rtv.purchaseOrderId ? (
                                                     !isManufacturer && !isRestricted ? (
-                                                        <Link href={`/purchase-orders/${rtv.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/purchase-orders/${rtv.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {rtv.purchaseOrder}
                                                         </Link>
                                                     ) : displayCell(rtv.purchaseOrder)
@@ -101,7 +101,7 @@ export default function QuoteRTVSubTab({
                                             <Td className="text-left truncate" style={{ width: widths.customerQuote }}>
                                                 {rtv.customerQuoteId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/quotes/${rtv.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/quotes/${rtv.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {rtv.customerQuote}
                                                         </Link>
                                                     ) : displayCell(rtv.customerQuote)
@@ -110,7 +110,7 @@ export default function QuoteRTVSubTab({
                                             <Td className="text-left truncate" style={{ width: widths.customerOrder }}>
                                                 {rtv.customerOrderId ? (
                                                     !isManufacturer && !isRestricted ? (
-                                                        <Link href={`/orders/${rtv.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/orders/${rtv.customerOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {rtv.customerOrder}
                                                         </Link>
                                                     ) : displayCell(rtv.customerOrder)

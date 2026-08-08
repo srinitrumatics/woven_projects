@@ -81,7 +81,7 @@ export default function ProductsTab({
                         {paginatedProducts.map((product) => (
                             <Tr key={product.id} className="group transition-colors">
                                 <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10  truncate" style={{ width: widths.Name }}>
-                                    <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary rounded font-bold hover:underline truncate" title={product.Name}>
+                                    <Link href={`/proposals/${proposalId}/lines/${product.id}`} className="text-primary rounded font-semibold hover:underline truncate" title={product.Name}>
                                         {product.Name}
                                     </Link>
                                 </Td>
@@ -92,7 +92,7 @@ export default function ProductsTab({
                                 </Td>
                                 <Td className="text-left truncate" style={{ width: widths.productName }} title={product.productName || ''}>
                                     {product.productId ? (
-                                        <Link href={`/products/${product.productId}`} target="_blank" className="text-primary hover:underline truncate">
+                                        <Link href={`/products/${product.productId}`} target="_blank" className="text-primary hover:underline truncate font-semibold">
                                             {product.productName}
                                         </Link>
                                     ) : displayCell(product.productName)}

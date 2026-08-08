@@ -87,7 +87,7 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                             <Tr key={line.id} className="transition-colors">
                                 <Td className="font-bold text-left sticky left-0 bg-white dark:bg-gray-800 truncate">
                                     {invoiceId ? (
-                                        <Link href={`/invoices/${invoiceId}/lines/${line.id}`} className="text-primary hover:underline truncate block" title={line.invoiceLineName}>
+                                        <Link href={`/invoices/${invoiceId}/lines/${line.id}`} className="text-primary hover:underline truncate block font-semibold" title={line.invoiceLineName}>
                                             {line.invoiceLineName}
                                         </Link>
                                     ) : (
@@ -99,7 +99,7 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                                 </Td>
                                 <Td className="text-left truncate">
                                     {invoiceId ? (
-                                        <Link href={`/invoices/${invoiceId}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/invoices/${invoiceId}`} className="text-primary hover:underline font-semibold">
                                             {displayCell(invoiceNumber)}
                                         </Link>
                                     ) : (
@@ -114,11 +114,11 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                                 </Td>
                                 <Td className="text-left truncate">
                                     {line.customerQuoteId && line.customerQuoteLineId ? (
-                                        <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                        <Link href={`/quotes/${line.customerQuoteId}/lines/${line.customerQuoteLineId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                             {displayCell(line.customerQuoteLineName)}
                                         </Link>
                                     ) : line.customerQuoteId ? (
-                                        <Link href={`/quotes/${line.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                        <Link href={`/quotes/${line.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                             {displayCell(line.customerQuoteLineName)}
                                         </Link>
                                     ) : (
@@ -127,7 +127,7 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                                 </Td>
                                 <Td className="text-left truncate">
                                     {line.proposedProductId ? (
-                                        <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                        <Link href={`/proposals/${line.proposalId}/lines/${line.proposedProductId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                             {displayCell(line.proposedProduct)}
                                         </Link>
                                     ) : (
@@ -137,7 +137,7 @@ export default function InvoiceLineItems({ lines, invoiceId, invoiceNumber }: In
                                 <Td className="font-medium text-left truncate">
                                     <div className="truncate">
                                         {line.productId ? (
-                                            <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-medium" title={line.productName} onClick={(e) => e.stopPropagation()}>
+                                            <Link href={`/products/${line.productId}`} target="_blank" className="text-primary hover:underline font-semibold" title={line.productName} onClick={(e) => e.stopPropagation()}>
                                                 {displayCell(line.productName)}
                                             </Link>
                                         ) : (

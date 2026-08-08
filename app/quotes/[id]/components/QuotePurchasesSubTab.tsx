@@ -94,7 +94,7 @@ export default function QuotePurchasesSubTab({
                             {paginatedPurchases.map((po) => (
                                 <Tr key={po.id}>
                                     <Td className="font-medium sticky left-0 bg-white dark:bg-gray-800 truncate" style={{ width: widths.purchaseOrderNumber }}>
-                                        <Link href={`/purchase-orders/${po.id}`} target="_blank" className="text-primary hover:underline font-bold">
+                                        <Link href={`/purchase-orders/${po.id}`} target="_blank" className="text-primary hover:underline font-semibold">
                                             {po.purchaseOrderNumber}
                                         </Link>
                                     </Td>
@@ -103,14 +103,14 @@ export default function QuotePurchasesSubTab({
                                     </Td>
                                     <Td className="truncate" style={{ width: widths.customerQuote }}>
                                         {po.customerQuoteId ? (
-                                            <Link href={`/quotes/${po.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/quotes/${po.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                 {po.customerQuote}
                                             </Link>
                                         ) : displayCell(po.customerQuote)}
                                     </Td>
                                     <Td className="truncate" style={{ width: widths.customerOrder }}>
                                         {po.customerOrderId ? (
-                                            <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                            <Link href={`/orders/${po.customerOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                 {po.customerOrder}
                                             </Link>
                                         ) : displayCell(po.customerOrder)}

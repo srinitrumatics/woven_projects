@@ -151,7 +151,7 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                             <Tr key={b.Id} className="transition-colors group">
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white font-medium sticky left-0 bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50 transition-colors z-10 truncate" title={b.Name}>
                                     {b.Id ? (
-                                        <Link href={`/supplier-bills/${b.Id}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/supplier-bills/${b.Id}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {b.Name || 'View suppiler bill'}
                                         </Link>
                                     ) : b.Name || '-'}
@@ -162,7 +162,7 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                 </Td>
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Purchase_Order_Name || '-'}>
                                     {b.Purchase_Order__c ? (
-                                        <Link href={`/purchase-orders/${b.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                        <Link href={`/purchase-orders/${b.Purchase_Order__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                             {b.Purchase_Order_Name || 'View PO'}
                                         </Link>
                                     ) : displayCell(b.Purchase_Order_Name)}
@@ -170,7 +170,7 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Quote_Name || '-'}>
                                     {b.Customer_Quote__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/quotes/${b.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/quotes/${b.Customer_Quote__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {b.Customer_Quote_Name || 'View Quote'}
                                             </Link>
                                         ) : (
@@ -181,7 +181,7 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Proposal_Number__c || b.Proposal_Name || '-'}>
                                     {b.Proposal__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/proposals/${b.Proposal__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/proposals/${b.Proposal__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {b.Proposal_Number__c || b.Proposal_Name || 'View Proposal'}
                                             </Link>
                                         ) : (
@@ -193,7 +193,7 @@ export default function POSupplierBillsTable({ bills }: POSupplierBillsTableProp
                                 <Td className="px-3 py-2 text-sm text-gray-900 dark:text-white truncate" title={b.Customer_Order_Name || '-'}>
                                     {b.Customer_Order__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/orders/${b.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                                            <Link href={`/orders/${b.Customer_Order__c}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                                                 {b.Customer_Order_Name || 'View Order'}
                                             </Link>
                                         ) : (

@@ -93,7 +93,7 @@ export default function QuoteDebitMemoSubTab({
                                             <Td className="truncate" style={{ width: widths.supplierBill }}>
                                                 {memo.supplierBillId ? (
                                                     !isManufacturer && !isRestricted ? (
-                                                        <Link href={`/supplier-bills/${memo.supplierBillId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/supplier-bills/${memo.supplierBillId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {memo.supplierBill}
                                                         </Link>
                                                     ) : displayCell(memo.supplierBill)
@@ -102,7 +102,7 @@ export default function QuoteDebitMemoSubTab({
                                             <Td className="truncate" style={{ width: widths.purchaseOrder }}>
                                                 {memo.purchaseOrderId ? (
                                                     !isManufacturer && !isRestricted ? (
-                                                        <Link href={`/purchase-orders/${memo.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/purchase-orders/${memo.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {memo.purchaseOrder}
                                                         </Link>
                                                     ) : displayCell(memo.purchaseOrder)
@@ -111,7 +111,7 @@ export default function QuoteDebitMemoSubTab({
                                             <Td className="truncate" style={{ width: widths.customerQuote }}>
                                                 {memo.customerQuoteId ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/quotes/${memo.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/quotes/${memo.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {memo.customerQuote}
                                                         </Link>
                                                     ) : displayCell(memo.customerQuote)
@@ -120,7 +120,7 @@ export default function QuoteDebitMemoSubTab({
                                             <Td className="truncate" style={{ width: widths.customerOrder }}>
                                                 {memo.customerOrderId ? (
                                                     !isManufacturer && !isRestricted ? (
-                                                        <Link href={`/orders/${memo.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium">
+                                                        <Link href={`/orders/${memo.customerOrderId}`} target="_blank" className="text-primary hover:underline font-semibold">
                                                             {memo.customerOrder}
                                                         </Link>
                                                     ) : displayCell(memo.customerOrder)

@@ -156,7 +156,7 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                                 <TextCell v={displayCell(log.productSerialNumber)} w={widths.productSerialNumber} />
                                 <TextCell
                                     v={log.productId ? (
-                                        <Link href={`/products/${log.productId}`} className="text-primary hover:underline font-medium">
+                                        <Link href={`/products/${log.productId}`} className="text-primary hover:underline font-semibold">
                                             {log.productName}
                                         </Link>
                                     ) : (
@@ -168,7 +168,7 @@ export default function SerialNumbersTab({ shipmentId, accountId, contactId, onC
                                 <TextCell v={displayCell(log.brand)} w={widths.brand} />
                                 <TextCell
                                     v={log.shippingManifestId ? (
-                                        <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-medium" target="_blank" onClick={(e) => e.stopPropagation()}>
+                                        <Link href={`/shipments/${log.shippingManifestId}`} className="text-primary hover:underline font-semibold" target="_blank" onClick={(e) => e.stopPropagation()}>
                                             {log.shippingManifest || "View Manifest"}
                                         </Link>
                                     ) : (

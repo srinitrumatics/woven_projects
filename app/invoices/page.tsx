@@ -546,7 +546,7 @@ export default function InvoicesPage() {
                               <Link
                                 href={`/quotes/${invoice.customerQuoteId}`}
                                 target="_blank"
-                                className="text-primary hover:underline font-medium"
+                                className="text-primary hover:underline font-semibold"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >
                                 {invoice.customerQuoteName || 'N/A'}
@@ -562,7 +562,7 @@ export default function InvoicesPage() {
                               <Link
                                 href={`/proposals/${invoice.proposalId}`}
                                 target="_blank"
-                                className="text-primary hover:underline font-medium"
+                                className="text-primary hover:underline font-semibold"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >
                                 {invoice.proposalNumber || 'N/A'}
@@ -581,7 +581,7 @@ export default function InvoicesPage() {
                               <Link
                                 href={`/orders/${invoice.customerOrderId}`}
                                 target="_blank"
-                                className="text-primary hover:underline font-medium"
+                                className="text-primary hover:underline font-semibold"
                                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                               >
                                 {invoice.customerOrder || 'N/A'}

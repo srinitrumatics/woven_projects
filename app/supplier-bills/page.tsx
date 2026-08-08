@@ -316,7 +316,7 @@ export default function SupplierBillsPage() {
                                             <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.supplierName}>{displayCell(bill.supplierName)}</Td>
                                             <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.purchaseOrderName}>
                                                 {bill.purchaseOrderId && bill.purchaseOrderId !== 'N/A' && bill.purchaseOrderId !== '' ? (
-                                                    <Link href={`/purchase-orders/${bill.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                    <Link href={`/purchase-orders/${bill.purchaseOrderId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                                         {bill.purchaseOrderName || bill.purchaseOrderId}
                                                     </Link>
                                                 ) : (
@@ -326,7 +326,7 @@ export default function SupplierBillsPage() {
                                             <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerQuoteName}>
                                                 {bill.customerQuoteId && bill.customerQuoteId !== 'N/A' && bill.customerQuoteId !== '' ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/quotes/${bill.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/quotes/${bill.customerQuoteId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                                             {bill.customerQuoteName || bill.customerQuoteId}
                                                         </Link>
                                                     ) : (
@@ -339,7 +339,7 @@ export default function SupplierBillsPage() {
                                             <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.proposalNumber}>
                                                 {bill.proposalId && bill.proposalId !== 'N/A' && bill.proposalId !== '' ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/proposals/${bill.proposalId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/proposals/${bill.proposalId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                                             {bill.proposalNumber || bill.proposalId}
                                                         </Link>
                                                     ) : (
@@ -353,7 +353,7 @@ export default function SupplierBillsPage() {
                                             <Td className="px-2 py-2 text-sm text-gray-600 dark:text-gray-400 truncate" title={bill.customerOrderName}>
                                                 {bill.customerOrderId && bill.customerOrderId !== 'N/A' && bill.customerOrderId !== '' ? (
                                                     !isManufacturer ? (
-                                                        <Link href={`/orders/${bill.customerOrderId}`} target="_blank" className="text-primary hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={`/orders/${bill.customerOrderId}`} target="_blank" className="text-primary hover:underline font-semibold" onClick={(e) => e.stopPropagation()}>
                                                             {bill.customerOrderName || bill.customerOrderId}
                                                         </Link>
                                                     ) : (

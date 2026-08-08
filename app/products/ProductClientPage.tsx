@@ -696,8 +696,8 @@ function ListView({ canEditProduct, onEdit, onAddToOrder }: Omit<ViewProps, 'pro
                       </Link>
                     </Td>
                     <Td className="px-4 py-3 overflow-hidden" style={{ width: widths.name, minWidth: widths.name, maxWidth: widths.name }}>
-                      <Link href={`/products/${p.objectID || product.id}`} className="block" title={product.name}>
-                        <div className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate">{product.name}</div>
+                      <Link href={`/products/${p.objectID || product.id}`} className="block font-semibold" title={product.name}>
+                        <div className="text-sm text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate">{product.name}</div>
                         <div className="text-sm text-gray-500 dark:text-gray-400 font-mono truncate">{displayCell(product.sku)}</div>
                       </Link>
                     </Td>
