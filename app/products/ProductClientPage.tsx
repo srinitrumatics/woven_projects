@@ -592,13 +592,13 @@ const CardView = ({ products, canEditProduct, onEdit, onAddToOrder }: ViewProps)
                 )}
               </div>
               <div className="flex justify-between items-start gap-2 mb-2">
-                <h3 className="text-base font-bold text-gray-900 dark:text-white min-w-[200px] truncate group-hover:text-primary transition-colors " title={product.name}>
+                <h3 className="text-base font-bold text-gray-900 dark:text-white min-w-0 truncate group-hover:text-primary transition-colors " title={product.name}>
                   {product.name}
                 </h3>
 
               </div>
 
-              <p className="text-sm text-gray-600 dark:text-gray-400 min-w-[200px] truncate mb-3" title={product.description}>
+              <p className="text-sm text-gray-600 dark:text-gray-400 min-w-0 truncate mb-3" title={product.description}>
                 {product.description}
               </p>
 
