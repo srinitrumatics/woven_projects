@@ -390,7 +390,7 @@ export default function InventoryPage() {
                                         href="#"
                                         onClick={() => handleCardClick("All")}
                                         className="hover:underline block">
-                                        <span className="text-sm text-gray-500 dark:text-gray-400">Products</span>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">Products</span>
                                     </Link>
                                 </div>
                                 <p className="text-lg font-semibold text-primary mt-1">{formatCurrency(stats.totalValue)}</p>
@@ -431,7 +431,7 @@ export default function InventoryPage() {
                     <div className="p-4 flex flex-col h-full">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1" title="Average Days Aged">Average Days Aged</p>
+                                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1" title="Average Days Aged">Average Days Aged</p>
                                 <div className="flex items-baseline gap-2">
                                     <span className="text-3xl font-bold text-gray-900 dark:text-white ">{stats.avgDaysAged.toFixed(2)}</span>
                                     <span className="text-sm text-gray-500 dark:text-gray-400 ">Days</span>
@@ -471,7 +471,7 @@ export default function InventoryPage() {
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 min-w-0">
                                 <Link href="#" onClick={() => handleCardClick("Put-Away")} className="hover:underline block">
-                                    <p className="text-sm font-medium text-gray-400 dark:text-gray-400 mb-1" title="Put-Away">Put-Away</p>
+                                    <p className="text-xs font-medium text-gray-400 dark:text-gray-400 mb-1" title="Put-Away">Put-Away</p>
                                 </Link>
                                 <div className="flex items-baseline gap-2 group/count">
                                     <Link href="#" onClick={() => handleCardClick("Put-Away")} className="hover:underline block">
@@ -514,7 +514,7 @@ export default function InventoryPage() {
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 min-w-0">
                                 <Link href="#" onClick={() => handleCardClick("On Hold")} className="hover:underline block">
-                                    <p className="text-sm font-medium text-gray-400 dark:text-gray-400 mb-1" title="Products On Hold">Products On Hold</p>
+                                    <p className="text-xs font-medium text-gray-400 dark:text-gray-400 mb-1" title="Products On Hold">Products On Hold</p>
                                 </Link>
                                 <div className="flex items-baseline gap-2 group/count">
                                     <Link href="#" onClick={() => handleCardClick("On Hold")} className="hover:underline block">

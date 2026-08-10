@@ -700,6 +700,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
         quoteNumber={quote.quoteNumber}
         status={quote.status}
         description={quote.description || ''}
+        id={quote.id}
       />
 
       <QuoteDetailsSection

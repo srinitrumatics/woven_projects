@@ -47,7 +47,11 @@ export default function LineHeader({
                     Orders
                 </button>
                 <span>&gt;</span>
-                <span className="hover:text-gray-700 dark:text-gray-300 truncate">Order Line</span>
+                <span className="hover:text-gray-700 dark:text-gray-300 truncate">
+                    <Link href={`/orders/${id}`} className="px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400  truncate">
+                        Order Details
+                    </Link>
+                </span>
                 <span>&gt;</span>
                 <span className="text-gray-900 dark:text-white truncate max-w-[200px]" title={productSku || `Line #${lineId}`}>
                     {productSku || `Line #${lineId}`}

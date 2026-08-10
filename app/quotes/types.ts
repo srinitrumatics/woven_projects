@@ -397,6 +397,7 @@ export interface QuoteDetails extends Quote {
   shipToLocation?: string; // mapped from shipTo in Proposal
   dropShip?: boolean;
   site?: string;
+  id: string;
 }
 export interface QuoteFile {
   id: string;
