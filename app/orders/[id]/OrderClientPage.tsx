@@ -1807,7 +1807,7 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
               ]}
               activeKey={viewMode}
               onChange={(key) => setViewMode(key as typeof viewMode)}
-              className="no-scrollbar pb-0.5 flex-shrink-0 lg:w-auto"
+              className="pb-0.5 min-w-0 lg:w-auto"
             />
           </div>
 
