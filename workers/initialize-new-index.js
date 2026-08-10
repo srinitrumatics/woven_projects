@@ -23,17 +23,18 @@ async function initializeIndex() {
         'sku',
         'description',
         'category',
+        'sub_category',
+        'family',
         'manufacturer',
-        'product_availability'
+        'brand'
       ],
+      // Must match the flattened field names lib/product-sync-service.ts actually writes
+      // to Algolia records — not raw Salesforce field names — or filters silently match 0.
       attributesForFaceting: [
         'searchable(category)',
-        'searchable(product_availability)',
         'searchable(manufacturer)',
-        'searchable(Availability_Status__c)',
-        'status',
-        'is_active',
-        '_tags'
+        'product_availability',
+        'filterOnly(stock_quantity)'
       ],
       customRanking: [
         'desc(updated_at)',

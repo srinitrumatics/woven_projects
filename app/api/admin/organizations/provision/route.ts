@@ -91,10 +91,18 @@ export async function POST(request: Request) {
         created_at: Date.now()
       });
 
-      // Set basic default settings based on existing app configs
+      // Match the flattened field names product-sync-service.ts actually writes to Algolia
+      // records (category, manufacturer, product_availability, stock_quantity — not the raw
+      // gtherp__*__c Salesforce field names), so filtering/faceting works the moment products
+      // are synced, without a manual settings fix-up after the fact.
       await index.setSettings({
-        searchableAttributes: ['name', 'description', 'productcode', 'family', 'gtherp__category__c', 'gtherp__sub_category__c', 'manufacturer_name__c'],
-        attributesForFaceting: ['family', 'gtherp__category__c', 'gtherp__sub_category__c', 'manufacturer_name__c', 'product_availability__c'],
+        searchableAttributes: ['name', 'description', 'sku', 'category', 'sub_category', 'family', 'manufacturer', 'brand'],
+        attributesForFaceting: [
+          'searchable(category)',
+          'searchable(manufacturer)',
+          'product_availability',
+          'filterOnly(stock_quantity)',
+        ],
       });
     } else {
       console.warn("ALGOLIA_APP_ID or ALGOLIA_ADMIN_KEY missing. Algolia index not created via API.");
