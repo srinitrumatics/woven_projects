@@ -27,7 +27,7 @@ import AddProductModal from "./components/AddProductModal";
 import AddToOrderModal from "./[id]/components/AddToOrderModal";
 import PermissionGate from "@/components/PermissionGate";
 import { getCategoryFromAccountType, MANUFACTURER_GROUP } from "@/lib/permissions";
-import { Table, THead, TBody, Tr, Th, Td, TableEmptyState } from "@/components/ui/DataTable";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, SEARCH_EMPTY_MESSAGE, SEARCH_EMPTY_DESCRIPTION } from "@/components/ui/DataTable";
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || "",
@@ -538,8 +538,8 @@ interface ViewProps {
 const CardView = ({ products, canEditProduct, onEdit, onAddToOrder }: ViewProps) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {products.length === 0 ? (
-      <div key="no-matches" className="col-span-full text-center py-12 text-gray-500 dark:text-gray-400">
-        No products found matching your criteria.
+      <div key="no-matches" className="col-span-full">
+        <TableEmptyState message={SEARCH_EMPTY_MESSAGE} description={SEARCH_EMPTY_DESCRIPTION} />
       </div>
     ) : (
       products.map((product) => {
@@ -659,7 +659,7 @@ function ListView({ canEditProduct, onEdit, onAddToOrder }: Omit<ViewProps, 'pro
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
         {sortedProducts.length === 0 ? (
-          <TableEmptyState message="No products found." />
+          <TableEmptyState message={SEARCH_EMPTY_MESSAGE} description={SEARCH_EMPTY_DESCRIPTION} />
         ) : (
         <Table className="min-w-[640px]">
           <THead>

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
-import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState, SEARCH_EMPTY_MESSAGE, SEARCH_EMPTY_DESCRIPTION } from "@/components/ui/DataTable";
 import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting";
 import { Quote, QuoteStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
@@ -463,9 +463,9 @@ export default function QuotesPage() {
               <TableLoadingState message="Loading quotes..." />
             ) : paginatedQuotes.length === 0 ? (
               <TableEmptyState
-                message="No quotes found"
+                message={searchQuery || activeTab !== "All" ? SEARCH_EMPTY_MESSAGE : "No quotes found"}
                 description={searchQuery || activeTab !== "All"
-                  ? "Try adjusting your filters"
+                  ? SEARCH_EMPTY_DESCRIPTION
                   : "Get started by creating your first quote"}
               />
             ) : (

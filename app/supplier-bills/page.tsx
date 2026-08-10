@@ -11,7 +11,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
-import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState, SEARCH_EMPTY_MESSAGE, SEARCH_EMPTY_DESCRIPTION } from "@/components/ui/DataTable";
 import { StatusBadge, RemittanceBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
@@ -273,8 +273,8 @@ export default function SupplierBillsPage() {
                             <TableLoadingState message="Synchronizing data from Salesforce..." />
                         ) : paginatedBills.length === 0 ? (
                             <TableEmptyState
-                                message="No Supplier Bills Found"
-                                description={searchQuery ? `We couldn't find any results matching "${searchQuery}". Try a different search term.` : "There are currently no supplier bills in the system."}
+                                message={searchQuery || activeTab !== "All" ? SEARCH_EMPTY_MESSAGE : "No Supplier Bills Found"}
+                                description={searchQuery || activeTab !== "All" ? SEARCH_EMPTY_DESCRIPTION : "There are currently no supplier bills in the system."}
                             />
                         ) : (
                             <Table className="border-collapse">

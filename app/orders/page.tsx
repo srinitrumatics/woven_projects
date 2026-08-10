@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layouts/Sidebar";
 import Pagination from "@/components/ui/Pagination";
-import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState, SEARCH_EMPTY_MESSAGE, SEARCH_EMPTY_DESCRIPTION } from "@/components/ui/DataTable";
 
 import { formatCurrency, formatNumber, formatDate, displayCell } from "@/lib/utils/formatting";
 import { OrderStatus } from "./types";
@@ -880,9 +880,9 @@ export default function OrdersPage() {
             <TableLoadingState message="Loading orders..." />
           ) : paginatedOrders.length === 0 ? (
             <TableEmptyState
-              message="No orders found"
+              message={searchQuery || activeTab !== "All" ? SEARCH_EMPTY_MESSAGE : "No orders found"}
               description={searchQuery || activeTab !== "All"
-                ? "Try adjusting your filters"
+                ? SEARCH_EMPTY_DESCRIPTION
                 : "Get started by creating your first order"}
             />
           ) : (

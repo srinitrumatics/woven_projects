@@ -12,7 +12,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
-import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState, SEARCH_EMPTY_MESSAGE, SEARCH_EMPTY_DESCRIPTION } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 
 type TabFilter = "Pipeline" | "Draft" | "Client Review" | "Won" | string;
@@ -512,9 +512,9 @@ export default function ProposalsPage() {
               <TableLoadingState message="Loading proposals..." />
             ) : paginatedProposals.length === 0 ? (
               <TableEmptyState
-                message="No proposals found"
+                message={searchQuery || activeTab !== "All" ? SEARCH_EMPTY_MESSAGE : "No proposals found"}
                 description={searchQuery || activeTab !== "All"
-                  ? "Try adjusting your filters"
+                  ? SEARCH_EMPTY_DESCRIPTION
                   : "Get started by creating your first proposal"}
               />
             ) : (

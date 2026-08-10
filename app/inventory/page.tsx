@@ -12,7 +12,7 @@ import { InventoryPosition, InventoryStatus } from "./types";
 import Link from "next/link";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
-import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState, SEARCH_EMPTY_MESSAGE, SEARCH_EMPTY_DESCRIPTION } from "@/components/ui/DataTable";
 
 type TabFilter = "All" | "On Hold" | "Put-Away" | "Average Aged";
 
@@ -589,8 +589,8 @@ export default function InventoryPage() {
                             <TableLoadingState message="Loading inventory data..." />
                         ) : paginatedInventory.length === 0 ? (
                             <TableEmptyState
-                                message="No inventory items found"
-                                description="Try adjusting your filters or search query to find what you're looking for."
+                                message={SEARCH_EMPTY_MESSAGE}
+                                description={SEARCH_EMPTY_DESCRIPTION}
                             />
                         ) : (
                             <Table className="text-sm table-fixed">

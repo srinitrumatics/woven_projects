@@ -9,7 +9,7 @@ import Tabs from "@/components/ui/Tabs";
 import { ShippingManifest, ShipmentStatus } from "./types";
 import { formatDate, formatCurrency, formatNumber, displayCell } from "@/lib/utils/formatting";
 import { SortableHeader } from "@/components/ui/SortableHeader";
-import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState, SEARCH_EMPTY_MESSAGE, SEARCH_EMPTY_DESCRIPTION } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useSortableData } from "@/hooks/useSortableData";
@@ -461,8 +461,8 @@ export default function ShipmentsPage() {
                 <TableLoadingState message="Loading shipments..." />
               ) : paginatedShipments.length === 0 ? (
                 <TableEmptyState
-                  message="No shipments found"
-                  description={searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No shipping manifests available"}
+                  message={searchQuery || activeTab !== "All" ? SEARCH_EMPTY_MESSAGE : "No shipments found"}
+                  description={searchQuery || activeTab !== "All" ? SEARCH_EMPTY_DESCRIPTION : "No shipping manifests available"}
                 />
               ) : (
                 <Table>

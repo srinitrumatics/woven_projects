@@ -8,7 +8,7 @@ import Pagination from "@/components/ui/Pagination";
 import { formatCurrency, formatDate, displayCell } from "@/lib/utils/formatting";
 import { PurchaseOrder, POStatus } from "./types";
 import { SortableHeader } from "@/components/ui/SortableHeader";
-import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState, SEARCH_EMPTY_MESSAGE, SEARCH_EMPTY_DESCRIPTION } from "@/components/ui/DataTable";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useUserSession } from "@/components/UserSessionContext";
@@ -294,8 +294,8 @@ export default function PurchaseOrdersPage() {
                             <TableLoadingState message="Synchronizing data from Salesforce..." />
                         ) : paginatedPOs.length === 0 ? (
                             <TableEmptyState
-                                message="No Purchase Orders Found"
-                                description={searchQuery ? `We couldn't find any results matching "${searchQuery}". Try a different search term.` : "There are currently no purchase orders in the system."}
+                                message={searchQuery || activeTab !== "All" ? SEARCH_EMPTY_MESSAGE : "No Purchase Orders Found"}
+                                description={searchQuery || activeTab !== "All" ? SEARCH_EMPTY_DESCRIPTION : "There are currently no purchase orders in the system."}
                             />
                         ) : (
                             <Table>

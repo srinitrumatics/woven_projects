@@ -37,6 +37,12 @@ export function Td({ children, className = "", style, title, onClick, colSpan }:
     return <td className={`px-3 py-2 text-sm text-gray-900 dark:text-white ${className}`} style={style} title={title} onClick={onClick} colSpan={colSpan}>{children}</td>;
 }
 
+// Shared copy for the "a search or filter matched zero rows" case across every landing
+// page's datatable, so the message reads identically everywhere and never echoes back
+// whatever the user typed into the search box.
+export const SEARCH_EMPTY_MESSAGE = "No matching records found";
+export const SEARCH_EMPTY_DESCRIPTION = "Try adjusting your search or filters.";
+
 export function TableEmptyState({ message = "No records found", description }: { message?: string; description?: string }) {
     return (
         <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400 min-w-0">

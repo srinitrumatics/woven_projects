@@ -11,7 +11,7 @@ import { SortableHeader } from "@/components/ui/SortableHeader";
 import { useResizableColumns } from "@/hooks/useResizableColumns";
 import { useSortableData } from "@/hooks/useSortableData";
 import { useUserSession } from "@/components/UserSessionContext";
-import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState } from "@/components/ui/DataTable";
+import { Table, THead, TBody, Tr, Th, Td, TableEmptyState, TableLoadingState, SEARCH_EMPTY_MESSAGE, SEARCH_EMPTY_DESCRIPTION } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 
 const ITEMS_PER_PAGE = 10;
@@ -486,8 +486,8 @@ export default function InvoicesPage() {
                 <TableLoadingState message="Loading invoices..." />
               ) : paginatedInvoices.length === 0 ? (
                 <TableEmptyState
-                  message="No invoices found"
-                  description={searchQuery || activeTab !== "All" ? "Try adjusting your filters" : "No invoices available"}
+                  message={searchQuery || activeTab !== "All" ? SEARCH_EMPTY_MESSAGE : "No invoices found"}
+                  description={searchQuery || activeTab !== "All" ? SEARCH_EMPTY_DESCRIPTION : "No invoices available"}
                 />
               ) : (
                 <Table className="text-sm">
