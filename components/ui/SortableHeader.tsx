@@ -64,7 +64,7 @@ export function SortableHeader({
             style={{ ...(displayWidth ? { width: displayWidth, minWidth: displayWidth, maxWidth: displayWidth } : {}), ...style }}
         >
             <div
-                className={`px-2 py-3 flex items-center gap-1 h-full min-h-[44px]`}
+                className={`px-2 py-3 flex items-center gap-2 h-full min-h-[44px]`}
                 style={{ width: '100%' }}
             >
                 <div className="flex-1 min-w-0">
