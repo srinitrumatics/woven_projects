@@ -1,4 +1,4 @@
-import { getSalesforceSession, invalidateSalesforceSessionCache, fetchWithLogging } from './salesforce-service';
+import { getSalesforceSession, getSalesforceSessionForOrg, invalidateSalesforceSessionCache, fetchWithLogging } from './salesforce-service';
 
 export interface SalesforceAuthResponse {
   success: boolean;
@@ -11,7 +11,7 @@ export interface SalesforceAuthResponse {
  * @param email User email
  */
 export async function salesforceForgotPassword(email: string): Promise<SalesforceAuthResponse> {
-  const session = await getSalesforceSession();
+  const session = await getSalesforceSessionForOrg();
   if (!session || !session.accessToken) {
     throw new Error('No Salesforce session available');
   }
@@ -62,7 +62,7 @@ export async function salesforceForgotPassword(email: string): Promise<Salesforc
  * @param newPassword New password
  */
 export async function salesforceResetPassword(email: string, code: number, newPassword: string): Promise<SalesforceAuthResponse> {
-  const session = await getSalesforceSession();
+  const session = await getSalesforceSessionForOrg();
   if (!session || !session.accessToken) {
     throw new Error('No Salesforce session available');
   }

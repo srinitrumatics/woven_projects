@@ -63,6 +63,16 @@ interface CachedSFSession {
   expiresAt: number;
 }
 
+// Thrown by getSalesforceSessionForOrg() when the requesting organization has no
+// complete Salesforce connection config on its own record — callers MUST NOT fall
+// back to shared/global credentials when this is thrown.
+export class OrgSalesforceConfigError extends Error {
+  constructor(reason: string) {
+    super(reason);
+    this.name = 'OrgSalesforceConfigError';
+  }
+}
+
 // client_credentials tokens aren't returned with an expiry we can trust across orgs,
 // so cache conservatively under the typical Salesforce session timeout.
 const SF_TOKEN_TTL_MS = 15 * 60 * 1000;
@@ -125,6 +135,73 @@ export async function getSalesforceSession() {
   const session = {
     accessToken: tokenData.access_token,
     instanceUrl: orgConfig?.salesforceUrl || tokenData.instance_url || process.env.SF_DATA_URL || "",
+  };
+
+  if (session.accessToken) {
+    sfSessionCache.set(cacheKey, { ...session, expiresAt: Date.now() + SF_TOKEN_TTL_MS });
+  }
+
+  return session;
+}
+
+// Strict variant of getSalesforceSession() for flows where authenticating against the
+// wrong Salesforce org would be unsafe (e.g. forgot/reset-password). Requires the
+// requesting organization to have a complete Salesforce connection config on its own
+// record and NEVER falls back to shared/global env credentials for any field.
+export async function getSalesforceSessionForOrg() {
+  let orgConfig;
+  try {
+    orgConfig = await getOrgConfig();
+  } catch (e: any) {
+    throw new OrgSalesforceConfigError(e?.message || 'Could not resolve organization for this request');
+  }
+
+  const missingFields = (['salesforceUrl', 'salesforceAuthUrl', 'clientId', 'clientSecret'] as const)
+    .filter(field => !orgConfig[field]);
+  if (missingFields.length > 0) {
+    throw new OrgSalesforceConfigError(
+      `Organization ${orgConfig.id} is missing Salesforce config field(s): ${missingFields.join(', ')}`
+    );
+  }
+
+  const cacheKey = orgConfig.id;
+  const cached = sfSessionCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    return { accessToken: cached.accessToken, instanceUrl: cached.instanceUrl };
+  }
+
+  const body = new URLSearchParams({
+    grant_type: "client_credentials",
+    client_id: orgConfig.clientId!,
+    client_secret: orgConfig.clientSecret!,
+  });
+
+  const res = await fetchWithLogging(orgConfig.salesforceAuthUrl!, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: body.toString(),
+  });
+  const rawText = await res.text();
+  const contentType = res.headers.get("content-type") || "";
+
+  if (!contentType.includes("application/json")) {
+    console.error(
+      `getSalesforceSessionForOrg - Auth endpoint returned non-JSON response (HTTP ${res.status}) for org ${orgConfig.id}.\n` +
+      `URL: ${orgConfig.salesforceAuthUrl}\n` +
+      `Content-Type: ${contentType}\n` +
+      `Body preview: ${rawText.slice(0, 200)}`
+    );
+    throw new Error(`Salesforce auth endpoint returned HTML instead of JSON (HTTP ${res.status}).`);
+  }
+
+  const tokenData = JSON.parse(rawText);
+  if (!tokenData.access_token) {
+    console.error("getSalesforceSessionForOrg - FAILED to get access token for org", orgConfig.id, ":", tokenData);
+  }
+
+  const session = {
+    accessToken: tokenData.access_token,
+    instanceUrl: orgConfig.salesforceUrl!,
   };
 
   if (session.accessToken) {

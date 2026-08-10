@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { salesforceResetPassword } from '@/lib/salesforce-auth';
+import { OrgSalesforceConfigError } from '@/lib/salesforce-service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,6 +38,12 @@ export async function POST(request: NextRequest) {
       }, { status: result.success ? 200 : 400 });
     } catch (apiError: any) {
       console.error('[Reset Password] Salesforce API error:', apiError);
+      if (apiError instanceof OrgSalesforceConfigError) {
+        return NextResponse.json(
+          { error: 'Unable to process your request right now. Please contact support.' },
+          { status: 503 }
+        );
+      }
       return NextResponse.json(
         { error: apiError.message || 'Invalid code or reset failed. Please try again.' },
         { status: 400 }
