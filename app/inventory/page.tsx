@@ -377,7 +377,7 @@ export default function InventoryPage() {
                                     href="#"
                                     onClick={() => handleCardClick("All")}
                                     className="hover:underline block">
-                                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1" title="Total Inventory Value">Total Inventory Value</p>
+                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1" title="Total Inventory Value">Total Inventory Value</p>
                                 </Link>
                                 <div className="flex items-baseline gap-2 group/count">
                                     <Link
@@ -434,7 +434,7 @@ export default function InventoryPage() {
                                 <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1" title="Average Days Aged">Average Days Aged</p>
                                 <div className="flex items-baseline gap-2">
                                     <span className="text-3xl font-bold text-gray-900 dark:text-white ">{stats.avgDaysAged.toFixed(2)}</span>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400 ">Days</span>
+                                    <span className="text-xs text-gray-500 dark:text-gray-400 ">Days</span>
                                 </div>
                                 <p className="text-lg font-semibold text-slate-500 mt-1">{formatCurrency(stats.agedTotalValue)}</p>
 
@@ -523,7 +523,7 @@ export default function InventoryPage() {
                                     </Link>
                                     <Link href="#" onClick={() => handleCardClick("On Hold")} className="hover:underline block">
 
-                                        <span className="text-sm text-gray-500 dark:text-gray-400">Inventory Positions</span>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">Inventory Positions</span>
                                     </Link>
                                 </div>
                                 <p className="text-xl font-bold text-red-500 mt-2">{formatCurrency(stats.onHoldTotalValue)}</p>
@@ -626,7 +626,7 @@ export default function InventoryPage() {
                                 <TBody>
                                     {paginatedInventory.map((item) => (
                                         <Tr key={item.id} className={`group ${selectedItems.has(item.productId || item.id) ? 'bg-primary/5 dark:bg-primary/10' : ''}`}>
-                                            <Td className={`px-3 py-2  sticky left-0 bg-white dark:bg-gray-800 text-left ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
+                                            <Td className={`px-3 py-2  sticky left-0 bg-white dark:bg-gray-800 text-left ${selectedItems.has(item.productId || item.id) ? 'bg-primary/5 dark:bg-primary/10' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.checkbox, minWidth: widths.checkbox, maxWidth: widths.checkbox }}>
                                                 <input
                                                     type="checkbox"
                                                     className="rounded border-gray-300 text-primary focus:ring-primary cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
@@ -635,7 +635,7 @@ export default function InventoryPage() {
                                                     disabled={item.qtyAvailable <= 0}
                                                 />
                                             </Td>
-                                            <Td className={`px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky text-left truncate shadow-[1px_0_0_0_#f3f4f6] dark:shadow-[1px_0_0_0_#374151] z-20 ${selectedItems.has(item.productId || item.id) ? 'bg-blue-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-700'}`} style={{ width: widths.productName, minWidth: widths.productName, maxWidth: widths.productName, left: widths.checkbox }}>
+                                            <Td className={`px-3 py-2 text-sm text-primary font-semibold text-gray-600 dark:text-gray-400 hover:underline sticky text-left truncate z-20`} style={{ width: widths.productName, minWidth: widths.productName, maxWidth: widths.productName, left: widths.checkbox }}>
                                                 <Link href={`/inventory/${item.productId || item.id}`} title={item.productName} className="hover:underline text-left truncate block w-full outline-none focus:text-primary-dark">
                                                     {displayCell(item.productName)}
                                                 </Link>
