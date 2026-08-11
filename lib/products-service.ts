@@ -34,7 +34,7 @@ const PRODUCT_PLACEHOLDER_IMAGE = "/assets/product-placeholder.png";
  * Note: This function uses DOM APIs and should be called on the client side.
  */
 export function mapSalesforceProductToLocal(sfProduct: any): Product {
-  const photoUrls = parsePhotoUrls(sfProduct.gtherp__Image_URL__c);
+  const photoUrls = parsePhotoUrls(sfProduct.gtherp__Image_URL__c ?? sfProduct.Image_URL__c);
 
   const mappedProduct: Product = {
     id: sfProduct.Id,

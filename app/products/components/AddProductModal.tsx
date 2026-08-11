@@ -16,11 +16,39 @@ interface AddProductModalProps {
   inlineMode?: boolean;
 }
 
+const REQUIRED_FIELDS: Array<{ name: string; label: string }> = [
+  { name: "name", label: "Product Name" },
+  { name: "sku", label: "SKU" },
+];
+
+const NUMERIC_FIELDS: Array<{ name: string; label: string }> = [
+  { name: "availableToSell", label: "Available to Sell" },
+  { name: "listPrice", label: "List Price" },
+  { name: "leadTimeWks", label: "Lead Time (Wks)" },
+  { name: "moq", label: "MOQ" },
+  { name: "cubicVolumeIn", label: "Cubic Volume (in)" },
+  { name: "lengthIn", label: "Length (in)" },
+  { name: "widthIn", label: "Width (in)" },
+  { name: "heightIn", label: "Height (in)" },
+  { name: "netWeightLbs", label: "Net Weight (lbs)" },
+  { name: "grossWeightLbs", label: "Gross Weight (lbs)" },
+  { name: "caseLengthIn", label: "Case Length (in)" },
+  { name: "caseWidthIn", label: "Case Width (in)" },
+  { name: "caseHeightIn", label: "Case Height (in)" },
+  { name: "caseNetWeightLbs", label: "Case Net Weight (lbs)" },
+  { name: "caseGrossWeightLbs", label: "Case Gross Weight (lbs)" },
+  { name: "energyConsumption", label: "Energy Consumption" },
+  { name: "productLongevity", label: "Product Longevity" },
+  { name: "productUseEmissions", label: "Product Use Emissions" },
+  { name: "waterUsage", label: "Water Usage" },
+];
+
 export default function AddProductModal({ isOpen, onClose, productToEdit, inlineMode }: AddProductModalProps) {
   const { user, selectedAccount } = useUserSession();
   const { success, error, warning } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [picklists, setPicklists] = useState<any>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const isEditingMode = !!productToEdit;
 
   const [formData, setFormData] = useState<any>({
@@ -127,11 +155,47 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
 
       return newData;
     });
+
+    setFieldErrors((prev) => {
+      if (!prev[name]) return prev;
+      const next = { ...prev };
+      delete next[name];
+      return next;
+    });
+  };
+
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    REQUIRED_FIELDS.forEach(({ name, label }) => {
+      if (!String(formData[name] ?? "").trim()) {
+        errors[name] = `${label} is required.`;
+      }
+    });
+
+    NUMERIC_FIELDS.forEach(({ name, label }) => {
+      const value = formData[name];
+      if (value === "" || value === null || value === undefined) return;
+      const numValue = Number(value);
+      if (isNaN(numValue)) {
+        errors[name] = `${label} must be a number.`;
+      } else if (numValue < 0) {
+        errors[name] = `${label} cannot be negative.`;
+      }
+    });
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async () => {
     if (!selectedAccount || !user) {
       warning("Session expired. Please log in again.");
+      return;
+    }
+
+    if (!validateForm()) {
+      warning("Please fix the highlighted fields before saving.");
       return;
     }
 
@@ -223,6 +287,9 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
   if (inlineMode && !isOpen) return null;
 
   const renderField = (label: string, name: string, type: string = "text", options?: string[], required: boolean = false, isReadOnly: boolean = false) => {
+    const fieldError = fieldErrors[name];
+    const errorClasses = fieldError ? "border-red-500 dark:border-red-500 focus:ring-red-500" : "border-gray-300 dark:border-gray-600 focus:ring-blue-500";
+
     if (type === "select") {
       return (
         <div className="flex flex-col gap-1 w-full">
@@ -235,7 +302,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
             value={formData[name]}
             onChange={handleChange}
             disabled={isReadOnly}
-            className={`w-full px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500 ${isReadOnly ? 'opacity-70 bg-gray-50 dark:bg-gray-800' : ''}`}
+            className={`w-full px-3 py-1.5 border rounded-md bg-white dark:bg-gray-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 ${errorClasses} ${isReadOnly ? 'opacity-70 bg-gray-50 dark:bg-gray-800' : ''}`}
           >
             <option value="">--Select--</option>
             {options?.map((opt: any, idx: number) => {
@@ -244,6 +311,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
               return <option key={`${value}-${idx}`} value={value}>{label}</option>;
             })}
           </select>
+          {fieldError && <div className="text-xs text-red-500">{fieldError}</div>}
         </div>
       );
     }
@@ -261,8 +329,9 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
             onChange={handleChange}
             readOnly={isReadOnly}
             rows={3}
-            className={`w-full px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500 ${isReadOnly ? 'bg-gray-50 dark:bg-gray-800' : ''}`}
+            className={`w-full px-3 py-1.5 border rounded-md bg-white dark:bg-gray-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 ${errorClasses} ${isReadOnly ? 'bg-gray-50 dark:bg-gray-800' : ''}`}
           />
+          {fieldError && <div className="text-xs text-red-500">{fieldError}</div>}
         </div>
       );
     }
@@ -283,12 +352,13 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
             value={formData[name]}
             onChange={handleChange}
             readOnly={isReadOnly}
-            className={`w-full px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-blue-500 ${isReadOnly ? 'bg-gray-50 dark:bg-gray-800 cursor-not-allowed' : ''}`}
+            className={`w-full px-3 py-1.5 border rounded-md bg-white dark:bg-gray-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 ${errorClasses} ${isReadOnly ? 'bg-gray-50 dark:bg-gray-800 cursor-not-allowed' : ''}`}
           />
         </div>
         {isReadOnly && (
           <div className="text-xs italic text-gray-400 capitalize">Read only field</div>
         )}
+        {fieldError && <div className="text-xs text-red-500">{fieldError}</div>}
       </div>
     );
   };

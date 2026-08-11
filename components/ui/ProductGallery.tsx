@@ -11,11 +11,7 @@ const PLACEHOLDER = "/assets/product-placeholder.png";
 export default function ProductGallery({ images }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const realImages = images && images.length > 0 ? images : [PLACEHOLDER];
-  // Always show exactly 5 thumbnails, pad with placeholders if needed
-  const displayImages = realImages.length < 5
-    ? [...realImages, ...new Array(5 - realImages.length).fill(PLACEHOLDER)]
-    : realImages.slice(0, 5);
+  const displayImages = images && images.length > 0 ? images : [PLACEHOLDER];
   const total = displayImages.length;
 
   const goPrev = () => setActiveIndex((prev) => (prev - 1 + total) % total);
