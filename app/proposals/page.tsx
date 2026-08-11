@@ -15,9 +15,14 @@ import { useToast } from "@/components/ui/Toast";
 import { Table, THead, TBody, Tr, Td, TableEmptyState, TableLoadingState, SEARCH_EMPTY_MESSAGE, SEARCH_EMPTY_DESCRIPTION } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 
-type TabFilter = "Pipeline" | "Draft" | "Client Review" | "Won" | string;
+type TabFilter = "Pipeline" | "In Progress" | "Client Review" | "Won" | string;
 
 const ITEMS_PER_PAGE = 10;
+
+const IN_PROGRESS_STATUSES: ProposalStatus[] = ["Draft", "Proposal Requested", "Quote Requested", "Quote Ready", "Proposal Development"];
+const CLIENT_REVIEW_STATUSES: ProposalStatus[] = ["Proposal Sent", "Negotiation", "Negotiations", "Pending Review", "Under Review"];
+const WON_STATUSES: ProposalStatus[] = ["Proposal Won", "Awarded"];
+const NON_PIPELINE_STATUSES: string[] = ["Canceled", "Rejected", "Closed Lost", "Expired", "Proposal Won", "Awarded"];
 
 export default function ProposalsPage() {
   const router = useRouter();
@@ -127,22 +132,19 @@ export default function ProposalsPage() {
     const total = proposals.length;
     const totalValue = proposals.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const inProgressStatuses: ProposalStatus[] = ["Draft", "Proposal Requested", "Quote Ready", "Proposal Development"];
-    const inProgress = proposals.filter(p => inProgressStatuses.includes(p.status));
+    const inProgress = proposals.filter(p => IN_PROGRESS_STATUSES.includes(p.status));
     const inProgressCount = inProgress.length;
     const inProgressValue = inProgress.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const clientReviewStatuses: ProposalStatus[] = ["Proposal Sent", "Negotiation", "Negotiations", "Pending Review", "Under Review"];
-    const clientReview = proposals.filter(p => clientReviewStatuses.includes(p.status));
+    const clientReview = proposals.filter(p => CLIENT_REVIEW_STATUSES.includes(p.status));
     const clientReviewCount = clientReview.length;
     const clientReviewValue = clientReview.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const wonStatuses: ProposalStatus[] = ["Proposal Won"];
-    const won = proposals.filter(p => wonStatuses.includes(p.status));
+    const won = proposals.filter(p => WON_STATUSES.includes(p.status));
     const wonCount = won.length;
     const wonValue = won.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
-    const pipelineProposals = proposals.filter(p => !["Canceled", "Rejected", "Closed Lost", "Proposal Won"].includes(p.status));
+    const pipelineProposals = proposals.filter(p => !NON_PIPELINE_STATUSES.includes(p.status));
     const pipelineCount = pipelineProposals.length;
     const pipelineValue = pipelineProposals.reduce((sum, p) => sum + (p.totalAmount || 0), 0);
 
@@ -159,8 +161,17 @@ export default function ProposalsPage() {
   const filteredAndSearchedProposals = useMemo(() => {
     let filtered = proposals;
 
-    // Exact-match status filter ("All" = no filter)
-    if (activeTab !== 'All') {
+    // "All" = no filter. The four stat cards map to status groups; individual
+    // status pills map to a single real status and use an exact match.
+    if (activeTab === 'Pipeline') {
+      filtered = filtered.filter(p => !NON_PIPELINE_STATUSES.includes(p.status));
+    } else if (activeTab === 'In Progress') {
+      filtered = filtered.filter(p => IN_PROGRESS_STATUSES.includes(p.status));
+    } else if (activeTab === 'Client Review') {
+      filtered = filtered.filter(p => CLIENT_REVIEW_STATUSES.includes(p.status));
+    } else if (activeTab === 'Won') {
+      filtered = filtered.filter(p => WON_STATUSES.includes(p.status));
+    } else if (activeTab !== 'All') {
       filtered = filtered.filter(p => p.status === activeTab);
     }
 
@@ -287,8 +298,8 @@ export default function ProposalsPage() {
 
         {/* Draft/In Progress Proposals Card */}
         <button
-          onClick={() => handleCardClick("Draft")}
-          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "Draft"
+          onClick={() => handleCardClick("In Progress")}
+          className={`group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border transition-all duration-200 text-left hover:shadow-lg flex flex-col h-full ${activeTab === "In Progress"
             ? "border-gray-500 ring-2 ring-gray-500/20"
             : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
             }`}
@@ -299,13 +310,13 @@ export default function ProposalsPage() {
               <div className="flex-1 min-w-0">
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("Draft")}
+                  onClick={() => handleCardClick("In Progress")}
                   className="hover:underline block">
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1 truncate" title="In Progress">In Progress</p>
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("Draft")}
+                  onClick={() => handleCardClick("In Progress")}
                   className="hover:underline block">
                   <div className="flex items-baseline gap-2">
 
@@ -317,7 +328,7 @@ export default function ProposalsPage() {
                 </Link>
                 <p className="text-lg font-semibold text-gray-600 dark:text-gray-300 mt-1 truncate">{formatCurrency(stats.inProgressValue)}</p>
               </div>
-              <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "Draft" ? "bg-gray-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-600 group-hover:text-white"
+              <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === "In Progress" ? "bg-gray-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 group-hover:bg-gray-600 group-hover:text-white"
                 } transition-colors`}>
                 <svg className="w-5  h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -328,7 +339,7 @@ export default function ProposalsPage() {
               <span className="inline-flex items-center text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white group-hover:underline truncate">
                 <Link
                   href="#"
-                  onClick={() => handleCardClick("Draft")}
+                  onClick={() => handleCardClick("In Progress")}
                   className="hover:underline block">
                   View in progress</Link>
                 <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -3,7 +3,7 @@
 import { use, useState, useEffect } from "react";
 import Sidebar from "@/components/layouts/Sidebar";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import ProductGallery from "./components/ProductGallery";
+import ProductGallery from "@/components/ui/ProductGallery";
 import ProductInfoCard from "./components/ProductInfoCard";
 import ProductTabs from "./components/ProductTabs";
 import { useUserSession } from "@/components/UserSessionContext";

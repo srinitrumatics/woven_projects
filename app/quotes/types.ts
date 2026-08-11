@@ -105,6 +105,7 @@ export interface QuoteLine {
   customerOrderId?: string;
   salesOrder?: string;
   salesOrderId?: string;
+  images?: string[];
 }
 
 export interface QuoteTax {

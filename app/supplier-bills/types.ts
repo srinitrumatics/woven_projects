@@ -83,6 +83,7 @@ export interface SupplierBillLine {
   customerOrderId?: string;
   shipmentId?: string;
   shipmentName?: string;
+  images?: string[];
 }
 
 export interface BillPayment {

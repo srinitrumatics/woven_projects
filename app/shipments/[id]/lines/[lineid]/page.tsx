@@ -12,6 +12,8 @@ import MetricsTable from "./components/MetricsTable";
 import BottomTabs from "./components/BottomTabs";
 import { useUserSession } from "@/components/UserSessionContext";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import ProductGallery from "@/components/ui/ProductGallery";
+import { parsePhotoUrls } from "@/lib/utils/product-images";
 
 // Interface for shipping manifest line item from Salesforce
 interface ManifestLineItem {
@@ -48,6 +50,7 @@ interface ManifestLineItem {
     Case_Gross_Weight__c?: number;
     Case_DW_139__c?: number;
     Case_DW_166__c?: number;
+    Image_URL__c?: string;
 }
 
 export default function ShipmentLineDetailPage({
@@ -203,18 +206,9 @@ export default function ShipmentLineDetailPage({
 
             {/* Row 1: Main Image + Notes + Product Information */}
             <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4 mb-4 items-stretch">
-                {/* Main Image with Carousel - 25% width (3 of 12 cols) */}
+                {/* Main Image - 25% width (3 of 12 cols) */}
                 <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
-                    <div className="relative flex-1 flex flex-col">
-                        {/* Main Image Display */}
-                        <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
-                            <div className="text-center">
-                                <svg className="w-16 h-16 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
+                    <ProductGallery images={parsePhotoUrls(product.Image_URL__c)} />
                 </div>
 
                 {/* Notes - 25% width (3 of 12 cols) */}

@@ -111,4 +111,5 @@ export interface PurchaseOrderLine {
     customerPO?: string;
     shipmentId?: string;
     shipmentName?: string;
+    images?: string[];
 }

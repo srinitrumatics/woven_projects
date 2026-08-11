@@ -1,4 +1,5 @@
 import { formatCurrency } from "./utils/formatting";
+import { parsePhotoUrls } from "./utils/product-images";
 
 export interface Product {
   id: string;
@@ -26,11 +27,15 @@ export interface Product {
   certifications: any[];
 }
 
+const PRODUCT_PLACEHOLDER_IMAGE = "/assets/product-placeholder.png";
+
 /**
  * Maps a raw Salesforce product record to the application's Product interface.
  * Note: This function uses DOM APIs and should be called on the client side.
  */
 export function mapSalesforceProductToLocal(sfProduct: any): Product {
+  const photoUrls = parsePhotoUrls(sfProduct.gtherp__Image_URL__c);
+
   const mappedProduct: Product = {
     id: sfProduct.Id,
     name: sfProduct.Name,
@@ -63,7 +68,7 @@ export function mapSalesforceProductToLocal(sfProduct: any): Product {
       { label: "Compressor Type", value: sfProduct.Compressor_Type__c || "0" },
       { label: "Noise Level", value: sfProduct.Noise_Level__c || "0" },
     ],
-    images: ["/assets/product-placeholder.png"],
+    images: photoUrls.length > 0 ? photoUrls : [PRODUCT_PLACEHOLDER_IMAGE],
     specifications: {
       "Physical Dimensions": [
         { label: "Case Cubic Volume (in)", value: sfProduct.Case_CV_Inches__c || "0" },

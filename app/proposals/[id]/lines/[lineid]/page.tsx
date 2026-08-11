@@ -17,6 +17,8 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import ReadOnlyField from "@/components/ui/ReadOnlyField";
 import ReadOnlyTextArea from "@/components/ui/ReadOnlyTextArea";
 import Breadcrumb from "@/components/ui/Breadcrumb";
+import ProductGallery from "@/components/ui/ProductGallery";
+import { parsePhotoUrls } from "@/lib/utils/product-images";
 
 // Interface for proposal product item from Salesforce (matching what we saw in proposal list logic)
 interface ProposalProductItem {
@@ -62,6 +64,7 @@ interface ProposalProductItem {
     Site_Name?: string;
     Inventory_Account_Name?: string;
     Status__c: string;
+    Image_URL__c?: string;
 }
 
 // Interface for mapped product data
@@ -93,6 +96,7 @@ interface ProductData {
     moq: number;
     taxDetail: TaxDetail;
     status: string;
+    images: string[];
 }
 
 export default function ProposalProductDetailPage({
@@ -456,6 +460,7 @@ export default function ProposalProductDetailPage({
                         totalCost: item.Total_Cost__c != null ? `$${item.Total_Cost__c.toFixed(2)}` : "Hide",
                         moq: item.MOQ__c || 1,
                         status: item.Status__c || "Draft",
+                        images: parsePhotoUrls(item.Image_URL__c),
 
                         taxDetail: {
                             id: item.Id,
@@ -674,28 +679,9 @@ export default function ProposalProductDetailPage({
 
             {/* Row 1: Main Image + Proposal Note + Product Information */}
             <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4 mb-4 items-stretch">
-                {/* Main Image with Carousel - 25% width (3 of 12 cols) */}
+                {/* Main Image - 25% width (3 of 12 cols) */}
                 <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
-                    <div className="relative flex-1 flex flex-col">
-                        {/* Main Image Display - Reduced height */}
-                        <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
-                            <div className="text-center">
-                                <svg
-                                    className="w-16 h-16 text-gray-400 mx-auto"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={1.5}
-                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                                    />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
+                    <ProductGallery images={product.images} />
                 </div>
 
                 {/* Proposal Note - 25% width (3 of 12 cols) */}

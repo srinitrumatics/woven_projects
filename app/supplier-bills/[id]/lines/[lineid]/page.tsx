@@ -12,6 +12,8 @@ import SBLDebitMemoLinesTab from "./components/SBLDebitMemoLinesTab";
 import { useUserSession } from "@/components/UserSessionContext";
 import { Table, THead, TBody, Tr, Th, Td } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import ProductGallery from "@/components/ui/ProductGallery";
+import { parsePhotoUrls } from "@/lib/utils/product-images";
 
 export default function SupplierBillLineDetailPage({
     params,
@@ -78,6 +80,7 @@ export default function SupplierBillLineDetailPage({
                         billAmount: item.BillAmount__c,
                         shipping: item.Shipping_Charges__c,
                         totalBillAmount: item.Total_Bill_Amount__c,
+                        images: parsePhotoUrls(item.Image_URL__c),
                     }));
 
                     setLines(mappedLines);
@@ -145,12 +148,6 @@ export default function SupplierBillLineDetailPage({
     // Navigation helpers
     const hasPrevLine = currentLineIndex > 0;
     const hasNextLine = currentLineIndex < totalLines - 1;
-
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const productImages = [
-        { id: 1, label: "Image 1" },
-        { id: 2, label: "Image 2" }
-    ];
 
     const handlePrevLine = () => {
         if (hasPrevLine) {
@@ -225,75 +222,9 @@ export default function SupplierBillLineDetailPage({
 
                 {/* Row 1: Image + Line Note + Detailed Information */}
                 <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4 mb-4 items-stretch">
-                    {/* Image Carousel (3 of 12) */}
+                    {/* Product Image (3 of 12) */}
                     <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
-                        <div className="relative flex-1 flex flex-col">
-                            {/* Main Image Display */}
-                            <div className="bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-1 min-h-[200px]">
-                                <div className="text-center">
-                                    <svg
-                                        className="w-16 h-16 text-gray-400 mx-auto"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={1.5}
-                                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                                        />
-                                    </svg>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 block truncate">
-                                        {productImages[currentImageIndex].label}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Carousel Navigation Arrows */}
-                            <button
-                                onClick={() => setCurrentImageIndex(i => (i - 1 + productImages.length) % productImages.length)}
-                                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <svg
-                                    className="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M15 19l-7-7 7-7"
-                                    />
-                                </svg>
-                            </button>
-                            <button
-                                onClick={() => setCurrentImageIndex(i => (i + 1) % productImages.length)}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <svg
-                                    className="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M9 5l7 7-7 7"
-                                    />
-                                </svg>
-                            </button>
-
-                            {/* Carousel Dots */}
-                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-                                {productImages.map((_, i) => (
-                                    <div key={i} className={`w-2 h-2 rounded-full transition-colors ${i === currentImageIndex
-                                        ? "bg-primary"
-                                        : "bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500"
-                                        }`} />
-                                ))}
-                            </div>
-                        </div>
+                        <ProductGallery images={line.images || []} />
                     </div>
 
                     {/* Supplier Bill Line Note (3 of 12) */}

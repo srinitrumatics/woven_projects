@@ -1,6 +1,7 @@
 import { pool } from '@/db';
 import { organizations } from '@/db/schema';
 import { getRunningRun } from './admin-sync-helpers';
+import { parseImageEntries } from './utils/product-images';
 
 type Org = typeof organizations.$inferSelect;
 
@@ -8,6 +9,7 @@ const BATCH_SIZE = 500;
 
 const COLUMNS = [
   'sfid', 'productcode', 'name', 'description', 'isactive', 'family',
+  'image_url',
   'gtherp__price__c', 'list_price__c', 'gtherp__stock_quantity__c',
   'gtherp__available_quantity__c', 'gtherp__discount__c',
   'gtherp__category__c', 'gtherp__sub_category__c',
@@ -15,6 +17,18 @@ const COLUMNS = [
   'gtherp__moq__c', 'gtherp__available_to_sell__c',
   'createddate', 'systemmodstamp',
 ] as const;
+
+/**
+ * Builds the `{images: [...]}` JSONB shape that transform_sf_product_for_algolia
+ * (scripts/provisionTenant.ts) and buildAlgoliaPayload (lib/product-index-service.ts)
+ * both already expect from product2.image_url. Returns null when there's no photo, so
+ * the column stays NULL rather than an empty/misleading object.
+ */
+function buildImageUrlJson(raw: unknown): string | null {
+  const entries = parseImageEntries(raw);
+  if (entries.length === 0) return null;
+  return JSON.stringify({ images: entries });
+}
 
 async function getSalesforceToken(org: Org) {
   const tokenUrl = org.salesforceAuthUrl || process.env.SF_AUTH_URL || '';
@@ -51,7 +65,7 @@ async function fetchAllProducts(accessToken: string, instanceUrl: string) {
   const query = `
     SELECT Id, ProductCode, Name, Description, IsActive, Family, CreatedDate, SystemModstamp,
            gtherp__Product_Availability__c, gtherp__Manufacturer_Name__r.Name, gtherp__Brand_Name__c, gtherp__Brand_Name__r.Name,
-           gtherp__Available_To_Sell__c, gtherp__MOQ__c,
+           gtherp__Available_To_Sell__c, gtherp__MOQ__c, gtherp__Image_URL__c,
            (SELECT Id, Name, UnitPrice, gtherp__Selling_Unit_Price__c FROM PricebookEntries)
     FROM Product2
     WHERE IsActive = true
@@ -88,6 +102,7 @@ function toRow(p: any): any[] {
 
   return [
     p.Id, p.ProductCode, p.Name, p.Description, p.IsActive, p.Family,
+    buildImageUrlJson(p.gtherp__Image_URL__c),
     sellingPrice, listPrice,
     p.gtherp__Available_To_Sell__c ?? 0,
     p.gtherp__Available_To_Sell__c ?? 0,
@@ -118,6 +133,7 @@ function buildUpsertQuery(schemaName: string, rowCount: number): string {
       description = EXCLUDED.description,
       isactive = EXCLUDED.isactive,
       family = EXCLUDED.family,
+      image_url = EXCLUDED.image_url,
       gtherp__price__c = EXCLUDED.gtherp__price__c,
       list_price__c = EXCLUDED.list_price__c,
       gtherp__stock_quantity__c = EXCLUDED.gtherp__stock_quantity__c,
@@ -180,6 +196,9 @@ export async function runLoadAsync(schemaName: string, runId: string, org: Org):
     );
     await client.query(
       `ALTER TABLE "${schemaName}".product2 ADD COLUMN IF NOT EXISTS gtherp__brand_name__c VARCHAR(255);`
+    );
+    await client.query(
+      `ALTER TABLE "${schemaName}".product2 ADD COLUMN IF NOT EXISTS image_url JSONB;`
     );
 
     const active = products.filter((p) => {

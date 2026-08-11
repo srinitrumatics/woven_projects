@@ -170,12 +170,15 @@ function Content({ indexName }: { indexName: string }) {
     setAddToOrderQuantity(parseInt(p.moq) || 1);
   };
 
+  // Note: the `manufacturer` field in Algolia stores the manufacturer Account's
+  // Name (resolveLookupName in lib/product-sync-service.ts), not its Id.
+  const accountName = selectedAccount?.Name || selectedAccount?.name || '';
+
   const canEditProduct = (p: any) => {
     if (isAdmin) return true;
     if (isCustomer) return false;
     // Hybrid and Supplier Group can only edit their own products
-    // Note: manufacturer field in Algolia stores the Account ID
-    return (isHybrid || isSupplierGroup) && p.manufacturer === selectedAccount?.Id;
+    return (isHybrid || isSupplierGroup) && p.manufacturer === accountName;
   };
 
   let filters = '';
@@ -184,10 +187,10 @@ function Content({ indexName }: { indexName: string }) {
     filters = "product_availability:'Available'";
   } else if (isHybrid) {
     // (2) Hybrid: Display All Products OR My Products
-    filters = showOnlyMine ? `manufacturer:'${selectedAccount?.Id}'` : '';
+    filters = showOnlyMine ? `manufacturer:'${accountName.replace(/'/g, "\\'")}'` : '';
   } else if (isSupplierGroup && !isAdmin) {
     // (3) Supplier/Manufacturer Group: Display only their own products
-    filters = `manufacturer:'${selectedAccount?.Id}'`;
+    filters = `manufacturer:'${accountName.replace(/'/g, "\\'")}'`;
   } else if (isAdmin) {
     // Admins see all products
     filters = '';

@@ -1,0 +1,349 @@
+◇ injected env (15) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+FAILED: Auth failed: 420 <!DOCTYPE HTML>
+<html lang=en-US>
+<head>
+<meta charset=UTF-8>
+<title>Error Page</title>
+    <style>
+        /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+
+        html {
+            font-family: sans-serif;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%
+        }
+
+        body {
+            margin: 0
+        }
+
+        article,
+        aside,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        hgroup,
+        main,
+        menu,
+        nav,
+        section,
+        summary {
+            display: block
+        }
+
+        a {
+            background-color: transparent
+        }
+
+        b,
+        strong {
+            font-weight: 700
+        }
+
+        img {
+            border: 0
+        }
+
+        svg:not(:root) {
+            overflow: hidden
+        }
+
+        *,
+        :after,
+        :before {
+            box-sizing: border-box
+        }
+
+        ::selection {
+            background: #d8edff;
+            text-shadow: none;
+            color: #080707
+        }
+
+        html {
+            font-family: "Salesforce Sans", Arial, sans-serif;
+            font-size: 100%;
+            line-height: 1.5;
+            background: #b0c4df;
+            color: #080707;
+            -webkit-tap-highlight-color: transparent
+        }
+
+        body {
+            font-size: .812rem;
+            background: 0 0
+        }
+
+        dl,
+        fieldset,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        ol,
+        p,
+        ul {
+            margin: 0;
+            padding: 0
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-weight: inherit;
+            font-size: 1em
+        }
+
+        a {
+            color: #006dcc;
+            text-decoration: none;
+            transition: color .1s linear
+        }
+
+        a,
+        button {
+            cursor: pointer
+        }
+
+        b,
+        dfn,
+        strong {
+            font-weight: 400
+        }
+
+        audio,
+        canvas,
+        iframe,
+        img,
+        svg,
+        video {
+            vertical-align: middle
+        }
+
+        img {
+            max-width: 100%;
+            height: auto
+        }
+
+        .slds-illustration {
+            text-align: center
+        }
+
+        .slds-illustration.slds-illustration_large .slds-illustration__svg {
+            width: 100%;
+            max-width: 600px;
+            max-height: 400px;
+            margin-bottom: 3rem
+        }
+
+        .slds-text-longform dl,
+        .slds-text-longform h1,
+        .slds-text-longform h2,
+        .slds-text-longform h3,
+        .slds-text-longform img,
+        .slds-text-longform ol,
+        .slds-text-longform p,
+        .slds-text-longform ul {
+            margin-bottom: .75rem
+        }
+
+        .slds-illustration.slds-illustration_large p {
+            margin-bottom: 3rem
+        }
+
+        .slds-illustration .slds-illustration__stroke-primary {
+            stroke: #8cd3f8
+        }
+
+        .slds-illustration .slds-illustration__stroke-secondary {
+            stroke: #c2e8ff
+        }
+
+        .slds-illustration .slds-illustration__fill-secondary {
+            fill: #c2e8ff
+        }
+
+        .slds-align--absolute-center,
+        .slds-align_absolute-center {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -ms-flex-line-pack: center;
+            align-content: center;
+            -ms-flex-align: center;
+            align-items: center;
+            margin: auto
+        }
+    </style>
+    <style>
+        html {
+            background: #fff
+        }
+
+        p {
+            color: #3e3e3c;
+            font-size: 16px !important
+        }
+
+        h3 {
+            font-weight: 400;
+            font-size: 26px;
+            color: #3e3e3c
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            height: 20px;
+            padding-bottom: 20px;
+            width: 100%
+        }
+
+        .origin-p {
+            color: #6e6e6e;
+            font-size: 12px !important
+        }
+
+        .slds-text-body {
+            margin: 15px !important
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+            margin-top: 10px
+        }
+
+        .slds-illustration {
+            padding: 15vh 5vh 0 5vh
+        }
+
+        @media (max-height:745px) {
+            footer {
+                position: relative;
+                padding: 50px 0 20px 0
+            }
+        }
+        .interstitial {
+            text-align:center;
+        }
+        .interstitial-failure {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="slds-illustration slds-illustration_large"><svg aria-hidden=true class=slds-illustration__svg viewBox="0 0 454 265" xmlns=http://www.w3.org/2000/svg><g fill=none fill-rule=evenodd stroke=none stroke-width=1><g transform="translate(-77.000000, -60.000000)"><g><g transform="translate(190.000000, 206.000000)"class=slds-illustration__stroke-secondary stroke-linecap=round stroke-width=3><path d="M44,17.5 L63,17.5 C62.2789714,12.0723971 64.081543,7.53186978 68.4077148,3.87841797 C73.3754883,-0.195556641 79.2734375,0.717773438 82.440918,2.12353516 C85.6083984,3.52929687 87.9606934,5.46069336 89.5913086,9.10524041 C90.2822266,10.6397351 90.7517904,11.9379883 91,13"vector-effect=non-scaling-stroke></path><path d="M83,20.5 C84.0558268,16.8461914 86.2227376,14.4572754 89.5007324,13.333252 C94.4177246,11.6472168 99.0800781,13.8925781 100.942383,16.1518555 C102.804687,18.4111328 103.39502,20.2260742 103.746582,22.1201172 C103.980957,23.3828125 104.06543,24.8427734 104,26.5 C108.141764,26.3313802 110.918945,27.1647135 112.331543,29 C114.040039,31.1936035 114.215332,33.817627 113.593018,35.75 C112.970703,37.682373 110.894531,40.5 107,40.5 L28,40.5"vector-effect=non-scaling-stroke></path><path d="M18,27.5 L83.0004985,27.5"vector-effect=non-scaling-stroke></path><path d="M0,27.5 L8,27.5"vector-effect=non-scaling-stroke></path></g><g transform="translate(300.000000, 161.000000)"class=slds-illustration__stroke-secondary stroke-linecap=round stroke-width=3><path d="M44,17.5 L63,17.5 C62.2789714,12.0723971 64.081543,7.53186978 68.4077148,3.87841797 C73.3754883,-0.195556641 79.2734375,0.717773438 82.440918,2.12353516 C85.6083984,3.52929687 87.9606934,5.46069336 89.5913086,9.10524041 C90.2822266,10.6397351 90.7517904,11.9379883 91,13"vector-effect=non-scaling-stroke></path><path d="M83,20.5 C84.0558268,16.8461914 86.2227376,14.4572754 89.5007324,13.333252 C94.4177246,11.6472168 99.0800781,13.8925781 100.942383,16.1518555 C102.804687,18.4111328 103.39502,20.2260742 103.746582,22.1201172 C103.980957,23.3828125 104.06543,24.8427734 104,26.5 C108.141764,26.3313802 110.918945,27.1647135 112.331543,29 C114.040039,31.1936035 114.215332,33.817627 113.593018,35.75 C112.970703,37.682373 110.894531,40.5 107,40.5 L28,40.5"vector-effect=non-scaling-stroke></path><path d="M18,27.5 L83.0004985,27.5"vector-effect=non-scaling-stroke></path><path d="M0,27.5 L8,27.5"vector-effect=non-scaling-stroke></path></g><g transform="translate(79.000000, 249.000000)"><path d="M0,62.5 L450,62.5"vector-effect=non-scaling-stroke class=slds-illustration__stroke-secondary stroke-linecap=round stroke-width=3></path><polyline class=slds-illustration__stroke-secondary points="32 62 107.5 0 165.5 45.1232877"stroke-linecap=round stroke-linejoin=round stroke-width=3 vector-effect=non-scaling-stroke></polyline><polyline class=slds-illustration__stroke-secondary points="148 30.9433962 165.5 16 222 62"stroke-linecap=round stroke-linejoin=round stroke-width=3 vector-effect=non-scaling-stroke></polyline><path d="M42.8943213,32.968973 L46.3925781,49.4296875 L34.453125,58.6445312 L40.9466068,32.9319979 C41.081836,32.3965247 41.6255477,32.0720629 42.1610209,32.2072921 C42.5306645,32.3006424 42.8150677,32.5960527 42.8943213,32.968973 Z"vector-effect=non-scaling-stroke class=slds-illustration__fill-secondary></path><path d="M199.962964,27.4391572 L206,49 L194.770218,39.1063642 L198.037036,27.4391572 C198.185948,26.9073269 198.7378,26.5969106 199.26963,26.7458231 C199.605963,26.8399963 199.868791,27.1028246 199.962964,27.4391572 Z"vector-effect=non-scaling-stroke class=slds-illustration__fill-secondary></path><path d="M47.9662349,37.3583594 L50.4271384,46.5867475 L46.8251953,48.7349783 L43,48.7349783 L46.0337651,37.3583594 C46.1760682,36.8247225 46.7240258,36.5074839 47.2576627,36.6497871 C47.6036917,36.7420615 47.8739605,37.0123303 47.9662349,37.3583594 Z"vector-effect=non-scaling-stroke class=slds-illustration__fill-secondary></path></g><g transform="translate(394.000000, 265.500000) scale(-1, 1) translate(-394.000000, -265.500000) translate(288.000000, 222.000000)"><polyline class=slds-illustration__stroke-secondary points="0.5 87 87.5 0 153.5 68"stroke-linecap=round stroke-linejoin=round stroke-width=3 vector-effect=non-scaling-stroke></polyline><path d="M8.16064153,59.5904583 L14.229782,83 L3,71.1063642 L6.22968061,59.5717906 C6.37859311,59.0399602 6.93044422,58.729544 7.46227456,58.8784565 C7.80524768,58.9744889 8.07125785,59.2456927 8.16064153,59.5904583 Z"vector-effect=non-scaling-stroke transform="translate(8.614891, 70.920583) scale(-1, 1) translate(-8.614891, -70.920583) "class=slds-illustration__fill-secondary></path><polyline class=slds-illustration__stroke-secondary points="135.5 46 158.5 25 211.5 78"stroke-linecap=round stroke-linejoin=round stroke-width=3 vector-effect=non-scaling-stroke></polyline></g><g transform="translate(406.500000, 262.500000)"><g class=slds-illustration__fill-secondary><path d="M18.9209988,1.95433401 L33.259296,51.443436 C33.5666778,52.5043744 32.9557995,53.613617 31.8948612,53.9209988 C31.7139843,53.9734036 31.5266126,54 31.3382972,54 L2.6617028,54 C1.5571333,54 0.661702805,53.1045695 0.661702805,52 C0.661702805,51.8116846 0.688299176,51.6243129 0.74070397,51.443436 L15.0790012,1.95433401 C15.386383,0.893395645 16.4956256,0.282517358 17.556564,0.589899164 C18.2152102,0.780726338 18.7301717,1.29568777 18.9209988,1.95433401 Z"vector-effect=non-scaling-stroke></path></g><g class=slds-illustration__stroke-primary stroke-width=3 stroke-linecap=round><polygon points="17 0.323943662 34 54 -1.81721305e-12 54"stroke-linejoin=round vector-effect=non-scaling-stroke></polygon><path d="M17,3.6953125 C17,42.0456294 17,61.6471919 17,62.5 C17,61.6471919 17,42.0456294 17,3.6953125 Z"vector-effect=non-scaling-stroke></path><path d="M17,29.3239437 C22.3333333,35.7851611 25,39.1184944 25,39.3239437 C25,39.1184944 22.3333333,35.7851611 17,29.3239437 Z"vector-effect=non-scaling-stroke transform="translate(21.000000, 34.323944) scale(-1, 1) translate(-21.000000, -34.323944) "stroke-linejoin=round></path></g></g><g transform="translate(363.000000, 229.500000)"><g transform="translate(1.000000, 0.000000)"class=slds-illustration__fill-secondary><path d="M25.6478873,0 L50.879042,84.4273253 C51.1953215,85.4856452 50.5937789,86.5999782 49.535459,86.9162577 C49.3496374,86.9717906 49.1567264,87 48.9627843,87 L2.33299037,87 C1.22842087,87 0.332990367,86.1045695 0.332990367,85 C0.332990367,84.8060578 0.361199757,84.6131469 0.416732643,84.4273253 L25.6478873,0 Z"vector-effect=non-scaling-stroke></path></g><g class=slds-illustration__stroke-primary stroke-width=3 stroke-linecap=round><polygon points="26.5 0 52.5 87 0.5 87"stroke-linejoin=round vector-effect=non-scaling-stroke></polygon><path d="M26.5,2.58642578 C26.5,63.0261034 26.5,93.9972948 26.5,95.5 C26.5,93.9972948 26.5,63.0261034 26.5,2.58642578 Z"vector-effect=non-scaling-stroke></path><path d="M15.6478873,42 C22.9812207,49.078692 26.6478873,52.7453587 26.6478873,53 C26.6478873,52.7453587 22.9812207,49.078692 15.6478873,42 Z"vector-effect=non-scaling-stroke stroke-linejoin=round></path><path d="M27.6478873,68 C36.9812207,57.078692 41.6478873,51.7453587 41.6478873,52 C41.6478873,51.7453587 36.9812207,57.078692 27.6478873,68 Z"vector-effect=non-scaling-stroke stroke-linejoin=round></path></g></g><g transform="translate(118.500000, 262.500000)"><g transform="translate(27.000000, 0.000000)"class=slds-illustration__fill-secondary><path d="M18.9209988,1.95433401 L33.259296,51.443436 C33.5666778,52.5043744 32.9557995,53.613617 31.8948612,53.9209988 C31.7139843,53.9734036 31.5266126,54 31.3382972,54 L2.6617028,54 C1.5571333,54 0.661702805,53.1045695 0.661702805,52 C0.661702805,51.8116846 0.688299176,51.6243129 0.74070397,51.443436 L15.0790012,1.95433401 C15.386383,0.893395645 16.4956256,0.282517358 17.556564,0.589899164 C18.2152102,0.780726338 18.7301717,1.29568777 18.9209988,1.95433401 Z"vector-effect=non-scaling-stroke></path></g><g class=slds-illustration__stroke-primary stroke-width=3><polygon points="44 0.323943662 61 54 27 54"stroke-linejoin=round vector-effect=non-scaling-stroke stroke-linecap=round></polygon><path d="M44,4.32394366 C44,42.2551731 44,61.6471919 44,62.5 C44,61.6471919 44,42.2551731 44,4.32394366 Z"vector-effect=non-scaling-stroke></path><path d="M44,32.3239437 C50.6666667,39.4518278 54,43.1184944 54,43.3239437 C54,43.1184944 50.6666667,39.4518278 44,32.3239437 Z"vector-effect=non-scaling-stroke transform="translate(49.000000, 37.823944) scale(-1, 1) translate(-49.000000, -37.823944) "stroke-linejoin=round stroke-linecap=round></path><path d="M0.5,61 L356.5,61"vector-effect=non-scaling-stroke stroke-linecap=round></path><path d="M363.5,61 L373.5,61"vector-effect=non-scaling-stroke stroke-linecap=round></path></g></g><g transform="translate(146.000000, 62.000000)"><g class=slds-illustration__fill-secondary><circle cx=66 cy=66 r=66 vector-effect=non-scaling-stroke></circle><ellipse cx=66.5 cy=66 rx=38.5 ry=66></ellipse><rect height=22 width=32 x=49.5 y=153.5></rect></g><g transform="translate(4.000000, 0.000000)"fill=#FFFFFF><path d="M0.276855469,47.7788086 C4.72770182,36.0685221 11.8059896,26.5141602 21.5117188,19.1157227 C30.1201172,12.7973633 35.706543,9.09326172 48.0908203,6.87597656 C51.8487061,6.20316343 56.1575774,0.963049705 61.0175781,0.886230469 C66.9931232,0.791778465 73.7249109,6.08477534 80.3537012,7.83514372 C86.1008648,9.35271373 91.8836069,11.7592753 97.3378906,15.394043 C114.199707,26.6308594 117.956543,35.4946289 123.961914,47.7788086 C127.965495,55.9682617 127.643229,53.3107096 122.995117,39.8061523 L115.15625,26.3779297 L99.3500977,11.8393555 L79.3271484,3.14208984 L58.2192383,0.886230469 L41.0913086,4.39794922 L22.6689453,13.8129883 L6.44238281,30.0708008 L0.276855469,43.0327148 L0.276855469,47.7788086 Z"vector-effect=non-scaling-stroke></path><path d="M30.494873,34.0495605 C30.494873,34.0495605 37.3376465,17.0495605 47.779541,9.9309082 C53.5096842,6.13435872 59.1995443,4.51472982 64.8491211,5.07202148 C69.2832031,5.49861654 73.9475098,7.55900065 78.842041,11.2531738 C86.1838379,16.7944336 92.1347656,27.7973633 95.4316406,35.8276367 C97.6295573,41.1811523 96.2676595,36.5566406 91.3459473,21.9541016 C85.9305827,14.9046224 83.0406087,11.2403971 82.6760254,10.9614258 C82.3114421,10.6824544 79.0512695,7.82503255 72.8955078,2.38916016 C68.7790927,0.889351294 65.6379734,0.119006242 63.4721497,0.078125 C61.306326,0.0372437583 58.0536466,0.686901961 53.7141113,2.02709961 L45.8171387,7.78222656 L37.4606934,16.3037109 C33.3729655,23.1031901 31.1993001,26.6408691 30.9396973,26.916748 C30.550293,27.3305664 30.494873,34.0495605 30.494873,34.0495605 Z"vector-effect=non-scaling-stroke></path></g><circle cx=66 cy=66 r=66 vector-effect=non-scaling-stroke class=slds-illustration__stroke-primary stroke-linecap=round stroke-linejoin=round stroke-width=3></circle><ellipse cx=66.5 cy=66 rx=38.5 ry=66 class=slds-illustration__stroke-primary stroke-linecap=round stroke-linejoin=round stroke-width=3></ellipse><g transform="translate(24.000000, 117.000000)"class=slds-illustration__stroke-primary stroke-linecap=round stroke-width=3 stroke-linejoin=round><rect height=22 width=31 x=26.5 y=36.5></rect><path d="M84,36 L58,0"vector-effect=non-scaling-stroke transform="translate(71.000000, 18.000000) scale(-1, 1) translate(-71.000000, -18.000000) "></path><path d="M55,36 L48,14"vector-effect=non-scaling-stroke transform="translate(51.500000, 25.000000) scale(-1, 1) translate(-51.500000, -25.000000) "></path><path d="M36,36 L29,14"vector-effect=non-scaling-stroke></path><path d="M26,36 L0,0"vector-effect=non-scaling-stroke></path></g></g><g transform="translate(426.000000, 113.000000)"class=slds-illustration__stroke-secondary stroke-linecap=round stroke-width=3 stroke-linejoin=round><g transform="translate(0.500000, 0.500000)"><circle cx=33.5 cy=33.5 r=33 vector-effect=non-scaling-stroke></circle><ellipse cx=33.75 cy=33.5 rx=19.25 ry=33></ellipse><rect height=11 width=18 x=24.5 y=77></rect><path d="M54.5,77 L41.5,59"vector-effect=non-scaling-stroke transform="translate(48.000000, 68.000000) scale(-1, 1) translate(-48.000000, -68.000000) "></path><path d="M40,77 L36.5,66"vector-effect=non-scaling-stroke transform="translate(38.250000, 71.500000) scale(-1, 1) translate(-38.250000, -71.500000) "></path><path d="M30.5,77 L27,66"vector-effect=non-scaling-stroke></path><path d="M25.5,77 L12,59"vector-effect=non-scaling-stroke></path></g></g><g transform="translate(72.000000, 194.000000)"class=slds-illustration__stroke-secondary stroke-linecap=round stroke-width=3><g transform="translate(31.713442, 25.088326) rotate(-15.000000) translate(-31.713442, -25.088326) translate(4.713442, 6.588326)"><path d="M31.0360707,3.43528591 C31.0360707,3.43528591 40.5802283,0.671893051 42.6488424,10.6908663"vector-effect=non-scaling-stroke transform="translate(36.842457, 6.888440) rotate(41.000000) translate(-36.842457, -6.888440) "></path><path d="M40.4282002,10.1797377 C40.4282002,10.1797377 49.9723578,7.4163448 52.0409719,17.435318"vector-effect=non-scaling-stroke transform="translate(46.234586, 13.632892) scale(-1, 1) rotate(-41.000000) translate(-46.234586, -13.632892) "></path><path d="M0.730284783,29.5865514 C0.730284783,29.5865514 10.2744424,26.8231586 12.3430565,36.8421318"vector-effect=non-scaling-stroke></path><path d="M12.7302848,29.5865514 C12.7302848,29.5865514 22.2744424,26.8231586 24.3430565,36.8421318"vector-effect=non-scaling-stroke transform="translate(18.536671, 33.039705) scale(-1, 1) translate(-18.536671, -33.039705) "></path></g></g></g></g></g></svg>
+    </div>
+    <div class="slds-text-longform interstitial interstitial-success">
+        <h3>Stay Tuned...</h3>
+        <h3>We are setting things up.</h3>
+        <h3>This process can take a few minutes.</h3>
+        <h3>This page will auto-refresh when ready.</h3>
+        <p class="slds-text-body">
+            If it takes too long, please contact support or visit our <a href="https://status.salesforce.com/" target="_blank">status page</a> for more information.
+        </p>
+        <br>
+        <span class="site-logo"><img src="https://www.lightningdesignsystem.com/assets/images/logo.svg" alt="logo" class="logo"></span>
+    </div>
+    <div class="slds-text-longform interstitial interstitial-failure">
+        <h3>We've hit a snag.</h3>
+        <p class="slds-text-body">
+            Please contact support or visit our <a href="https://status.salesforce.com/" target="_blank">status page</a> for more information.
+        </p>
+        <br>
+        <span class="site-logo"><img src="https://www.lightningdesignsystem.com/assets/images/logo.svg" alt="logo" class="logo"></span>
+    </div>
+
+    <footer class=slds-align_absolute-center>
+      <p class=origin-p>Salesforce Edge:</p>
+      <p class=origin-p>604ea02a4e800671348c7013419ae5cc;2026-08-11T08:51:52+00:00;</p>
+    </footer>
+
+<script>
+// total timeout (in ms) until which we will keep trying reaching to hostnames
+var totalThresholdDelay = 240000;
+
+// make a call to hostnames every specified ms
+var retry = 10000;
+
+var hosts = '["https:\/\/ruby-drive-5024-dev-ed.scratch.my.salesforce.com"]';
+hosts = JSON.parse(hosts);
+
+var result = {
+  success: 0
+}
+
+function test(hostIndex) {
+  const xhttp = new XMLHttpRequest();
+  const url = new URL(window.location.href);
+  xhttp.open("GET", url.pathname+url.search, false);
+  xhttp.send();
+  if (xhttp.status >= 200 && xhttp.status < 400) {
+    result.success++;
+    result[hostIndex] = true;
+  }
+}
+
+function success() {
+  // window.location.replace(retURL);
+  window.location.reload();
+}
+
+function failure() {
+  document.querySelector('div.slds-text-longform.interstitial.interstitial-success').style.display = "none";
+  document.querySelector('div.slds-text-longform.interstitial.interstitial-failure').style.display = "block";
+}
+
+
+
+function start(hostnames) {
+  var startTime = Date.now();
+  var urlParams = new URL(window.location.href).searchParams;
+  var timer = 1;
+
+  var interval = setInterval(function () {
+    if (timer <= 0) {
+      clearInterval(interval);
+      failure();
+      return;
+    }
+
+    if (result.success === hostnames.length) {
+      clearInterval(interval);
+      success();
+      return;
+    }
+
+    if (Date.now() - startTime > totalThresholdDelay) {
+      clearInterval(interval);
+      failure();
+      return;
+    }
+
+    for (var i = 0; i < hostnames.length; i++) {
+      if (result["host" + i] === undefined) {
+        result["host" + i] = false;
+      }
+      if (!result["host" + i]) {
+        test(i);
+      }
+    }
+  }, retry);
+}
+
+start(hosts);
+
+</script>
+</body>
+</html>
+
+

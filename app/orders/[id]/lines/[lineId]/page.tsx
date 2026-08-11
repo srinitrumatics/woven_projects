@@ -10,13 +10,14 @@ import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 // Import sub-components
 import LineHeader from "./components/LineHeader";
-import ProductCarousel from "./components/ProductCarousel";
+import ProductGallery from "@/components/ui/ProductGallery";
 import OrderLineNotes from "./components/OrderLineNotes";
 import ProductInfo from "./components/ProductInfo";
 import OrderDetailsTable from "./components/OrderDetailsTable";
 import LineNavigation from "./components/LineNavigation";
 import { useUserSession } from "@/components/UserSessionContext";
 import { useToast } from "@/components/ui/Toast";
+import { parsePhotoUrls } from "@/lib/utils/product-images";
 
 // Interface for order line item from Salesforce
 interface OrderLineItem {
@@ -47,6 +48,7 @@ interface OrderLineItem {
   Site_Name?: string;
   Inventory_Account_Name?: string;
   Customer_Order_Line_Notes__c?: string;
+  Image_URL__c?: string;
   // Tax Fields
   Sales_Tax_Rate__c?: number;
   Sales_Tax_Amount__c?: number;
@@ -94,6 +96,7 @@ interface ProductData {
   totalCost: string;
   orderLineNotes: string;
   status: string;
+  images: string[];
   // Tax Fields
   Sales_Tax_Rate__c?: number;
   Sales_Tax_Amount__c?: number;
@@ -207,6 +210,7 @@ export default function OrderLineDetailPage({
               totalCost: item.Total_Cost__c != null ? `$${item.Total_Cost__c.toFixed(2)}` : "Hide",
               orderLineNotes: item.Customer_Order_Line_Notes__c || "",
               status: item.Status__c || "Draft",
+              images: parsePhotoUrls(item.Image_URL__c),
               // Map Tax Fields
               Sales_Tax_Rate__c: item.Sales_Tax_Rate__c,
               Sales_Tax_Amount__c: item.Sales_Tax_Amount__c,
@@ -328,13 +332,6 @@ export default function OrderLineDetailPage({
   const prevLineId = hasPrevLine ? orderLines[currentLineIndex - 1]?.orderLineId : "";
   const nextLineId = hasNextLine ? orderLines[currentLineIndex + 1]?.orderLineId : "";
 
-  // Mock multiple images for carousel (product images not available from API)
-  const productImages = [
-    { id: 1, label: "Image 1" },
-    { id: 2, label: "Image 2" },
-    { id: 3, label: "Image 3" },
-  ];
-
   // Calculate order line totals
   const displayQty = isEditing ? editedOrderQty : (product?.orderQty || 0);
   const unitPrice = product?.unitPrice || 0;
@@ -401,7 +398,9 @@ export default function OrderLineDetailPage({
 
       {/* Row 1: Main Image + Order Notes + Product Information */}
       <div className="grid grid-cols-1 w1025:grid-cols-12 gap-4 mb-4 items-stretch">
-        <ProductCarousel images={productImages} />
+        <div className="w1025:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+          <ProductGallery images={product.images} />
+        </div>
 
         <OrderLineNotes
           isEditing={isEditing}

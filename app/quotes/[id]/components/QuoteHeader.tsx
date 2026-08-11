@@ -13,13 +13,11 @@ export default function QuoteHeader({ id, quoteNumber, status, description }: Qu
     return (
         <div className="mb-6">
             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2 min-w-0">
-                <span><Link href={`/quotes`} className="px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400  truncate">Quotes</Link></span>
+                <Link href={`/quotes`} className="px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400  truncate">Quotes</Link>
                 <span>&gt;</span>
-                <span className="hover:text-gray-700 dark:text-gray-300">
-                    <Link href={`/quotes/${id}`} className="px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400  truncate">
-                        Quote Details
-                    </Link>
-                </span>
+                <Link href={`/quotes/${id}`} className="px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400  truncate">
+                    Quote Details
+                </Link>
                 <span>&gt;</span>
                 <span className="text-gray-900 dark:text-white" title={quoteNumber}>{quoteNumber}</span>
             </div>
