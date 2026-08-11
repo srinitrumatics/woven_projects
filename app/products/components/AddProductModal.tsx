@@ -195,7 +195,7 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
     }
 
     if (!validateForm()) {
-      warning("Please fix the highlighted fields before saving.");
+      warning("Please fill the required fields.");
       return;
     }
 
@@ -371,50 +371,50 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
 
   const bodyFields = (
     <>
-        <SectionHeader title="Product Header" />
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-          {renderField("Product Name", "name", "text", [], true)}
-          {renderField("SKU", "sku", "text", [], true, false)}
-          {renderField("Product Code", "productCode", "text", [], false, false)}
-          {renderField("Product Family", "family", "select", picklists?.Family || picklists?.Product_Family__c)}
-          {renderField("Availability Status", "availabilityStatus", "text", [], false, true)}
-          {renderField("Available to Sell", "availableToSell", "text", [], false, isEditingMode)}
-        </div>
-        <SectionHeader title="Pricing" />
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-          {renderField("List Price", "listPrice", "text", [], false, isEditingMode)}
-        </div>
+      <SectionHeader title="Product Header" />
+      <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+        {renderField("Product Name", "name", "text", [], true)}
+        {renderField("SKU", "sku", "text", [], true, false)}
+        {renderField("Product Code", "productCode", "text", [], false, false)}
+        {renderField("Product Family", "family", "select", picklists?.Family || picklists?.Product_Family__c)}
+        {renderField("Availability Status", "availabilityStatus", "text", [], false, true)}
+        {renderField("Available to Sell", "availableToSell", "text", [], false, isEditingMode)}
+      </div>
+      <SectionHeader title="Pricing" />
+      <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+        {renderField("List Price", "listPrice", "text", [], false, isEditingMode)}
+      </div>
 
-        <SectionHeader title="Metadata" />
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-          {renderField("Lead Time (Wks)", "leadTimeWks")}
-          {renderField("MOQ", "moq")}
-        </div>
+      <SectionHeader title="Metadata" />
+      <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+        {renderField("Lead Time (Wks)", "leadTimeWks")}
+        {renderField("MOQ", "moq")}
+      </div>
 
-        <SectionHeader title="Overview" />
-        <div className="grid grid-cols-1 gap-y-4 px-2">
-          {renderField("Product Description", "description", "textarea")}
-          <div className="flex flex-col gap-1 w-full">
-            <label className="text-xs font-semibold text-gray-600 dark:text-gray-400">Key Features</label>
-            <div className="bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600">
-              <ReactQuill
-                theme="snow"
-                value={formData.keyFeatures}
-                onChange={(content) => setFormData((prev: any) => ({ ...prev, keyFeatures: content }))}
-                modules={{
-                  toolbar: [
-                    [{ 'header': [1, 2, false] }],
-                    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                    ['link'],
-                    ['clean']
-                  ],
-                }}
-                placeholder="Add key features here..."
-              />
-            </div>
+      <SectionHeader title="Overview" />
+      <div className="grid grid-cols-1 gap-y-4 px-2">
+        {renderField("Product Description", "description", "textarea")}
+        <div className="flex flex-col gap-1 w-full">
+          <label className="text-xs font-semibold text-gray-600 dark:text-gray-400">Key Features</label>
+          <div className="bg-white dark:bg-gray-900 rounded-md border border-gray-300 dark:border-gray-600">
+            <ReactQuill
+              theme="snow"
+              value={formData.keyFeatures}
+              onChange={(content) => setFormData((prev: any) => ({ ...prev, keyFeatures: content }))}
+              modules={{
+                toolbar: [
+                  [{ 'header': [1, 2, false] }],
+                  ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                  [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                  ['link'],
+                  ['clean']
+                ],
+              }}
+              placeholder="Add key features here..."
+            />
           </div>
-          <style jsx global>{`
+        </div>
+        <style jsx global>{`
               .ql-container {
                 min-height: 150px;
                 font-size: 0.9rem;
@@ -447,52 +447,52 @@ export default function AddProductModal({ isOpen, onClose, productToEdit, inline
                 color: #f3f4f6 !important;
               }
             `}</style>
-        </div>
+      </div>
 
-        <SectionHeader title="Quick Specifications (Unit)" />
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-          {renderField("Cubic Volume (in)", "cubicVolumeIn")}
-          {renderField("Length (in)", "lengthIn")}
-          {renderField("Width (in)", "widthIn")}
-          {renderField("Height (in)", "heightIn")}
-          {renderField("Net Weight (lbs)", "netWeightLbs")}
-          {renderField("Gross Weight (lbs)", "grossWeightLbs")}
-        </div>
+      <SectionHeader title="Quick Specifications (Unit)" />
+      <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+        {renderField("Cubic Volume (in)", "cubicVolumeIn")}
+        {renderField("Length (in)", "lengthIn")}
+        {renderField("Width (in)", "widthIn")}
+        {renderField("Height (in)", "heightIn")}
+        {renderField("Net Weight (lbs)", "netWeightLbs")}
+        {renderField("Gross Weight (lbs)", "grossWeightLbs")}
+      </div>
 
-        <SectionHeader title="Quick Specifications (Case & Compliance)" />
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-          {renderField("Case Cubic Volume (in)", "caseCubicVolumeIn", "text", [], false, true)}
-          {renderField("Case Length (in)", "caseLengthIn")}
-          {renderField("Case Width (in)", "caseWidthIn")}
-          {renderField("Case Height (in)", "caseHeightIn")}
-          {renderField("Case Net Weight (lbs)", "caseNetWeightLbs")}
-          {renderField("Case Gross Weight (lbs)", "caseGrossWeightLbs")}
-          {renderField("Shipping Weight DW 139 (lbs)", "shippingWeightDW139", "text", [], false, true)}
-          {renderField("Shipping Weight DW 166 (lbs)", "shippingWeightDW166", "text", [], false, true)}
-          {renderField("ECCN", "eccn")}
-          {renderField("HTS Code", "htsCode")}
-          {renderField("GTIN", "gtin")}
-          {renderField("UPC", "upc")}
-        </div>
+      <SectionHeader title="Quick Specifications (Case & Compliance)" />
+      <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+        {renderField("Case Cubic Volume (in)", "caseCubicVolumeIn", "text", [], false, true)}
+        {renderField("Case Length (in)", "caseLengthIn")}
+        {renderField("Case Width (in)", "caseWidthIn")}
+        {renderField("Case Height (in)", "caseHeightIn")}
+        {renderField("Case Net Weight (lbs)", "caseNetWeightLbs")}
+        {renderField("Case Gross Weight (lbs)", "caseGrossWeightLbs")}
+        {renderField("Shipping Weight DW 139 (lbs)", "shippingWeightDW139", "text", [], false, true)}
+        {renderField("Shipping Weight DW 166 (lbs)", "shippingWeightDW166", "text", [], false, true)}
+        {renderField("ECCN", "eccn")}
+        {renderField("HTS Code", "htsCode")}
+        {renderField("GTIN", "gtin")}
+        {renderField("UPC", "upc")}
+      </div>
 
-        <SectionHeader title="Electrical" />
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-          {renderField("Voltage Rating", "voltageRating")}
-          {renderField("Plug Type", "plugType")}
-          {renderField("Cord Length", "cordLength")}
-        </div>
+      <SectionHeader title="Electrical" />
+      <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+        {renderField("Voltage Rating", "voltageRating")}
+        {renderField("Plug Type", "plugType")}
+        {renderField("Cord Length", "cordLength")}
+      </div>
 
-        <SectionHeader title="ESG" />
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
-          {renderField("Product Availability", "productAvailabilityESG", "text", [], false, true)}
-          {renderField("Energy Consumption", "energyConsumption")}
-          {renderField("End-of-Life Management", "endOfLifeManagement", "select", picklists?.End_of_Life_Management__c || ["Biodegradable", "Recyclable", "Landfill"])}
-          {renderField("Manufacturing Process", "manufacturingProcess", "select", picklists?.Manufacturing_Process__c || ["Additive manufacturing", "Traditional"])}
-          {renderField("Packaging Materials", "packagingMaterials", "select", picklists?.Packaging_Materials__c || ["Biodegradable", "Plastic", "Paper"])}
-          {renderField("Product Longevity", "productLongevity")}
-          {renderField("Product Use Emissions", "productUseEmissions")}
-          {renderField("Water Usage", "waterUsage")}
-        </div>
+      <SectionHeader title="ESG" />
+      <div className="grid grid-cols-2 gap-x-8 gap-y-4 px-2">
+        {renderField("Product Availability", "productAvailabilityESG", "text", [], false, true)}
+        {renderField("Energy Consumption", "energyConsumption")}
+        {renderField("End-of-Life Management", "endOfLifeManagement", "select", picklists?.End_of_Life_Management__c || ["Biodegradable", "Recyclable", "Landfill"])}
+        {renderField("Manufacturing Process", "manufacturingProcess", "select", picklists?.Manufacturing_Process__c || ["Additive manufacturing", "Traditional"])}
+        {renderField("Packaging Materials", "packagingMaterials", "select", picklists?.Packaging_Materials__c || ["Biodegradable", "Plastic", "Paper"])}
+        {renderField("Product Longevity", "productLongevity")}
+        {renderField("Product Use Emissions", "productUseEmissions")}
+        {renderField("Water Usage", "waterUsage")}
+      </div>
     </>
   );
 
