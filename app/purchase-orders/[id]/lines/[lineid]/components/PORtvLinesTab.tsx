@@ -113,7 +113,7 @@ export default function PORtvLinesTab({ lines }: PORtvLinesTabProps) {
                                 <Td className="truncate" title={line.Customer_Quote_Line_Name || '-'}>
                                     {line.Customer_Quote_Line__c && line.Customer_Quote__c ? (
                                         !isManufacturer ? (
-                                            <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" className="text-primary hover:underline font-semibold">
+                                            <Link href={`/quotes/${line.Customer_Quote__c}/lines/${line.Customer_Quote_Line__c}`} target="_blank" className="text-primary hover:underline font-semibold truncate">
                                                 {line.Customer_Quote_Line_Name || 'View Quote Line'}
                                             </Link>
                                         ) : (
@@ -133,12 +133,14 @@ export default function PORtvLinesTab({ lines }: PORtvLinesTabProps) {
                                     ) : displayCell(line.Proposed_Product_Name)}
                                 </Td>
                                 <Td className="truncate" title={line.Reason_Code__c || '-'}>{displayCell(line.Reason_Code__c)}</Td>
-                                <Td className="truncate" title={line.Product_Name || '-'}>
+                                <Td className="truncate" style={{ maxWidth: columnWidths.productName }} title={line.Product_Name || '-'}>
                                     {line.Product_Name__c ? (
-                                        <Link href={`/products/${line.Product_Name__c}`} target="_blank" className="text-primary hover:underline font-semibold">
+                                        <Link href={`/products/${line.Product_Name__c}`} target="_blank" className="text-primary hover:underline font-semibold block truncate">
                                             {line.Product_Name}
                                         </Link>
-                                    ) : displayCell(line.Product_Name)}
+                                    ) : (
+                                        <span className="block truncate">{displayCell(line.Product_Name)}</span>
+                                    )}
                                 </Td>
                                 <Td className="truncate" title={line.Product_Description__c || '-'}>{displayCell(line.Product_Description__c)}</Td>
                                 <Td className="truncate" title={line.brand || line.Brand_Name__c || '-'}>{displayCell(line.brand || line.Brand_Name__c)}</Td>
