@@ -45,12 +45,15 @@ export default function SupplierBillDetailPage() {
 
         async function fetchData() {
             setIsLoading(true);
+            let hadSfError = false;
             try {
                 // 1. Fetch main bill record
                 const billRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=view&tabName=Supplier_Bill`);
                 const billData = await billRes.json();
 
-                if (billData && billData.Supplier_Bill__c && billData.Supplier_Bill__c.length > 0) {
+                if (billData?._sfFetchFailed) {
+                    hadSfError = true;
+                } else if (billData && billData.Supplier_Bill__c && billData.Supplier_Bill__c.length > 0) {
                     const b = billData.Supplier_Bill__c[0];
                     const a = billData.Billing_Information__c?.[0] || {};
                     setBill({
@@ -106,7 +109,9 @@ export default function SupplierBillDetailPage() {
                 // 2. Fetch lines
                 const linesRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Products`);
                 const linesData = await linesRes.json();
-                if (linesData && linesData.Supplier_Bill_Line__c) {
+                if (linesData?._sfFetchFailed) {
+                    hadSfError = true;
+                } else if (linesData && linesData.Supplier_Bill_Line__c) {
                     const mappedLines = linesData.Supplier_Bill_Line__c.map((l: any) => ({
                         id: l.Id,
                         name: l.Name || '',
@@ -146,6 +151,9 @@ export default function SupplierBillDetailPage() {
                 // 3. Fetch files
                 const filesRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&objectName=Supplier_Bill__c&action=files`);
                 const filesData = await filesRes.json();
+                if (filesData?._sfFetchFailed) {
+                    hadSfError = true;
+                }
                 setFiles((filesData || []).map((f: any) => ({
                     id: f.ContentVersionId || f.Id,
                     fileName: f.Title || f.Name || '',
@@ -161,6 +169,9 @@ export default function SupplierBillDetailPage() {
                     const paymentsRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Payments`);
                     if (paymentsRes.ok) {
                         const paymentsData = await paymentsRes.json();
+                        if (paymentsData?._sfFetchFailed) {
+                            hadSfError = true;
+                        }
                         if (paymentsData) {
                             if (paymentsData.Bill_Payment__c) {
                                 setBillPayments(paymentsData.Bill_Payment__c.map((p: any) => ({
@@ -195,11 +206,16 @@ export default function SupplierBillDetailPage() {
                                 }))];
                             }
                         }
+                    } else {
+                        hadSfError = true;
                     }
 
                     const returnsRes = await fetch(`/api/supplier-bills?accountId=${SF_ACCOUNT_ID}&contactId=${SF_CONTACT_ID}&objectId=${id}&action=lines&tabName=Returns`);
                     if (returnsRes.ok) {
                         const returnsData = await returnsRes.json();
+                        if (returnsData?._sfFetchFailed) {
+                            hadSfError = true;
+                        }
                         if (returnsData) {
                             if (returnsData.Applied_Debit_Memo__c) {
                                 newAppliedDebits = [...newAppliedDebits, ...returnsData.Applied_Debit_Memo__c.map((d: any) => ({
@@ -249,6 +265,8 @@ export default function SupplierBillDetailPage() {
                                 })));
                             }
                         }
+                    } else {
+                        hadSfError = true;
                     }
 
                     // Remove duplicates just in case both APIs returned the same records
@@ -256,11 +274,16 @@ export default function SupplierBillDetailPage() {
                     setAppliedDebits(uniqueDebits);
                 } catch (e) {
                     console.error("Error fetching payments data:", e);
+                    hadSfError = true;
                 }
 
             } catch (error) {
                 console.error("Error fetching supplier bill details:", error);
+                hadSfError = true;
             } finally {
+                if (hadSfError) {
+                    toastError("Some data on this page couldn't be loaded from Salesforce. Please try again in a moment.");
+                }
                 setIsLoading(false);
             }
         }

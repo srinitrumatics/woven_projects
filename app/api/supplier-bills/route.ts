@@ -36,6 +36,17 @@ export async function GET(req: NextRequest) {
             data = await getSupplierBillsFromSalesforce(accountId, contactId, objectId, tabName, objectName);
         }
 
+        // getSupplierBillsFromSalesforce/getSupplierBillFilesFromSalesforce mark a real
+        // Salesforce failure (org down, auth failure, non-2xx) with this flag on the
+        // returned array. Surface it as a non-2xx response here — JSON.stringify drops
+        // non-index array properties, so this check must happen before serialization.
+        if ((data as any)?._sfFetchFailed) {
+            return NextResponse.json(
+                { error: "Unable to reach Salesforce right now", _sfFetchFailed: true },
+                { status: 502 }
+            );
+        }
+
         return NextResponse.json(data);
     } catch (error) {
         console.error("Error in supplier bills API:", error);

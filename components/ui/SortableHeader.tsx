@@ -61,25 +61,25 @@ export function SortableHeader({
             ref={thRef}
             className={`p-0 text-sm font-semibold text-gray-900 dark:text-white cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors select-none ${className?.includes('sticky') ? '' : 'relative'} ${className}`}
             onClick={() => requestSort && requestSort(field)}
-            style={{ ...(displayWidth ? { width: displayWidth, minWidth: displayWidth, maxWidth: displayWidth } : {}), ...style }}
+            style={{ ...(displayWidth ? { width: displayWidth, minWidth: displayWidth } : {}), ...style }}
         >
             <div
-                className={`px-2 py-3 flex items-center gap-2 h-full min-h-[44px]`}
+                className={`px-2 py-3 flex items-start gap-2 h-full min-h-[44px]`}
                 style={{ width: '100%' }}
             >
-                <div className="flex-1 min-w-0">
+                <div className="flex-1">
                     <span
-                        className={`text-${align} block w-full ${truncate ? 'truncate' : 'whitespace-nowrap'}`}
+                        className={`text-${align} block w-full whitespace-nowrap`}
                         title={label}
                     >
                         {label}
                     </span>
                 </div>
-                <span className="text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300 w-4 flex-shrink-0 mt-0.5">
+                <span className="text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300 w-4 flex-shrink-0 text-xs">
                     {isSorted ? (
                         sortConfig?.direction === 'asc' ? '↑' : '↓'
                     ) : (
-                        <span className="opacity-0 group-hover:opacity-100 text-xs">↕</span>
+                        '↕'
                     )}
                 </span>
             </div>
