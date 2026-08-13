@@ -246,8 +246,23 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
   // Store contact ID for order submission
   const [contactId, setContactId] = useState<string>("");
 
-  // Tooltip state
   const [tooltipState, setTooltipState] = useState<{ product: Product; x: number; y: number } | null>(null);
+
+  // Close tooltip when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = () => {
+      if (tooltipState) {
+        setTooltipState(null);
+      }
+    };
+    window.addEventListener('click', handleOutsideClick);
+    window.addEventListener('touchstart', handleOutsideClick, { passive: true });
+    
+    return () => {
+      window.removeEventListener('click', handleOutsideClick);
+      window.removeEventListener('touchstart', handleOutsideClick);
+    };
+  }, [tooltipState]);
 
 
   // Multi-select state
@@ -1945,9 +1960,9 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
         </div>
         {/* Fixed Tooltip */}
         {tooltipState && (
-          <div
-            role="tooltip"
-            className="fixed z-50 w-150 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg text-xs text-gray-900 dark:text-gray-100 pointer-events-none"
+            <div
+              role="tooltip"
+              className="fixed z-50 w-[90vw] max-w-[350px] p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg text-xs text-gray-900 dark:text-gray-100 pointer-events-none"
             style={{
               left: tooltipState.x,
               top: tooltipState.y - 8, // 8px gap

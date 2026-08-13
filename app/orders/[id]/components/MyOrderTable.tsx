@@ -57,11 +57,19 @@ export default function MyOrderTable({
         return sortedProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
     }, [sortedProducts, currentPage]);
 
-    const handleTooltipEnter = (e: React.MouseEvent<HTMLElement>, product: Product) => {
+    const handleTooltipEnter = (e: React.MouseEvent<HTMLElement> | React.TouchEvent<HTMLElement>, product: Product) => {
         const rect = e.currentTarget.getBoundingClientRect();
+        // Assuming tooltip max-width is ~350px, adjust x so it doesn't go off screen
+        const tooltipWidth = 350;
+        const padding = 16;
+        let x = rect.left;
+        if (typeof window !== 'undefined' && x + tooltipWidth + padding > window.innerWidth) {
+            x = Math.max(padding, window.innerWidth - tooltipWidth - padding);
+        }
+        
         setHoveredTooltip({
             product,
-            x: rect.left,
+            x,
             y: rect.top
         });
     };
@@ -121,6 +129,7 @@ export default function MyOrderTable({
                                                 className="underline cursor-help block truncate"
                                                 onMouseEnter={(e) => handleTooltipEnter(e, product)}
                                                 onMouseLeave={handleTooltipLeave}
+                                                onClick={(e) => { e.stopPropagation(); handleTooltipEnter(e, product); }}
                                             >
                                                 {product.name}
                                             </span>
@@ -134,7 +143,7 @@ export default function MyOrderTable({
                                             <div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(product.brand)}</div>
                                         </Td>
                                         <Td className="text-left" title={displayCell(product.productFamily)}>
-                                            <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">
+                                            <span className="inline-block max-w-full px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate align-middle">
                                                 {displayCell(product.productFamily)}
                                             </span>
                                         </Td>
