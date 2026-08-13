@@ -200,14 +200,14 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
   // Initialize resizable columns for My Order Table
   const myOrderColumns = useResizableColumns({
     image: 60,
-    sku: 200,
-    name: 200,
+    sku: 100,
+    name: 100,
     manufacturer: 120,
-    productFamily: 120,
+    productFamily: 140,
     listPrice: 100,
-    unitPrice: 120,
-    orderQty: 180,
-    subtotal: 180,
+    unitPrice: 100,
+    orderQty: 100,
+    subtotal: 100,
     actions: 80
   });
 
@@ -215,13 +215,13 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
   const catalogColumns = useResizableColumns({
     selection: 50,
     image: 60,
-    name: 250,
-    manufacturer: 150,
-    productFamily: 150,
-    productGrouping: 150,
+    name: 100,
+    manufacturer: 140,
+    productFamily: 140,
+    productGrouping: 140,
     listPrice: 100,
     unitPrice: 100,
-    orderQty: 120,
+    orderQty: 100,
     actions: 80
   });
 
@@ -257,7 +257,7 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
     };
     window.addEventListener('click', handleOutsideClick);
     window.addEventListener('touchstart', handleOutsideClick, { passive: true });
-    
+
     return () => {
       window.removeEventListener('click', handleOutsideClick);
       window.removeEventListener('touchstart', handleOutsideClick);
@@ -1960,9 +1960,9 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
         </div>
         {/* Fixed Tooltip */}
         {tooltipState && (
-            <div
-              role="tooltip"
-              className="fixed z-50 w-[90vw] max-w-[350px] p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg text-xs text-gray-900 dark:text-gray-100 pointer-events-none"
+          <div
+            role="tooltip"
+            className="fixed z-50 w-[90vw] max-w-[350px] p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg text-xs text-gray-900 dark:text-gray-100 pointer-events-none"
             style={{
               left: tooltipState.x,
               top: tooltipState.y - 8, // 8px gap

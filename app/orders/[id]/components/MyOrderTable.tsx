@@ -66,7 +66,7 @@ export default function MyOrderTable({
         if (typeof window !== 'undefined' && x + tooltipWidth + padding > window.innerWidth) {
             x = Math.max(padding, window.innerWidth - tooltipWidth - padding);
         }
-        
+
         setHoveredTooltip({
             product,
             x,
@@ -114,7 +114,7 @@ export default function MyOrderTable({
                             <TBody className="text-sm">
                                 {paginatedProducts.map((product) => (
                                     <Tr key={product.lineItemKey || product.id}>
-                                        <Td className="text-left min-w-[100px] sticky left-0 z-10 bg-white dark:bg-gray-800 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                        <Td className="text-left min-w-[100px] sticky left-0 z-10 bg-white dark:bg-gray-800">
                                             <Link
                                                 href={`/orders/${orderId}/lines/${product.orderLineId || product.id}`}
                                                 className="text-sm font-semibold text-primary hover:underline block"
@@ -143,7 +143,7 @@ export default function MyOrderTable({
                                             <div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(product.brand)}</div>
                                         </Td>
                                         <Td className="text-left" title={displayCell(product.productFamily)}>
-                                            <span className="inline-block max-w-full px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate align-middle">
+                                            <span className="line-clamp-2 max-w-full px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary align-middle">
                                                 {displayCell(product.productFamily)}
                                             </span>
                                         </Td>
