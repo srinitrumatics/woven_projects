@@ -55,6 +55,7 @@ export async function GET() {
       unitPrice: Number(h.price) || 0,
       orderQty: 0,
       subtotal: 0,
+      imageUrl: h.image_url || (h.images && h.images[0]?.thumb) || h.imageUrl || "",
     }));
 
     return NextResponse.json({ products, indexName, total: products.length });

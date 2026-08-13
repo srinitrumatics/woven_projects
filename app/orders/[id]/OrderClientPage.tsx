@@ -9,6 +9,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 import { formatCurrency, formatNumber } from "@/lib/utils/formatting";
 import { Product, ShippingMethodOption } from "@/app/orders/types";
 import { isServiceRecordType } from "@/lib/utils/product-record-type";
+import { parsePhotoUrls } from "@/lib/utils/product-images";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import OrderHeader from "./components/OrderHeader";
@@ -640,6 +641,7 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
         unitPrice: Number(p.unitPrice) || 0,
         orderQty: 0,
         subtotal: 0,
+        imageUrl: p.imageUrl,
       }));
 
       setCatalogProducts(mappedProducts);
@@ -981,6 +983,7 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
                     orderQty: (item.Order_Qty__c || 0) * (item.MOQ__c || 1),
                     subtotal: item.Total_Price__c,
                     productRecordType: item.Product_Record_Type__c || "",
+                    imageUrl: item.Image_URL__c || item.Product_Image__c ? parsePhotoUrls(item.Image_URL__c || item.Product_Image__c)[0] || "" : "",
                     // Store the original order line ID for updates
                     orderLineId: item.Id,
                     // Add unique lineItemKey for proper tracking and deletion
@@ -1952,10 +1955,15 @@ export default function OrderClientPage({ params, indexName }: { params: Promise
             }}
           >
             <div className="flex items-start gap-3">
-              <div className="w-24 h-12 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
-                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
+              <div className="w-24  bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center overflow-hidden">
+                {tooltipState.product.imageUrl ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={tooltipState.product.imageUrl} alt={tooltipState.product.name} className="w-full h-full object-contain" />
+                ) : (
+                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                )}
               </div>
               <div className="flex-1">
                 <div className="font-semibold leading-tight">{tooltipState.product.name}</div>

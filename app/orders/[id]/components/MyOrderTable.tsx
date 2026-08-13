@@ -134,7 +134,7 @@ export default function MyOrderTable({
                                             <div className="text-sm text-gray-900 dark:text-white truncate">{displayCell(product.brand)}</div>
                                         </Td>
                                         <Td className="text-left" title={displayCell(product.productFamily)}>
-                                            <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary">
+                                            <span className="inline-block px-2 py-1 text-sm font-medium rounded bg-primary/10 text-primary truncate">
                                                 {displayCell(product.productFamily)}
                                             </span>
                                         </Td>
